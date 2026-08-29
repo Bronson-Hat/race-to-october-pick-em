@@ -1,0 +1,2 @@
+# Copy this file to .dev.vars for local development. Never commit .dev.vars.
+HASH_PEPPER=replace-with-a-local-development-secret

@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hat-trick-sportsbook",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-08-27",
+  "workers_dev": true,
+  "keep_vars": true,
+  "secrets": {
+    "required": ["HASH_PEPPER"]
+  },
+  "vars": {
+    "CUSTOMER_ACCOUNT_CLIENT_ID": "04dd413b-445b-400c-93b8-f56feab29197"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hat-trick-sportsbook",
+      "database_id": "a00f40a6-60fe-4fff-a873-8c74a7197e52"
+    }
+  ]
+}

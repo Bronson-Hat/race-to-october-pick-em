@@ -1,0 +1,15 @@
+{
+  "name": "hat-trick-sportsbook-worker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "check": "node --check src/worker.js",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "types": "wrangler types"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20260829.1",
+    "wrangler": "4.127.1"
+  }
+}
