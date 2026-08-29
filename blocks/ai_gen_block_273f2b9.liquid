@@ -1,0 +1,485 @@
+{% doc %}
+  @prompt
+    Create a product page block that displays a vintage CRT television countdown timer. Use the existing theme asset 'crt-frame-transparent.png' as the TV frame overlay (via `{{ 'crt-frame-transparent.png' | asset_url }}`). Inside the TV screen area, display a hockey scoreboard-style countdown timer with a black background, red glowing LED/dot-matrix digits counting down to Friday August 14 2026 at 11:59 PM Eastern Time. Show DAYS, HRS, MIN, SEC labels in red scoreboard font below the digits. Add a "PRE-ORDER ENDS" label at the top of the screen in red. Include CRT scanline effect overlay on the screen. The TV frame PNG should be positioned on top as an overlay so the countdown shows through the screen area. The block should be self-contained and placeable on a product page between the buy buttons and the product description., very close are you able to match the angle of the tv and keep everything in the proportions of the tv?, the black around the timer can be cut down width and height. also the 3d angle sliders arent doing anything
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-crt-countdown-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: {{ block.settings.vertical_spacing }}px 0;
+  }
+
+  .ai-crt-tv-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    max-width: {{ block.settings.tv_max_width }}px;
+    margin: 0 auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  .ai-crt-tv-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    transform: perspective({{ block.settings.perspective }}px) rotateY({{ block.settings.rotate_y }}deg) rotateX({{ block.settings.rotate_x }}deg);
+    transform-style: preserve-3d;
+  }
+
+  .ai-crt-screen-{{ ai_gen_id }} {
+    position: absolute;
+    top: {{ block.settings.screen_top }}%;
+    left: {{ block.settings.screen_left }}%;
+    width: {{ block.settings.screen_width }}%;
+    height: {{ block.settings.screen_height }}%;
+    background-color: #000000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: {{ block.settings.screen_border_radius }}px;
+    padding: {{ block.settings.screen_padding }}px;
+  }
+
+  .ai-crt-scanlines-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15) 0px,
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .ai-crt-label-top-{{ ai_gen_id }} {
+    font-family: 'Courier New', monospace;
+    font-size: {{ block.settings.label_size }}px;
+    font-weight: bold;
+    color: {{ block.settings.led_color }};
+    text-shadow: 0 0 8px {{ block.settings.led_color }}, 0 0 12px {{ block.settings.led_color }};
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    z-index: 2;
+  }
+
+  .ai-crt-timer-display-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.digit_spacing }}px;
+    z-index: 2;
+  }
+
+  .ai-crt-time-unit-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ai-crt-digits-{{ ai_gen_id }} {
+    font-family: 'Courier New', monospace;
+    font-size: {{ block.settings.digit_size }}px;
+    font-weight: bold;
+    color: {{ block.settings.led_color }};
+    text-shadow: 0 0 10px {{ block.settings.led_color }}, 0 0 20px {{ block.settings.led_color }}, 0 0 30px {{ block.settings.led_color }};
+    line-height: 1;
+    min-width: 2ch;
+    text-align: center;
+  }
+
+  .ai-crt-unit-label-{{ ai_gen_id }} {
+    font-family: 'Courier New', monospace;
+    font-size: {{ block.settings.unit_label_size }}px;
+    font-weight: bold;
+    color: {{ block.settings.led_color }};
+    text-shadow: 0 0 6px {{ block.settings.led_color }};
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  .ai-crt-frame-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .ai-crt-frame-overlay-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-crt-tv-wrapper-{{ ai_gen_id }} {
+      transform: perspective({{ block.settings.perspective }}px) rotateY(0deg) rotateX(0deg);
+    }
+
+    .ai-crt-label-top-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.label_size }}px * 0.6);
+      margin-bottom: 8px;
+    }
+
+    .ai-crt-digits-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.digit_size }}px * 0.5);
+    }
+
+    .ai-crt-unit-label-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.unit_label_size }}px * 0.6);
+      margin-top: 4px;
+    }
+
+    .ai-crt-timer-display-{{ ai_gen_id }} {
+      gap: calc({{ block.settings.digit_spacing }}px * 0.5);
+    }
+
+    .ai-crt-screen-{{ ai_gen_id }} {
+      padding: calc({{ block.settings.screen_padding }}px * 0.5);
+    }
+  }
+{% endstyle %}
+
+<crt-countdown-{{ ai_gen_id }}
+  class="ai-crt-countdown-{{ ai_gen_id }}"
+  data-end-date="{{ block.settings.countdown_end_date }}"
+  data-end-time="{{ block.settings.countdown_end_time }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-crt-tv-container-{{ ai_gen_id }}">
+    <div class="ai-crt-tv-wrapper-{{ ai_gen_id }}">
+      <div class="ai-crt-screen-{{ ai_gen_id }}">
+        <div class="ai-crt-scanlines-{{ ai_gen_id }}"></div>
+        
+        <div class="ai-crt-label-top-{{ ai_gen_id }}">{{ block.settings.top_label }}</div>
+        
+        <div class="ai-crt-timer-display-{{ ai_gen_id }}">
+          <div class="ai-crt-time-unit-{{ ai_gen_id }}">
+            <div class="ai-crt-digits-{{ ai_gen_id }}" data-unit="days">00</div>
+            <div class="ai-crt-unit-label-{{ ai_gen_id }}">DAYS</div>
+          </div>
+          
+          <div class="ai-crt-time-unit-{{ ai_gen_id }}">
+            <div class="ai-crt-digits-{{ ai_gen_id }}" data-unit="hours">00</div>
+            <div class="ai-crt-unit-label-{{ ai_gen_id }}">HRS</div>
+          </div>
+          
+          <div class="ai-crt-time-unit-{{ ai_gen_id }}">
+            <div class="ai-crt-digits-{{ ai_gen_id }}" data-unit="minutes">00</div>
+            <div class="ai-crt-unit-label-{{ ai_gen_id }}">MIN</div>
+          </div>
+          
+          <div class="ai-crt-time-unit-{{ ai_gen_id }}">
+            <div class="ai-crt-digits-{{ ai_gen_id }}" data-unit="seconds">00</div>
+            <div class="ai-crt-unit-label-{{ ai_gen_id }}">SEC</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="ai-crt-frame-overlay-{{ ai_gen_id }}">
+        <img
+          src="{{ 'crt-frame-transparent.png' | asset_url }}"
+          alt="CRT TV Frame"
+          loading="lazy"
+        >
+      </div>
+    </div>
+  </div>
+</crt-countdown-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CRTCountdown{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.endDate = null;
+        this.timerInterval = null;
+      }
+
+      connectedCallback() {
+        const endDateStr = this.dataset.endDate;
+        const endTimeStr = this.dataset.endTime;
+        
+        if (endDateStr && endTimeStr) {
+          this.endDate = new Date(endDateStr + 'T' + endTimeStr + ':00-04:00');
+          this.startCountdown();
+        }
+      }
+
+      disconnectedCallback() {
+        if (this.timerInterval) {
+          clearInterval(this.timerInterval);
+        }
+      }
+
+      startCountdown() {
+        this.updateDisplay();
+        this.timerInterval = setInterval(() => {
+          this.updateDisplay();
+        }, 1000);
+      }
+
+      updateDisplay() {
+        const now = new Date();
+        const diff = this.endDate - now;
+
+        if (diff <= 0) {
+          this.displayZeros();
+          if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+          }
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        this.querySelector('[data-unit="days"]').textContent = String(days).padStart(2, '0');
+        this.querySelector('[data-unit="hours"]').textContent = String(hours).padStart(2, '0');
+        this.querySelector('[data-unit="minutes"]').textContent = String(minutes).padStart(2, '0');
+        this.querySelector('[data-unit="seconds"]').textContent = String(seconds).padStart(2, '0');
+      }
+
+      displayZeros() {
+        this.querySelector('[data-unit="days"]').textContent = '00';
+        this.querySelector('[data-unit="hours"]').textContent = '00';
+        this.querySelector('[data-unit="minutes"]').textContent = '00';
+        this.querySelector('[data-unit="seconds"]').textContent = '00';
+      }
+    }
+
+    customElements.define('crt-countdown-{{ ai_gen_id }}', CRTCountdown{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "CRT countdown timer",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Countdown settings"
+    },
+    {
+      "type": "text",
+      "id": "countdown_end_date",
+      "label": "End date",
+      "default": "2026-08-14",
+      "info": "Format: YYYY-MM-DD"
+    },
+    {
+      "type": "text",
+      "id": "countdown_end_time",
+      "label": "End time (Eastern)",
+      "default": "23:59",
+      "info": "Format: HH:MM (24-hour)"
+    },
+    {
+      "type": "text",
+      "id": "top_label",
+      "label": "Top label",
+      "default": "PRE-ORDER ENDS"
+    },
+    {
+      "type": "header",
+      "content": "TV screen position"
+    },
+    {
+      "type": "range",
+      "id": "screen_top",
+      "label": "Screen top position",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "screen_left",
+      "label": "Screen left position",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "screen_width",
+      "label": "Screen width",
+      "min": 50,
+      "max": 90,
+      "step": 1,
+      "unit": "%",
+      "default": 76
+    },
+    {
+      "type": "range",
+      "id": "screen_height",
+      "label": "Screen height",
+      "min": 50,
+      "max": 90,
+      "step": 1,
+      "unit": "%",
+      "default": 76
+    },
+    {
+      "type": "range",
+      "id": "screen_padding",
+      "label": "Screen padding",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "screen_border_radius",
+      "label": "Screen corner radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "3D angle"
+    },
+    {
+      "type": "range",
+      "id": "perspective",
+      "label": "Perspective",
+      "min": 500,
+      "max": 2000,
+      "step": 100,
+      "unit": "px",
+      "default": 1000
+    },
+    {
+      "type": "range",
+      "id": "rotate_y",
+      "label": "Horizontal rotation",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "deg",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "rotate_x",
+      "label": "Vertical rotation",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "deg",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "led_color",
+      "label": "LED color",
+      "default": "#ff0000"
+    },
+    {
+      "type": "range",
+      "id": "digit_size",
+      "label": "Digit size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Top label size",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "unit_label_size",
+      "label": "Unit label size",
+      "min": 6,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "digit_spacing",
+      "label": "Digit spacing",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "tv_max_width",
+      "label": "TV max width",
+      "min": 200,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "vertical_spacing",
+      "label": "Vertical spacing",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "CRT countdown timer"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,302 @@
+{% liquid
+  assign archive_handles = 'cheers-sitcom-hat-beer-bottle-green,detroit-improvement-hat,fantasy-football-hat,mariner-sitcom-hat,rockies,yankee-sitcom-hat,yankee-sitcom-away-gray,yankee-sitcom-hat-blue,yankee-sitcom-hat-season-8' | split: ','
+%}
+
+<section class="ht-ballot" data-archive-ballot data-round="comeback-verified-01" data-theme-id="{{ theme.id }}" data-theme-role="{{ theme.role | escape }}">
+  <header class="ht-ballot__hero">
+    <div class="ht-ballot__hero-copy">
+      <p class="ht-ballot__kicker">Hat Trick Archive Department · Official Ballot No. 01</p>
+      <h1>The Comeback<br>Ballot</h1>
+      <p class="ht-ballot__dek">The vault is open. Pick one retired hat to bring back into production. One verified Shop account, one ballot, one shot at a comeback.</p>
+    </div>
+    <div class="ht-ballot__stamp" aria-hidden="true"><span>Vote</span><strong>Back</strong><small>2026</small></div>
+  </header>
+
+  <div class="ht-ballot__ticker" aria-hidden="true">
+    <div><span>Fan controlled production</span><span>9 retired releases</span><span>One vote per Shop account</span><span>The people pick the reissue</span><span>Fan controlled production</span><span>9 retired releases</span><span>One vote per Shop account</span><span>The people pick the reissue</span></div>
+  </div>
+
+  <section class="ht-leaderboard" aria-labelledby="ht-leaderboard-title">
+    <div class="ht-leaderboard__heading">
+      <div>
+        <p>Live from the counting room</p>
+        <h2 id="ht-leaderboard-title">Comeback standings</h2>
+      </div>
+      <div class="ht-leaderboard__total"><strong data-total-votes>0</strong><span>total votes</span></div>
+    </div>
+    <ol class="ht-leaderboard__list" data-leaderboard>
+      <li class="ht-leaderboard__empty">Cast the first ballot to start the board.</li>
+    </ol>
+    <p class="ht-leaderboard__note">Live shared totals · One verified ballot per Shop account · Standings update automatically</p>
+    <div class="ht-ballot__auth" data-ballot-auth>
+      <div><strong>Want a retired hat back?</strong><span data-auth-copy>Log in or create a free Shop account to cast one persistent vote.</span></div>
+      <a class="ht-ballot__login" data-ballot-login href="#">Log in or sign up to vote ↗</a>
+    </div>
+  </section>
+
+  <div class="ht-ballot__catalog-head">
+    <div>
+      <p>Series 001 · The retired collection</p>
+      <h2>Choose your card</h2>
+    </div>
+    <label class="ht-ballot__search">
+      <span>Search the archive</span>
+      <input type="search" data-card-search placeholder="Team, city or hat…" autocomplete="off">
+    </label>
+  </div>
+
+  <div class="ht-card-grid" data-card-grid>
+    {% for handle in archive_handles %}
+      {% assign archive_product = all_products[handle] %}
+      {% if archive_product != blank %}
+        <article class="ht-card" data-card data-handle="{{ archive_product.handle }}" data-title="{{ archive_product.title | escape }}">
+          <div class="ht-card__shell">
+            <div class="ht-card__topline"><span>Hat Trick Archive</span><strong>#{{ forloop.index | prepend: '00' | slice: -3, 3 }}</strong></div>
+            <div class="ht-card__photo">
+              {% if archive_product.featured_image %}
+                <img src="{{ archive_product.featured_image | image_url: width: 720 }}" alt="{{ archive_product.featured_image.alt | default: archive_product.title | escape }}" width="720" height="720" loading="lazy">
+              {% endif %}
+              <span class="ht-card__foil" aria-hidden="true"></span>
+              <span class="ht-card__status">Retired</span>
+            </div>
+            <div class="ht-card__identity">
+              <p>Comeback candidate</p>
+              <h3>{{ archive_product.title | escape }}</h3>
+            </div>
+            <div class="ht-card__stats">
+              <div><span>Card</span><strong>{{ forloop.index }}/{{ archive_handles.size }}</strong></div>
+              <div><span>Votes</span><strong data-card-votes>0</strong></div>
+              <div><span>Status</span><strong data-card-rank>—</strong></div>
+            </div>
+            <button type="button" class="ht-card__vote" data-vote-button>
+              <span>Vote this hat back</span><strong>+</strong>
+            </button>
+          </div>
+          <div class="ht-card__cast" aria-hidden="true"><span>Ballot cast</span></div>
+        </article>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="ht-ballot__result" data-ballot-result hidden>
+    <p>Your official comeback pick</p>
+    <strong data-result-title></strong>
+    <span>Ballot saved to your verified Shop account.</span>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} { background:#d9c79d; color:#17130e; }
+  #shopify-section-{{ section.id }} .ht-ballot { --red:#b93225; --blue:#173f68; --ink:#17130e; --paper:#eadcb8; --yellow:#e6b839; position:relative; overflow:hidden; max-width:1600px; margin:0 auto; padding:0 0 110px; background-color:#d9c79d; background-image:linear-gradient(rgba(50,38,22,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(50,38,22,.04) 1px,transparent 1px); background-size:5px 5px; }
+  .ht-ballot__hero { position:relative; min-height:580px; display:flex; align-items:flex-end; justify-content:space-between; padding:clamp(70px,10vw,150px) clamp(22px,6vw,90px) 65px; color:#f1e5c7; background:var(--blue); overflow:hidden; }
+  .ht-ballot__hero:before { content:""; position:absolute; inset:-25%; opacity:.21; background:repeating-radial-gradient(ellipse at center,transparent 0 18px,#fff 19px 21px,transparent 22px 39px); transform:rotate(-9deg); }
+  .ht-ballot__hero:after { content:"ARCHIVE"; position:absolute; right:-.03em; bottom:-.22em; color:rgba(234,220,184,.06); font:900 clamp(130px,25vw,390px)/.8 Arial Black,sans-serif; letter-spacing:-.08em; }
+  .ht-ballot__hero-copy { position:relative; z-index:2; max-width:1000px; }
+  .ht-ballot__kicker,.ht-ballot__catalog-head p,.ht-leaderboard__heading p { margin:0 0 22px; text-transform:uppercase; letter-spacing:.16em; font:800 11px/1.2 Arial,sans-serif; }
+  .ht-ballot__hero h1 { margin:0; color:var(--yellow); font:500 clamp(68px,12vw,180px)/.72 Georgia,serif; letter-spacing:-.075em; text-shadow:5px 5px 0 var(--red); transform-origin:left center; animation:ht-title-breathe 4.8s ease-in-out infinite; }
+  .ht-ballot__dek { max-width:620px; margin:42px 0 0; font:500 clamp(16px,2vw,22px)/1.45 Arial,sans-serif; }
+  .ht-ballot__stamp { position:relative; z-index:2; flex:0 0 170px; aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; margin:0 0 12px 40px; border:7px double #e6b839; border-radius:50%; color:#e6b839; transform:rotate(9deg); text-transform:uppercase; }
+  .ht-ballot__stamp span,.ht-ballot__stamp small { font:800 13px/1 Arial,sans-serif; letter-spacing:.18em; }
+  .ht-ballot__stamp strong { font:900 42px/.95 Georgia,serif; }
+  .ht-ballot__ticker { overflow:hidden; border-top:3px solid var(--ink); border-bottom:3px solid var(--ink); background:var(--red); color:#fff1cf; }
+  .ht-ballot__ticker div { width:max-content; display:flex; animation:ht-ballot-ticker 24s linear infinite; }
+  .ht-ballot__ticker span { display:flex; align-items:center; gap:18px; padding:15px 28px; text-transform:uppercase; letter-spacing:.14em; font:800 11px/1 Arial,sans-serif; }
+  .ht-ballot__ticker span:after { content:"★"; color:var(--yellow); }
+  .ht-leaderboard { margin:clamp(45px,7vw,95px) clamp(22px,6vw,90px); border:3px solid var(--ink); background:#eee2c4; box-shadow:12px 12px 0 var(--ink); }
+  .ht-leaderboard__heading { display:flex; align-items:end; justify-content:space-between; gap:25px; padding:28px 32px; border-bottom:3px solid var(--ink); background:var(--yellow); }
+  .ht-leaderboard__heading p { margin-bottom:8px; }
+  .ht-leaderboard h2 { margin:0; font:700 clamp(34px,5vw,68px)/.9 Georgia,serif; letter-spacing:-.04em; }
+  .ht-leaderboard__total { display:flex; align-items:end; gap:9px; text-align:right; }
+  .ht-leaderboard__total strong { font:900 54px/.8 Arial Black,sans-serif; color:var(--red); }
+  .ht-leaderboard__total span { max-width:50px; text-transform:uppercase; letter-spacing:.08em; font:800 9px/1.1 Arial,sans-serif; }
+  .ht-leaderboard__list { list-style:none; margin:0; padding:0; }
+  .ht-leaderboard__row { display:grid; grid-template-columns:54px minmax(0,1fr) minmax(80px,2fr) 80px; align-items:center; gap:16px; padding:17px 26px; border-bottom:2px solid var(--ink); transition:transform .3s ease,background .3s ease; }
+  .ht-leaderboard__row:first-child { background:#d7e5de; }
+  .ht-leaderboard__rank { font:900 30px/1 Arial Black,sans-serif; color:var(--red); }
+  .ht-leaderboard__name { font:700 18px/1.1 Georgia,serif; }
+  .ht-leaderboard__bar { height:12px; border:2px solid var(--ink); background:#d1c29f; }
+  .ht-leaderboard__bar i { display:block; height:100%; min-width:2px; background:var(--blue); transition:width .55s cubic-bezier(.2,.8,.2,1); }
+  .ht-leaderboard__votes { text-align:right; font:900 18px/1 Arial,sans-serif; }
+  .ht-leaderboard__empty { padding:30px; font:italic 18px/1.4 Georgia,serif; }
+  .ht-leaderboard__note { margin:0; padding:13px 26px; color:#e9dec1; background:var(--ink); font:700 10px/1.3 Arial,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+  .ht-ballot__auth { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:20px 26px; border-top:3px solid var(--ink); background:var(--blue); color:#fff1cf; }
+  .ht-ballot__auth div { display:grid; gap:5px; }
+  .ht-ballot__auth strong { text-transform:uppercase; letter-spacing:.09em; font:900 13px/1.15 Arial,sans-serif; }
+  .ht-ballot__auth span { font:600 12px/1.4 Arial,sans-serif; }
+  .ht-ballot__login { flex:0 0 auto; padding:13px 17px; border:2px solid var(--ink); color:var(--ink); background:var(--yellow); box-shadow:4px 4px 0 var(--red); text-decoration:none; text-transform:uppercase; letter-spacing:.08em; font:900 10px/1 Arial,sans-serif; }
+  .ht-ballot__login:hover { transform:translate(-1px,-1px); box-shadow:6px 6px 0 var(--red); }
+  .ht-ballot__auth.is-signed-in .ht-ballot__login { display:none; }
+  .ht-ballot__catalog-head { display:flex; align-items:end; justify-content:space-between; gap:30px; margin:100px clamp(22px,6vw,90px) 35px; padding-bottom:20px; border-bottom:5px solid var(--ink); }
+  .ht-ballot__catalog-head p { margin-bottom:10px; color:var(--red); }
+  .ht-ballot__catalog-head h2 { margin:0; font:700 clamp(48px,7vw,100px)/.82 Georgia,serif; letter-spacing:-.06em; }
+  .ht-ballot__search { width:min(360px,100%); }
+  .ht-ballot__search span { display:block; margin-bottom:8px; text-transform:uppercase; letter-spacing:.1em; font:800 10px/1 Arial,sans-serif; }
+  .ht-ballot__search input { width:100%; padding:14px 16px; border:3px solid var(--ink); border-radius:0; color:var(--ink); background:#eee2c4; font:700 15px/1 Arial,sans-serif; box-shadow:5px 5px 0 var(--red); }
+  .ht-card-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(24px,3vw,44px) clamp(18px,2.4vw,36px); padding:0 clamp(22px,6vw,90px); }
+  .ht-card { position:relative; perspective:1000px; }
+  .ht-card[hidden] { display:none; }
+  .ht-card__shell { position:relative; height:100%; padding:12px; border:3px solid var(--ink); border-radius:15px; background:#ede0bd; box-shadow:7px 8px 0 rgba(23,19,14,.9); transition:transform .24s ease,box-shadow .24s ease; overflow:hidden; }
+  .ht-card:hover .ht-card__shell { transform:translateY(-7px) rotate(-.5deg); box-shadow:11px 15px 0 rgba(23,19,14,.88); }
+  .ht-card:nth-child(4n+1) .ht-card__shell{--card-accent:#b93225}.ht-card:nth-child(4n+2) .ht-card__shell{--card-accent:#1b5772}.ht-card:nth-child(4n+3) .ht-card__shell{--card-accent:#d49b24}.ht-card:nth-child(4n) .ht-card__shell{--card-accent:#487149}
+  .ht-card__topline { display:flex; justify-content:space-between; padding:4px 3px 10px; text-transform:uppercase; letter-spacing:.11em; font:800 9px/1 Arial,sans-serif; }
+  .ht-card__photo { position:relative; aspect-ratio:1/1.04; overflow:hidden; border:3px solid var(--ink); background:#b8aa89; }
+  .ht-card__photo img { display:block; width:100%; height:100%; object-fit:cover; filter:saturate(.88) contrast(1.05); transition:transform .5s ease,filter .5s ease; }
+  .ht-card:hover .ht-card__photo img { transform:scale(1.035); filter:saturate(1.06) contrast(1.08); }
+  .ht-card__foil { position:absolute; inset:0; opacity:0; pointer-events:none; background:linear-gradient(115deg,transparent 37%,rgba(255,255,255,.08) 43%,rgba(107,242,229,.55) 48%,rgba(255,210,88,.55) 52%,rgba(255,121,154,.4) 56%,transparent 63%); background-size:300% 100%; background-repeat:no-repeat; background-position:150% 0; transform:translateZ(0); transition:opacity .25s; animation:ht-card-foil 5.5s ease-in-out infinite; mix-blend-mode:screen; will-change:background-position; }
+  .ht-card:hover .ht-card__foil { opacity:.9; }
+  .ht-card__status { position:absolute; left:10px; bottom:10px; padding:7px 9px; color:#fff5db; background:var(--card-accent); border:2px solid var(--ink); box-shadow:3px 3px 0 var(--ink); text-transform:uppercase; letter-spacing:.12em; font:900 9px/1 Arial,sans-serif; }
+  .ht-card__identity { min-height:106px; padding:16px 4px 10px; }
+  .ht-card__identity p { margin:0 0 6px; color:var(--card-accent); text-transform:uppercase; letter-spacing:.12em; font:900 9px/1 Arial,sans-serif; }
+  .ht-card__identity h3 { margin:0; font:700 clamp(20px,2vw,29px)/.98 Georgia,serif; letter-spacing:-.035em; }
+  .ht-card__stats { display:grid; grid-template-columns:repeat(3,1fr); border:2px solid var(--ink); }
+  .ht-card__stats div { padding:8px 6px; border-right:2px solid var(--ink); text-align:center; }
+  .ht-card__stats div:last-child { border:0; }
+  .ht-card__stats span { display:block; margin-bottom:4px; text-transform:uppercase; letter-spacing:.08em; font:800 7px/1 Arial,sans-serif; }
+  .ht-card__stats strong { font:900 12px/1 Arial,sans-serif; }
+  .ht-card__vote { appearance:none; display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:10px; padding:14px; border:2px solid var(--ink); color:#fff2d2; background:var(--ink); cursor:pointer; text-transform:uppercase; letter-spacing:.08em; font:900 10px/1 Arial,sans-serif; }
+  .ht-card__vote:hover { background:var(--card-accent); }
+  .ht-card__vote strong { font-size:20px; }
+  .ht-card__vote:disabled { color:#6a6253; background:#c5b793; cursor:not-allowed; }
+  .ht-card__cast { position:absolute; z-index:5; inset:20% 6%; display:none; place-items:center; pointer-events:none; border:8px double var(--red); color:var(--red); transform:rotate(-11deg); }
+  .ht-card__cast span { font:900 clamp(26px,3.4vw,48px)/.9 Arial Black,sans-serif; text-align:center; text-transform:uppercase; }
+  .ht-card.is-selected .ht-card__cast { display:grid; animation:ht-stamp-in .36s cubic-bezier(.2,1.4,.4,1) both; }
+  .ht-card.is-selected .ht-card__shell { outline:7px solid var(--yellow); }
+  .ht-ballot__result { position:fixed; z-index:40; right:22px; bottom:22px; max-width:370px; padding:20px 24px; border:3px solid var(--ink); color:#fff0ce; background:var(--red); box-shadow:8px 8px 0 var(--ink); }
+  .ht-ballot__result p,.ht-ballot__result span { display:block; margin:0; text-transform:uppercase; letter-spacing:.11em; font:800 9px/1.3 Arial,sans-serif; }
+  .ht-ballot__result strong { display:block; margin:7px 0; font:700 24px/1 Georgia,serif; }
+  @keyframes ht-ballot-ticker{to{transform:translateX(-50%)}}
+  @keyframes ht-card-foil{0%,35%{background-position:150% 0}65%,100%{background-position:-50% 0}}\n  @keyframes ht-title-breathe{0%,100%{transform:translateY(0);text-shadow:5px 5px 0 var(--red)}50%{transform:translateY(-3px);text-shadow:9px 9px 0 var(--red)}}
+  @keyframes ht-stamp-in{from{opacity:0;transform:scale(2.2) rotate(-18deg)}to{opacity:.92;transform:scale(1) rotate(-11deg)}}
+  @media(max-width:1100px){.ht-card-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(max-width:780px){.ht-ballot__hero{min-height:520px}.ht-ballot__stamp{display:none}.ht-leaderboard__row{grid-template-columns:40px minmax(0,1fr) 60px}.ht-leaderboard__bar{display:none}.ht-ballot__catalog-head{display:block}.ht-ballot__search{margin-top:30px}.ht-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:500px){.ht-ballot__hero h1{font-size:65px.ht-ballot__auth{display:grid;padding:18px}.ht-ballot__login{width:100%;text-align:center}}.ht-leaderboard{box-shadow:7px 7px 0 var(--ink)}.ht-leaderboard__heading{align-items:start;padding:22px 18px}.ht-leaderboard__total strong{font-size:38px}.ht-leaderboard__row{padding:15px 17px}.ht-card-grid{gap:22px 12px;padding:0 14px}.ht-card__shell{padding:8px;border-radius:10px;box-shadow:4px 5px 0 var(--ink)}.ht-card__identity{min-height:92px;padding-top:12px}.ht-card__identity h3{font-size:17px}.ht-card__stats div:first-child{display:none}.ht-card__stats{grid-template-columns:repeat(2,1fr)}.ht-card__vote{padding:11px 8px}.ht-ballot__catalog-head{margin-left:16px;margin-right:16px}.ht-ballot__result{left:12px;right:12px;bottom:12px}}
+  @media(prefers-reduced-motion:reduce){.ht-ballot__ticker div,.ht-card__foil,.ht-card__cast{animation:none}.ht-card__shell,.ht-card__photo img{transition:none}}
+</style>
+
+<script>
+  (() => {
+    const root = document.currentScript.previousElementSibling.previousElementSibling;
+    if (!root || !root.matches('[data-archive-ballot]')) return;
+    const api = 'https://hat-trick-sportsbook.bronson-16e.workers.dev';
+    const sessionKey = 'ht_off_track_session';
+    const cards = [...root.querySelectorAll('[data-card]')];
+    const authBox = root.querySelector('[data-ballot-auth]');
+    const login = root.querySelector('[data-ballot-login]');
+    const authCopy = root.querySelector('[data-auth-copy]');
+    let session = localStorage.getItem(sessionKey) || '';
+    let selection = null;
+    let standings = cards.map((card,index) => ({ rank:index+1, handle:card.dataset.handle, label:card.dataset.title, votes:0 }));
+    const returnUrl = new URL(location.href);
+    returnUrl.hash = '';
+    if ((root.dataset.themeRole || '').toLowerCase() !== 'main') {
+      returnUrl.searchParams.set('preview_theme_id',root.dataset.themeId || '189244801320');
+    } else {
+      returnUrl.searchParams.delete('preview_theme_id');
+    }
+    login.href = api + '/auth/start?return=' + encodeURIComponent(returnUrl.toString());
+    const call = async (path,options={}) => {
+      options.headers = {...(options.headers || {})};
+      if (session) options.headers.Authorization = 'Bearer ' + session;
+      const response = await fetch(api + path,options);
+      const data = await response.json();
+      if (!response.ok) { const error = new Error(data.error || 'Archive voting is temporarily unavailable.'); error.status = response.status; error.data = data; throw error; }
+      return data;
+    };
+    const escapeHtml = value => String(value).replace(/[&<>"']/g,char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+    const showNotice = (title,message) => {
+      const result = root.querySelector('[data-ballot-result]');
+      root.querySelector('[data-result-title]').textContent = title;
+      result.querySelector('span').textContent = message;
+      result.hidden = false;
+      window.setTimeout(() => { result.hidden = true; }, 4200);
+    };
+    const render = () => {
+      const byHandle = new Map(standings.map(item => [item.handle,item]));
+      const ranked = cards.map(card => {
+        const current = byHandle.get(card.dataset.handle);
+        return { card, handle:card.dataset.handle, title:card.dataset.title, votes:Number(current?.votes || 0), rank:Number(current?.rank || 99) };
+      }).sort((a,b) => b.votes-a.votes || a.rank-b.rank);
+      const max = Math.max(1,...ranked.map(item => item.votes));
+      ranked.forEach((item,index) => {
+        item.card.querySelector('[data-card-votes]').textContent = item.votes;
+        item.card.querySelector('[data-card-rank]').textContent = '#' + (index + 1);
+        item.card.classList.toggle('is-selected',item.handle === selection);
+        const button = item.card.querySelector('[data-vote-button]');
+        button.disabled = Boolean(selection);
+        button.querySelector('span').textContent = item.handle === selection ? 'Your comeback pick' : (selection ? 'Ballot already cast' : (session ? 'Vote this hat back' : 'Continue with Shop to vote'));
+      });
+      const active = ranked.slice(0,5);
+      root.querySelector('[data-total-votes]').textContent = ranked.reduce((sum,item) => sum + item.votes,0);
+      root.querySelector('[data-leaderboard]').innerHTML = active.map((item,index) => '<li class="ht-leaderboard__row"><span class="ht-leaderboard__rank">0'+(index+1)+'</span><strong class="ht-leaderboard__name">'+escapeHtml(item.title)+'</strong><span class="ht-leaderboard__bar"><i style="width:'+Math.max(4,(item.votes/max)*100)+'%"></i></span><span class="ht-leaderboard__votes">'+item.votes+'</span></li>').join('');
+    };
+    const load = async () => {
+      try {
+        const leaderboardData = await call('/archive/leaderboard');
+        const statusData = session ? await call('/archive/status') : { ok:true, voted:false, candidate:null };
+        standings = leaderboardData.leaderboard;
+        selection = statusData.ok && statusData.voted ? statusData.candidate : null;
+        authBox.classList.toggle('is-signed-in',Boolean(session));
+        authCopy.textContent = selection ? 'Your verified comeback ballot is counted and follows your Shop account.' : (session ? 'Shop account verified. Choose one retired hat below.' : 'Log in or create a free Shop account to cast one persistent vote.');
+        render();
+      } catch (error) {
+        if (error.status === 401) { localStorage.removeItem(sessionKey); session = ''; }
+        showNotice('Voting is warming up',error.message || 'Please refresh in a moment.');
+      }
+    };
+    cards.forEach(card => card.querySelector('[data-vote-button]').addEventListener('click',async () => {
+      if (selection) return;
+      if (!session) { location.href = login.href; return; }
+      const button = card.querySelector('[data-vote-button]');
+      button.disabled = true;
+      button.querySelector('span').textContent = 'Casting ballot…';
+      try {
+        const response = await fetch(api + '/archive/vote',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','Authorization':'Bearer '+session},
+          body:JSON.stringify({candidate:card.dataset.handle}),
+        });
+        const data = await response.json();
+        if (response.status === 409 && data.candidate) {
+          selection = data.candidate;
+          await load();
+          showNotice('Ballot already counted','One vote per verified Shop account.');
+          return;
+        }
+        if (!response.ok || !data.ok) throw new Error(data.error || 'vote_failed');
+        selection = data.candidate;
+        standings = data.leaderboard;
+        render();
+        showNotice(card.dataset.title,'Your vote is officially counted.');
+      } catch (error) {
+        button.disabled = false;
+        button.querySelector('span').textContent = 'Try vote again';
+        showNotice('Vote not counted','Please try again in a moment.');
+      }
+    }));
+    root.querySelector('[data-card-search]').addEventListener('input',event => {
+      const query = event.target.value.trim().toLowerCase();
+      cards.forEach(card => { card.hidden = Boolean(query) && !card.dataset.title.toLowerCase().includes(query); });
+    });
+    const exchangeFragment = async () => {
+      const match = location.hash.match(/(?:^#|&)auth=([^&]+)/);
+      if (!match) return;
+      history.replaceState(null,'',location.pathname + location.search);
+      try {
+        const data = await call('/auth/exchange',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:decodeURIComponent(match[1])})});
+        session = data.token;
+        localStorage.setItem(sessionKey,session);
+        showNotice('Shop account verified','Choose one retired hat to bring back.');
+      } catch (error) { showNotice('Login not completed',error.message); }
+    };
+    render();
+    (async()=>{ await exchangeFragment(); await load(); })();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Archive comeback ballot",
+  "settings": [],
+  "presets": [{ "name": "Archive comeback ballot" }]
+}
+{% endschema %}

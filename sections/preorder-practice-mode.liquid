@@ -1,0 +1,151 @@
+{% assign product = all_products[section.settings.product] %}
+{% assign close_iso = section.settings.close_iso | default: '2026-09-05T03:59:59Z' %}
+
+<section class="ht-practice{% if section.settings.full_page %} ht-practice--full{% endif %}" data-preorder-close="{{ close_iso }}">
+  <div class="ht-practice__noise" aria-hidden="true"></div>
+  <header class="ht-practice__topbar">
+    <span>Hat Trick Street Division</span>
+    <strong>Practice Mode</strong>
+    <span>Limited Run 001</span>
+  </header>
+
+  <div class="ht-practice__hero">
+    <div class="ht-practice__player">
+      <div class="ht-practice__portrait">
+        {% if product != blank %}
+          {{ product.featured_image | image_url: width: 1400 | image_tag: loading: 'eager', widths: '480,720,1000,1400', sizes: '(min-width: 900px) 48vw, 100vw', alt: product.title }}
+        {% endif %}
+        <span class="ht-practice__live">Preorder live</span>
+        <b aria-hidden="true">01</b>
+      </div>
+      <div class="ht-practice__meter">
+        <span>Run status</span><i><em></em></i><strong>Production queued</strong>
+      </div>
+    </div>
+
+    <div class="ht-practice__info">
+      <p class="ht-practice__eyebrow">Player 01 · Philadelphia · One size</p>
+      <h2>{% if product != blank %}{{ product.title }}{% else %}AND1 Practice Hat{% endif %}</h2>
+      <blockquote>“We talkin’ about practice.”</blockquote>
+
+      <div class="ht-practice__stats">
+        <div><span>Handles</span><b>99</b></div>
+        <div><span>Trash talk</span><b>98</b></div>
+        <div><span>Bench energy</span><b>00</b></div>
+        <div><span>Hat game</span><b>100</b></div>
+      </div>
+
+      <div class="ht-practice__deadline">
+        <div><span>Preorder closes</span><strong>September 4 · 11:59 PM ET</strong></div>
+        <div><span>Expected shipping</span><strong>On or before September 30</strong></div>
+      </div>
+
+      <div class="ht-practice__countdown" aria-live="polite">
+        <span>Shot clock</span>
+        <div><b data-days>--</b><small>Days</small></div>
+        <div><b data-hours>--</b><small>Hrs</small></div>
+        <div><b data-minutes>--</b><small>Min</small></div>
+      </div>
+
+      <p class="ht-practice__shipping">Production is already underway. Orders may begin shipping earlier; tracking is sent the moment yours leaves Brooklyn.</p>
+
+      {% if product != blank %}
+        <div class="ht-practice__buy">
+          <span>{{ product.price | money }}</span>
+          {% if product.available %}
+            {% form 'product', product %}
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" name="add">Enter preorder <b>↗</b></button>
+            {% endform %}
+          {% else %}
+            <a href="{{ product.url }}">View run status →</a>
+          {% endif %}
+        </div>
+      {% endif %}
+      {% unless section.settings.full_page %}<a class="ht-practice__desk-link" href="/pages/preorders">View the full preorder desk →</a>{% endunless %}
+    </div>
+  </div>
+
+  {% if section.settings.full_page %}
+    <section class="ht-practice__rules">
+      <div class="ht-practice__rules-head"><p>Mode instructions</p><h2>How limited runs work.</h2></div>
+      <ol>
+        <li><span>01</span><strong>Reserve your hat.</strong><p>Payment is collected when your preorder is placed.</p></li>
+        <li><span>02</span><strong>The window closes.</strong><p>This run closes September 4 at 11:59 PM Eastern.</p></li>
+        <li><span>03</span><strong>Production finishes.</strong><p>The hats are already moving. We inspect and pack every order.</p></li>
+        <li><span>04</span><strong>Tracking goes live.</strong><p>Expected to ship on or before September 30. Earlier is possible.</p></li>
+      </ol>
+    </section>
+
+    <section class="ht-practice__status-board">
+      <div><span>Current run</span><strong>AND1 Practice Hat</strong></div>
+      <div><span>Order status</span><strong class="ht-practice__green">Open</strong></div>
+      <div><span>Closes</span><strong>09.04.26</strong></div>
+      <div><span>Ship target</span><strong>By 09.30.26</strong></div>
+    </section>
+
+    <section class="ht-practice__faq">
+      <div><p>Preorder desk · FAQ</p><h2>Before you check in.</h2></div>
+      <div class="ht-practice__faq-list">
+        <details open><summary>When will my order ship?</summary><p>September 30 is the latest current expected ship date. Some orders may ship sooner. Tracking is emailed as soon as your package leaves Brooklyn.</p></details>
+        <details><summary>Why preorder?</summary><p>Preorders let us produce intentional limited batches without manufacturing piles of unwanted inventory.</p></details>
+        <details><summary>What if my order contains another hat?</summary><p>Unless arranged separately, items ordered together may ship when the preorder item is ready.</p></details>
+        <details><summary>Can the dates change?</summary><p>Production timelines can occasionally move. If the expected date changes materially, customers will be notified using the email attached to the order.</p></details>
+      </div>
+    </section>
+  {% endif %}
+
+  <footer class="ht-practice__ticker" aria-hidden="true"><div><span>Not a game</span><span>Practice mode</span><span>Limited run</span><span>Ships by 09.30</span><span>Not a game</span><span>Practice mode</span><span>Limited run</span><span>Ships by 09.30</span></div></footer>
+</section>
+
+<script>
+  (() => {
+    const root = document.currentScript.previousElementSibling;
+    if (!root || !root.matches('[data-preorder-close]')) return;
+    const end = new Date(root.dataset.preorderClose).getTime();
+    const draw = () => {
+      const remaining = Math.max(0, end - Date.now());
+      const days = Math.floor(remaining / 86400000);
+      const hours = Math.floor((remaining % 86400000) / 3600000);
+      const minutes = Math.floor((remaining % 3600000) / 60000);
+      root.querySelector('[data-days]').textContent = String(days).padStart(2,'0');
+      root.querySelector('[data-hours]').textContent = String(hours).padStart(2,'0');
+      root.querySelector('[data-minutes]').textContent = String(minutes).padStart(2,'0');
+    };
+    draw(); setInterval(draw, 60000);
+  })();
+</script>
+
+<style>
+  #shopify-section-{{ section.id }}{background:#111;color:#f7f0d0}
+  .ht-practice{--black:#11110f;--blue:#203eeb;--orange:#ff532b;--acid:#dcff35;--cream:#f7f0d0;--silver:#c8c8bd;position:relative;max-width:1600px;margin:auto;overflow:hidden;color:var(--cream);background:var(--black);border-block:5px solid var(--cream);font-family:Arial,sans-serif}.ht-practice__noise{position:absolute;inset:0;pointer-events:none;opacity:.11;background-image:radial-gradient(circle,#fff 0 1px,transparent 1.2px);background-size:4px 4px;mix-blend-mode:screen}.ht-practice:after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.025) 4px 5px)}
+  .ht-practice__topbar{position:relative;z-index:2;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:15px clamp(18px,5vw,70px);border-bottom:4px solid var(--cream);background:var(--blue);text-transform:uppercase;letter-spacing:.16em;font:900 9px/1 Arial,sans-serif}.ht-practice__topbar strong{padding:8px 25px;background:var(--orange);border:2px solid var(--cream);transform:skew(-8deg);font-size:11px}.ht-practice__topbar span:last-child{text-align:right}
+  .ht-practice__hero{position:relative;z-index:2;display:grid;grid-template-columns:1.02fr .98fr;min-height:720px}.ht-practice__player{padding:clamp(25px,5vw,70px);background:linear-gradient(135deg,var(--orange) 0 52%,#8222e4 52% 64%,var(--blue) 64%);border-right:5px solid var(--cream)}.ht-practice__portrait{position:relative;height:100%;min-height:520px;overflow:hidden;border:5px solid var(--cream);background:#fff;box-shadow:13px 13px 0 var(--black);transform:rotate(-1deg)}.ht-practice__portrait img{width:100%;height:100%;object-fit:cover}.ht-practice__portrait>b{position:absolute;right:-5px;bottom:-28px;color:var(--orange);font:900 clamp(150px,20vw,300px)/.75 Impact,Arial Black,sans-serif;text-shadow:-5px -5px 0 var(--black);opacity:.9}.ht-practice__live{position:absolute;z-index:2;top:18px;left:18px;padding:10px 13px;border:3px solid var(--black);background:var(--acid);color:var(--black);box-shadow:5px 5px 0 var(--black);text-transform:uppercase;letter-spacing:.12em;font:900 9px/1 Arial,sans-serif;animation:ht-practice-pulse 1.4s steps(2,end) infinite}
+  .ht-practice__meter{display:grid;grid-template-columns:auto 1fr auto;gap:15px;align-items:center;margin-top:24px;text-transform:uppercase;letter-spacing:.1em;font:900 8px/1 Arial,sans-serif}.ht-practice__meter i{height:15px;border:2px solid var(--cream);padding:2px}.ht-practice__meter em{display:block;width:76%;height:100%;background:var(--acid)}
+  .ht-practice__info{padding:clamp(38px,6vw,85px);background-image:linear-gradient(135deg,transparent 72%,rgba(32,62,235,.45) 72%),repeating-linear-gradient(-45deg,rgba(255,255,255,.025) 0 8px,transparent 8px 16px)}.ht-practice__eyebrow{margin:0 0 20px;color:var(--acid);text-transform:uppercase;letter-spacing:.16em;font:900 9px/1.2 Arial,sans-serif}.ht-practice__info h2{margin:0;color:var(--cream);font:italic 900 clamp(55px,7vw,105px)/.78 Impact,Arial Black,sans-serif;letter-spacing:-.035em;text-transform:uppercase;transform:skew(-3deg);text-shadow:5px 5px 0 var(--blue)}.ht-practice__info blockquote{margin:28px 0;padding:12px 0 12px 18px;border-left:7px solid var(--orange);color:var(--acid);font:italic 700 clamp(22px,2.5vw,38px)/1 Georgia,serif}
+  .ht-practice__stats{display:grid;grid-template-columns:1fr 1fr;border:3px solid var(--cream)}.ht-practice__stats div{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border-right:2px solid var(--cream);border-bottom:2px solid var(--cream)}.ht-practice__stats div:nth-child(even){border-right:0}.ht-practice__stats div:nth-child(n+3){border-bottom:0}.ht-practice__stats span{text-transform:uppercase;letter-spacing:.1em;font:900 8px/1 Arial,sans-serif}.ht-practice__stats b{color:var(--acid);font:900 24px/1 Impact,Arial Black,sans-serif}
+  .ht-practice__deadline{display:grid;grid-template-columns:1fr 1fr;margin-top:22px;border:3px solid var(--cream);background:var(--cream);color:var(--black)}.ht-practice__deadline div{padding:13px 15px}.ht-practice__deadline div:first-child{border-right:3px solid var(--black)}.ht-practice__deadline span{display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.1em;font:900 8px/1 Arial,sans-serif}.ht-practice__deadline strong{font:900 17px/1.05 Arial Black,Arial,sans-serif}
+  .ht-practice__countdown{display:grid;grid-template-columns:1fr repeat(3,auto);gap:14px;align-items:center;margin-top:18px;padding:13px 15px;border:3px solid var(--orange);background:#211f1b}.ht-practice__countdown>span{color:var(--orange);text-transform:uppercase;letter-spacing:.14em;font:900 9px/1 Arial,sans-serif}.ht-practice__countdown div{display:grid;text-align:center}.ht-practice__countdown b{font:900 27px/1 'Courier New',monospace}.ht-practice__countdown small{text-transform:uppercase;font-size:7px}.ht-practice__shipping{font:700 12px/1.45 Arial,sans-serif}.ht-practice__buy{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;margin-top:22px}.ht-practice__buy>span{color:var(--acid);font:900 24px/1 'Courier New',monospace}.ht-practice__buy form{margin:0}.ht-practice__buy button,.ht-practice__buy a{display:flex;justify-content:space-between;width:100%;padding:17px 19px;border:3px solid var(--cream);border-radius:0;background:var(--orange);color:var(--cream);box-shadow:6px 6px 0 var(--blue);text-decoration:none;text-transform:uppercase;letter-spacing:.13em;font:900 10px/1 Arial,sans-serif;cursor:pointer}
+  .ht-practice__desk-link{display:inline-block;margin-top:24px;color:var(--acid);text-transform:uppercase;text-underline-offset:5px;letter-spacing:.12em;font:900 9px/1 Arial,sans-serif}
+  .ht-practice__rules,.ht-practice__faq{position:relative;z-index:2;padding:clamp(65px,8vw,120px) clamp(20px,6vw,90px);color:var(--black);background:var(--cream)}.ht-practice__rules-head{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:40px}.ht-practice__rules-head p,.ht-practice__faq>div p{color:var(--orange);text-transform:uppercase;letter-spacing:.15em;font:900 9px/1 Arial,sans-serif}.ht-practice__rules h2,.ht-practice__faq h2{margin:0;font:italic 900 clamp(48px,7vw,95px)/.82 Impact,Arial Black,sans-serif;text-transform:uppercase;letter-spacing:-.03em}.ht-practice__rules ol{display:grid;grid-template-columns:repeat(4,1fr);margin:0;padding:0;list-style:none;border:4px solid var(--black)}.ht-practice__rules li{padding:24px;border-right:3px solid var(--black)}.ht-practice__rules li:last-child{border:0}.ht-practice__rules li>span{display:block;margin-bottom:60px;color:var(--blue);font:900 40px/1 Impact,Arial Black,sans-serif}.ht-practice__rules strong{font:900 22px/1 Arial Black,Arial,sans-serif}.ht-practice__rules li p{font:600 13px/1.5 Arial,sans-serif}
+  .ht-practice__status-board{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);border-block:5px solid var(--cream);background:var(--blue)}.ht-practice__status-board div{padding:20px 24px;border-right:3px solid var(--cream)}.ht-practice__status-board div:last-child{border:0}.ht-practice__status-board span{display:block;margin-bottom:8px;text-transform:uppercase;letter-spacing:.12em;font:900 8px/1 Arial,sans-serif}.ht-practice__status-board strong{font:900 20px/1 Arial Black,Arial,sans-serif}.ht-practice__green{color:var(--acid)}
+  .ht-practice__faq{display:grid;grid-template-columns:.8fr 1.2fr;align-items:start;gap:clamp(35px,7vw,100px);padding-block:clamp(48px,6vw,82px)}.ht-practice__faq-list{display:block}.ht-practice__faq details{border-top:3px solid var(--black);padding:17px 0}.ht-practice__faq details:last-child{border-bottom:3px solid var(--black)}.ht-practice__faq summary{cursor:pointer;list-style:none;font:900 19px/1.2 Arial Black,Arial,sans-serif}.ht-practice__faq summary:after{content:"+";float:right;color:var(--blue)}.ht-practice__faq details[open] summary:after{content:"–"}.ht-practice__faq details p{max-width:700px;margin:14px 0 2px;font:600 14px/1.55 Arial,sans-serif}
+  .ht-practice__ticker{position:relative;z-index:2;overflow:hidden;background:var(--acid);color:var(--black);border-top:5px solid var(--cream)}.ht-practice__ticker div{display:flex;width:max-content;animation:ht-practice-scroll 20s linear infinite}.ht-practice__ticker span{display:flex;align-items:center;gap:25px;padding:17px 31px;text-transform:uppercase;letter-spacing:.15em;font:900 9px/1 Arial,sans-serif}.ht-practice__ticker span:after{content:"◆";color:var(--orange)}
+  @keyframes ht-practice-scroll{to{transform:translateX(-50%)}}@keyframes ht-practice-pulse{50%{background:var(--orange);color:#fff}}
+  @media(max-width:900px){.ht-practice__hero{grid-template-columns:1fr}.ht-practice__player{border-right:0;border-bottom:5px solid var(--cream)}.ht-practice__portrait{min-height:500px}.ht-practice__rules-head{display:block}.ht-practice__rules ol,.ht-practice__status-board{grid-template-columns:1fr 1fr}.ht-practice__rules li:nth-child(2){border-right:0}.ht-practice__rules li{border-bottom:3px solid var(--black)}.ht-practice__status-board div:nth-child(2){border-right:0}.ht-practice__status-board div{border-bottom:3px solid var(--cream)}.ht-practice__faq{grid-template-columns:1fr}}
+  @media(max-width:560px){.ht-practice__topbar{grid-template-columns:1fr auto}.ht-practice__topbar span:last-child{display:none}.ht-practice__hero{min-height:0}.ht-practice__player{padding:18px}.ht-practice__portrait{min-height:370px}.ht-practice__info{padding:35px 18px}.ht-practice__info h2{font-size:54px}.ht-practice__deadline{grid-template-columns:1fr}.ht-practice__deadline div:first-child{border-right:0;border-bottom:3px solid var(--black)}.ht-practice__countdown{grid-template-columns:1fr repeat(3,auto)}.ht-practice__buy{grid-template-columns:1fr}.ht-practice__rules ol,.ht-practice__status-board{grid-template-columns:1fr}.ht-practice__rules li,.ht-practice__status-board div{border-right:0}.ht-practice__rules li>span{margin-bottom:20px}}
+  @media(prefers-reduced-motion:reduce){.ht-practice__ticker div,.ht-practice__live{animation:none}}
+</style>
+
+{% schema %}
+{
+  "name":"Preorder practice mode",
+  "settings":[
+    {"type":"product","id":"product","label":"Preorder product"},
+    {"type":"text","id":"close_iso","label":"Closing time (ISO)","default":"2026-09-05T03:59:59Z"},
+    {"type":"checkbox","id":"full_page","label":"Show full preorder page","default":false}
+  ],
+  "presets":[{"name":"Preorder practice mode"}]
+}
+{% endschema %}

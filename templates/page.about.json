@@ -1,0 +1,23 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "about_studio_colophon_01": {
+      "type": "about-studio-colophon",
+      "settings": {
+        "portrait": "shopify://shop_images/IMG_0152_24321328-4f00-4f7c-bdb5-b79328971fcf.jpg",
+        "story": "<p>I’m Bronson — a designer and lifelong sports fan who believes hats should do more than block the sun. I design hats that turn heads in the stadium, spark conversations in the stands, and fuel the kind of playful banter that makes sports fun. Hat Trick NYC is where design meets fandom. Equal parts style, nostalgia, and a wink to the games and culture we love.</p>"
+      }
+    }
+  },
+  "order": [
+    "about_studio_colophon_01"
+  ]
+}

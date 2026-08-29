@@ -1,0 +1,431 @@
+{% doc %}
+  @prompt
+    vintage countdown timer. Stylistically id like it to look like a red and block shot clock led. The timer counts down to November 28th at 4pm EST., white background. more of a physical 3d effect of a shot clock. Red glow didits, and dotted texture like a real shotclock. Show seconds as well 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-countdown-timer-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: {{ block.settings.padding }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-countdown-timer__display-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.digit_spacing }}px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+    padding: {{ block.settings.display_padding }}px;
+    border-radius: {{ block.settings.border_radius }}px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -2px 5px rgba(0, 0, 0, 0.5);
+    border: 2px solid #2a2a2a;
+    position: relative;
+  }
+
+  .ai-countdown-timer__display-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 3px 3px;
+    border-radius: {{ block.settings.border_radius }}px;
+    pointer-events: none;
+  }
+
+  .ai-countdown-timer__segment-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-countdown-timer__digits-{{ ai_gen_id }} {
+    display: flex;
+    gap: 6px;
+  }
+
+  .ai-countdown-timer__digit-{{ ai_gen_id }} {
+    background: linear-gradient(145deg, #0a0a0a, #000000);
+    padding: {{ block.settings.digit_padding }}px;
+    border-radius: 6px;
+    min-width: {{ block.settings.digit_width }}px;
+    text-align: center;
+    font-size: {{ block.settings.font_size }}px;
+    color: {{ block.settings.digit_color }};
+    text-shadow: 
+      0 0 8px {{ block.settings.digit_color }},
+      0 0 15px {{ block.settings.digit_color }},
+      0 0 25px {{ block.settings.digit_glow }},
+      0 0 35px {{ block.settings.digit_glow }};
+    letter-spacing: 2px;
+    position: relative;
+    box-shadow: 
+      inset 0 2px 4px rgba(0, 0, 0, 0.8),
+      inset 0 -1px 2px rgba(255, 255, 255, 0.05),
+      0 2px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid #1a1a1a;
+  }
+
+  .ai-countdown-timer__digit-{{ ai_gen_id }}::before {
+    content: '88';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a0000;
+    opacity: 0.2;
+    padding: {{ block.settings.digit_padding }}px;
+    text-shadow: none;
+  }
+
+  .ai-countdown-timer__digit-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle, rgba(255, 255, 255, 0.02) 0.5px, transparent 0.5px);
+    background-size: 2px 2px;
+    border-radius: 6px;
+    pointer-events: none;
+  }
+
+  .ai-countdown-timer__label-{{ ai_gen_id }} {
+    font-size: {{ block.settings.label_size }}px;
+    color: {{ block.settings.label_color }};
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .ai-countdown-timer__separator-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    font-size: {{ block.settings.font_size }}px;
+    color: {{ block.settings.digit_color }};
+    text-shadow: 
+      0 0 8px {{ block.settings.digit_color }},
+      0 0 15px {{ block.settings.digit_color }};
+    padding: 0 4px;
+    margin-bottom: 32px;
+    filter: brightness(0.8);
+  }
+
+  .ai-countdown-timer__expired-{{ ai_gen_id }} {
+    font-size: {{ block.settings.font_size }}px;
+    color: {{ block.settings.digit_color }};
+    text-shadow: 
+      0 0 10px {{ block.settings.digit_color }},
+      0 0 20px {{ block.settings.digit_color }};
+    padding: {{ block.settings.digit_padding }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-countdown-timer__digit-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.font_size }}px * 0.6);
+      min-width: calc({{ block.settings.digit_width }}px * 0.6);
+      padding: calc({{ block.settings.digit_padding }}px * 0.6);
+    }
+
+    .ai-countdown-timer__label-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.label_size }}px * 0.7);
+    }
+
+    .ai-countdown-timer__separator-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.font_size }}px * 0.6);
+    }
+
+    .ai-countdown-timer__display-{{ ai_gen_id }} {
+      gap: calc({{ block.settings.digit_spacing }}px * 0.5);
+      padding: calc({{ block.settings.display_padding }}px * 0.7);
+    }
+
+    .ai-countdown-timer__digits-{{ ai_gen_id }} {
+      gap: 3px;
+    }
+  }
+{% endstyle %}
+
+<countdown-timer-{{ ai_gen_id }}
+  class="ai-countdown-timer-{{ ai_gen_id }}"
+  data-end-date="{{ block.settings.end_date }}"
+  data-end-time="{{ block.settings.end_time }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-countdown-timer__display-{{ ai_gen_id }}">
+    <div class="ai-countdown-timer__segment-{{ ai_gen_id }}">
+      <div class="ai-countdown-timer__digits-{{ ai_gen_id }}">
+        <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-days-tens>0</div>
+        <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-days-ones>0</div>
+      </div>
+      <div class="ai-countdown-timer__label-{{ ai_gen_id }}">Days</div>
+    </div>
+
+    <div class="ai-countdown-timer__separator-{{ ai_gen_id }}">:</div>
+
+    <div class="ai-countdown-timer__segment-{{ ai_gen_id }}">
+      <div class="ai-countdown-timer__digits-{{ ai_gen_id }}">
+        <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-hours-tens>0</div>
+        <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-hours-ones>0</div>
+      </div>
+      <div class="ai-countdown-timer__label-{{ ai_gen_id }}">Hours</div>
+    </div>
+
+    <div class="ai-countdown-timer__separator-{{ ai_gen_id }}">:</div>
+
+    <div class="ai-countdown-timer__segment-{{ ai_gen_id }}">
+      <div class="ai-countdown-timer__digits-{{ ai_gen_id }}">
+        <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-minutes-tens>0</div>
+        <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-minutes-ones>0</div>
+      </div>
+      <div class="ai-countdown-timer__label-{{ ai_gen_id }}">Minutes</div>
+    </div>
+
+    <div class="ai-countdown-timer__separator-{{ ai_gen_id }}">:</div>
+
+    <div class="ai-countdown-timer__segment-{{ ai_gen_id }}">
+      <div class="ai-countdown-timer__digits-{{ ai_gen_id }}">
+        <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-seconds-tens>0</div>
+        <div class="ai-countdown-timer__digit-{{ ai_gen_id }}" data-seconds-ones>0</div>
+      </div>
+      <div class="ai-countdown-timer__label-{{ ai_gen_id }}">Seconds</div>
+    </div>
+  </div>
+</countdown-timer-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CountdownTimer{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.endDate = this.dataset.endDate;
+        this.endTime = this.dataset.endTime;
+        this.interval = null;
+      }
+
+      connectedCallback() {
+        this.daysTens = this.querySelector('[data-days-tens]');
+        this.daysOnes = this.querySelector('[data-days-ones]');
+        this.hoursTens = this.querySelector('[data-hours-tens]');
+        this.hoursOnes = this.querySelector('[data-hours-ones]');
+        this.minutesTens = this.querySelector('[data-minutes-tens]');
+        this.minutesOnes = this.querySelector('[data-minutes-ones]');
+        this.secondsTens = this.querySelector('[data-seconds-tens]');
+        this.secondsOnes = this.querySelector('[data-seconds-ones]');
+
+        this.startCountdown();
+      }
+
+      disconnectedCallback() {
+        if (this.interval) {
+          clearInterval(this.interval);
+        }
+      }
+
+      startCountdown() {
+        this.updateCountdown();
+        this.interval = setInterval(() => {
+          this.updateCountdown();
+        }, 1000);
+      }
+
+      updateCountdown() {
+        const endDateTime = new Date(this.endDate + 'T' + this.endTime + ':00-05:00');
+        const now = new Date();
+        const diff = endDateTime - now;
+
+        if (diff <= 0) {
+          this.displayExpired();
+          if (this.interval) {
+            clearInterval(this.interval);
+          }
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        this.updateDigits(days, this.daysTens, this.daysOnes);
+        this.updateDigits(hours, this.hoursTens, this.hoursOnes);
+        this.updateDigits(minutes, this.minutesTens, this.minutesOnes);
+        this.updateDigits(seconds, this.secondsTens, this.secondsOnes);
+      }
+
+      updateDigits(value, tensElement, onesElement) {
+        const valueStr = value.toString().padStart(2, '0');
+        tensElement.textContent = valueStr[0];
+        onesElement.textContent = valueStr[1];
+      }
+
+      displayExpired() {
+        const display = this.querySelector('.ai-countdown-timer__display-{{ ai_gen_id }}');
+        display.innerHTML = '<div class="ai-countdown-timer__expired-{{ ai_gen_id }}">EXPIRED</div>';
+      }
+    }
+
+    customElements.define('countdown-timer-{{ ai_gen_id }}', CountdownTimer{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Vintage countdown timer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Countdown settings"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "End date",
+      "default": "2025-11-28",
+      "info": "Format: YYYY-MM-DD"
+    },
+    {
+      "type": "text",
+      "id": "end_time",
+      "label": "End time (EST)",
+      "default": "16:00",
+      "info": "Format: HH:MM (24-hour)"
+    },
+    {
+      "type": "header",
+      "content": "Display style"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Digit size",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "digit_width",
+      "min": 40,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Digit width",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "digit_padding",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Digit padding",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "digit_spacing",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Digit spacing",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Label size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "display_padding",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Display padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "digit_color",
+      "label": "Digit color",
+      "default": "#ff0000"
+    },
+    {
+      "type": "color",
+      "id": "digit_glow",
+      "label": "Digit glow",
+      "default": "#cc0000"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label color",
+      "default": "#666666"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vintage countdown timer"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,878 @@
+{%- liquid 
+  assign padding_horizontal = section.settings.padding_horizontal
+  assign padding_horizontal_mobile = section.settings.padding_horizontal_mobile
+  assign padding_top = section.settings.padding_top
+  assign padding_bottom = section.settings.padding_bottom
+  assign border_color = section.settings.border_color
+  assign border_thickness = section.settings.border_thickness
+  assign margin_top = section.settings.margin_top
+  assign margin_bottom = section.settings.margin_bottom
+  assign background_color = section.settings.background_color
+  assign background_gradient = section.settings.background_gradient
+  assign full_width = section.settings.full_width
+  assign content_width = section.settings.content_width
+  assign lazy = section.settings.lazy
+
+  assign heading = section.settings.heading
+  assign heading_size = section.settings.heading_size
+  assign heading_custom = section.settings.heading_custom
+  assign heading_color = section.settings.heading_color
+  assign heading_font = section.settings.heading_font
+  assign heading_height = section.settings.heading_height
+  assign heading_letter = section.settings.heading_letter
+  assign heading_mt = section.settings.heading_mt
+  assign heading_mb = section.settings.heading_mb
+  assign heading_align = section.settings.heading_align
+
+  assign slider_mt = section.settings.slider_mt
+  assign slider_speed = section.settings.slider_speed
+  assign slider_gap_mobile = section.settings.slider_gap_mobile
+  assign slider_gap = section.settings.slider_gap
+  assign slide_padding_top = section.settings.slide_padding_top
+  assign slide_padding_top_mobile = section.settings.slide_padding_top_mobile
+  assign slider_direction = section.settings.slider_direction
+  assign pause_hover = section.settings.pause_hover
+
+  assign card_width = section.settings.card_width
+  assign card_width_mobile = section.settings.card_width_mobile
+  assign card_padding_vertical = section.settings.card_padding_vertical
+  assign card_padding_horizontal = section.settings.card_padding_horizontal
+  assign card_bg = section.settings.card_bg
+  assign card_radius = section.settings.card_radius
+  assign use_shadow = section.settings.use_shadow
+
+  assign image_ratio = section.settings.image_ratio
+  assign image_radius = section.settings.image_radius
+
+  assign text_custom = section.settings.text_custom
+  assign text_font = section.settings.text_font
+  assign text_size = section.settings.text_size
+  assign text_height = section.settings.text_height
+  assign text_color = section.settings.text_color
+  assign text_mt = section.settings.text_mt
+-%}
+
+{%- style -%}
+
+  {{  heading_font | font_face: font_display: 'swap' }}
+  {{  text_font | font_face: font_display: 'swap' }}
+  
+  .section-{{ section.id }} {
+    border-top: solid {{ border_color }} {{ border_thickness }}px;
+    border-bottom: solid {{ border_color }} {{ border_thickness }}px;
+    margin-top: {{ margin_top | times: 0.75 | round: 0 }}px;
+    margin-bottom: {{ margin_bottom | times: 0.75 | round: 0 }}px;
+  }
+  
+  .section-{{ section.id }}-settings {
+    {% unless full_width %}
+      max-width: {{ content_width }}rem;
+    {% endunless %}
+    margin: 0 auto;
+    padding-top: {{ padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ padding_bottom | times: 0.75 | round: 0 }}px;
+    padding-left: {{ padding_horizontal_mobile }}rem;
+    padding-right: {{ padding_horizontal_mobile }}rem;
+  }
+
+  .scrolling-image-heading-{{ section.id }} > * {
+    margin: 0;
+    font-size: {{ heading_size | times: 0.85 }}px;
+    color: {{ heading_color }};
+    line-height: {{ heading_height }}%;
+    text-transform: unset;
+    text-align: {{ heading_align }};
+  }
+
+  .scrolling-image-slider-{{ section.id }} {
+    margin-top: {{ slider_mt | times: 0.75 | round: 0 }}px;
+  }
+
+  .scrolling-image-slide-{{ section.id }} {
+    flex: 0 0 {{ card_width_mobile }}px;
+    width: 100%;
+    max-width: {{ card_width_mobile }}px;
+  }
+
+  .scrolling-image-slide-{{ section.id }}.padding-top {
+    padding-top: {{ slide_padding_top_mobile }}px;
+  }
+
+  .scrolling-image-card-{{ section.id }} {
+    width: 100%;
+    padding: {{ card_padding_vertical | times: 0.75 | round: 0 }}px {{ card_padding_horizontal | times: 0.75 | round: 0 }}px;
+    background-color: {{ card_bg }};
+    border-radius: {{ card_radius }}px;
+  }
+
+  .scrolling-image-media-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+  }
+
+  .scrolling-image-media-{{ section.id }} svg,
+  .scrolling-image-media-{{ section.id }} img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: {{ image_radius }}px;
+  }
+
+  .scrolling-image-media-{{ section.id }} svg {
+    background-color: #a0a0a0;
+  }
+
+  .scrolling-image-text-{{ section.id }} {
+    margin: 0px;
+    margin-top: {{ text_mt | times: 0.75 | round: 0 }}px;
+    font-size: {{ text_size | times: 0.85 }}px;
+    line-height: {{ text_height }}%;
+    color: {{ text_color }};
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .marquee-horizontal-{{ section.id }} {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      overflow: hidden;
+      width: 100%;
+      -webkit-box-pack: start;
+      -webkit-justify-content: flex-start;
+      -ms-flex-pack: start;
+      justify-content: flex-start;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
+      padding-bottom: 25px;
+  }
+
+  .track-horizontal-{{section.id}} {
+      padding-left: {{ slider_gap_mobile }}px;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      flex-shrink: 0;
+      width: calc(({{ card_width_mobile }}px * {{ section.blocks.size }}) + ({{ slider_gap_mobile }}px * {{ section.blocks.size }}));
+      gap: {{ slider_gap_mobile }}px;
+      -webkit-box-pack: start;
+      -webkit-justify-content: flex-start;
+      -ms-flex-pack: start;
+      justify-content: flex-start;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
+      white-space: nowrap;
+      will-change: transform;
+      animation: marquee-horizontal-{{ slider_direction }} {{ slider_speed | times: 1000 | round: 0 }}ms linear infinite;
+  }
+
+  @keyframes marquee-horizontal-left {
+    0% {
+        transform: translateZ(0);
+        visibility: visible;
+    }
+    
+    100% {
+        transform: translate3d(-100%,0,0);
+    }
+  }
+
+  @keyframes marquee-horizontal-right {
+    0% {
+        transform: translate3d(-100%,0,0);
+        visibility: visible;
+    }
+    
+    100% {
+        transform: translateZ(0);
+    }
+  }
+  
+  @media(min-width: 1024px) {
+
+    .section-{{ section.id }} {
+      margin-top: {{ margin_top }}px;
+      margin-bottom: {{ margin_bottom }}px;
+    }
+    
+    .section-{{ section.id }}-settings {
+      padding: 0 5rem;
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_horizontal }}rem;
+      padding-right: {{ padding_horizontal }}rem;
+    }
+
+    .scrolling-image-heading-{{ section.id }} > * {
+      font-size: {{ heading_size }}px;
+    }
+
+    .scrolling-image-slide-{{ section.id }} {
+      flex: 0 0 {{ card_width }}px;
+      max-width: {{ card_width }}px;
+    }
+    
+    .scrolling-image-slide-{{ section.id }}.padding-top {
+      padding-top: {{ slide_padding_top }}px;
+    }
+
+    .scrolling-image-slider-{{ section.id }} {
+      margin-top: {{ slider_mt }}px;
+    }
+
+    .scrolling-image-card-{{ section.id }} {
+      padding: {{ card_padding_vertical }}px {{ card_padding_horizontal }}px;      
+    }
+
+    .scrolling-image-text-{{ section.id }} {
+      margin-top: {{ text_mt }}px;
+      font-size: {{ text_size }}px;
+    }
+
+    .track-horizontal-{{section.id}} {
+      padding-left: {{ slider_gap }}px;
+      width: calc(({{ card_width }}px * {{ section.blocks.size }}) + ({{ slider_gap }}px * {{ section.blocks.size }}));
+      gap: {{ slider_gap }}px;
+    }
+
+    {% if pause_hover %}
+      .marquee-horizontal-{{ section.id }}:hover .track-horizontal-{{section.id}} {
+         animation-play-state: paused 
+      }
+    {% endif %}
+    
+  }
+  
+{%- endstyle -%}
+
+{% if heading_custom %}
+  <style>
+    .scrolling-image-heading-{{ section.id }} > * {
+      font-family: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+      font-weight: {{ heading_font.weight }};
+      font-style: {{ heading_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if text_custom %}
+  <style>
+    .scrolling-image-text-{{ section.id }} {
+      font-family: {{ text_font.family }}, {{ text_font.fallback_families }};
+      font-weight: {{ text_font.weight }};
+      font-style: {{ text_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if use_shadow %}
+  <style>
+    .scrolling-image-card-{{ section.id }} {
+      box-shadow: rgba(0, 0, 0, 0.04) 7.86305px 16.7738px 16.3023px, rgba(0, 0, 0, 0.03) 5.44683px 11.6194px 10.3517px, rgba(0, 0, 0, 0.027) 3.55328px 7.57997px 6.22623px, rgba(0, 0, 0, 0.024) 2.12738px 4.5382px 3.55513px, rgba(0, 0, 0, 0.02) 1.11412px 2.37669px 1.96768px, rgba(0, 0, 0, 0.016) 0.458487px 0.978061px 1.09315px, rgba(0, 0, 0, 0.008) 0.105452px 0.224954px 0.560836px
+    }
+  </style>
+{% endif %}
+
+{% if image_ratio == "square" %}
+  <style>
+    .scrolling-image-media-{{ section.id }} svg,
+    .scrolling-image-media-{{ section.id }} img {
+      aspect-ratio: 1/1;
+    }
+  </style>
+{% elsif image_ratio == "portrait" %}
+  <style>
+    .scrolling-image-media-{{ section.id }} svg,
+    .scrolling-image-media-{{ section.id }} img {
+      aspect-ratio: 1/1.45;
+    }
+  </style>
+{% endif %}
+
+<div class="section-{{ section.id }} scrolling-image-{{ section.id }}" style="background-color:{{ background_color }}; background-image: {{ background_gradient }};">
+    <div class="section-{{ section.id }}-settings ">
+      {% if heading != blank %}
+        <div class="scrolling-image-heading-{{ section.id }}">
+          {{ heading }}
+        </div>
+      {% endif %}
+      <div class="scrolling-image-slider-{{ section.id }}">
+        <div class="marquee-horizontal-{{ section.id }}">
+          <div class="track-horizontal track-horizontal-{{section.id}}">
+            {% for block in section.blocks %}
+              <div class="scrolling-image-slide-{{ section.id }}">
+                <div class="scrolling-image-card-{{ section.id }}">
+                  <div class="scrolling-image-media-{{ section.id }}">
+                    {% if block.settings.image != blank %}
+                      <img src="{{ block.settings.image | image_url }}" alt="{{ block.settings.image.alt }}" {% if lazy %}loading="lazy"{% endif %}>
+                    {% else %}
+                      {{ 'image' | placeholder_svg_tag }}
+                    {% endif %}
+                  </div>
+                  {% if block.settings.text != blank %}
+                    <p class="scrolling-image-text-{{ section.id }}">{{ block.settings.text }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="track-horizontal track-horizontal-{{section.id}}">
+            {% for block in section.blocks %}
+              <div class="scrolling-image-slide-{{ section.id }}">
+                <div class="scrolling-image-card-{{ section.id }}">
+                  <div class="scrolling-image-media-{{ section.id }}">
+                    {% if block.settings.image != blank %}
+                      <img src="{{ block.settings.image | image_url }}" alt="{{ block.settings.image.alt }}" {% if lazy %}loading="lazy"{% endif %}>
+                    {% else %}
+                      {{ 'image' | placeholder_svg_tag }}
+                    {% endif %}
+                  </div>
+                  {% if block.settings.text != blank %}
+                    <p class="scrolling-image-text-{{ section.id }}">{{ block.settings.text }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="track-horizontal track-horizontal-{{section.id}}">
+            {% for block in section.blocks %}
+              <div class="scrolling-image-slide-{{ section.id }}">
+                <div class="scrolling-image-card-{{ section.id }}">
+                  <div class="scrolling-image-media-{{ section.id }}">
+                    {% if block.settings.image != blank %}
+                      <img src="{{ block.settings.image | image_url }}" alt="{{ block.settings.image.alt }}" {% if lazy %}loading="lazy"{% endif %}>
+                    {% else %}
+                      {{ 'image' | placeholder_svg_tag }}
+                    {% endif %}
+                  </div>
+                  {% if block.settings.text != blank %}
+                    <p class="scrolling-image-text-{{ section.id }}">{{ block.settings.text }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="track-horizontal track-horizontal-{{section.id}}">
+            {% for block in section.blocks %}
+              <div class="scrolling-image-slide-{{ section.id }}">
+                <div class="scrolling-image-card-{{ section.id }}">
+                  <div class="scrolling-image-media-{{ section.id }}">
+                    {% if block.settings.image != blank %}
+                      <img src="{{ block.settings.image | image_url }}" alt="{{ block.settings.image.alt }}" {% if lazy %}loading="lazy"{% endif %}>
+                    {% else %}
+                      {{ 'image' | placeholder_svg_tag }}
+                    {% endif %}
+                  </div>
+                  {% if block.settings.text != blank %}
+                    <p class="scrolling-image-text-{{ section.id }}">{{ block.settings.text }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script>
+  function initScrollingImageClass() {
+    document.querySelectorAll('.scrolling-image-slide-{{ section.id }}').forEach((element, index) => {
+      if (index % 2 === 1) {
+        element.classList.add('padding-top');
+      }
+    })
+  }
+
+  document.addEventListener('DOMContentLoaded', initScrollingImageClass);
+  
+  if (Shopify.designMode) {
+     document.addEventListener('shopify:section:unload', initScrollingImageClass);
+     document.addEventListener('shopify:section:load', initScrollingImageClass);
+  }
+</script>
+
+{% schema %}
+  {
+    "name": "SS - Scrolling Images 2",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<h2>Heading</h2>"
+      },
+      {
+        "type": "checkbox",
+        "id": "heading_custom",
+        "label": "Use Custom Font",
+        "default": false
+      },
+      {
+        "type": "font_picker",
+        "id": "heading_font",
+        "label": "Heading Font Family",
+        "default": "josefin_sans_n4"
+      },
+      {
+        "type": "range",
+        "id": "heading_size",
+        "min": 0,
+        "max": 72,
+        "step": 2,
+        "unit": "px",
+        "label": "Heading Size",
+        "default": 40
+      },
+      {
+        "type": "range",
+        "id": "heading_height",
+        "min": 50,
+        "max": 200,
+        "step": 10,
+        "unit": "%",
+        "label": "Heading Line Height",
+        "default": 130
+      },
+      {
+        "type": "select",
+        "id": "heading_align",
+        "label": "Heading Text Align",
+        "default": "center",
+        "options": [
+          {
+            "label": "Left",
+            "value": "left"
+          },
+          {
+            "label": "Center",
+            "value": "center"
+          },
+          {
+            "label": "Right",
+            "value": "right"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Slider Settings"
+      },
+      {
+        "type": "range",
+        "id": "slider_speed",
+        "min": 1,
+        "max": 100,
+        "step": 1,
+        "label": "Slider Speed",
+        "info": "⚡ <----------------> 🐌",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "slider_gap",
+        "min": 10,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "label": "Slider Items Gap",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "slider_gap_mobile",
+        "min": 10,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Slider Items Gap - Mobile",
+        "default": 10
+      },
+      {
+        "type": "range",
+        "id": "slider_mt",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Slider Margin Top",
+        "default": 50
+      },
+      {
+        "type": "select",
+        "id": "slider_direction",
+        "label": "Slider Direction",
+        "default": "left",
+        "options": [
+          {
+            "label": "Left",
+            "value": "left"
+          },
+          {
+            "label": "Right",
+            "value": "right"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id":"pause_hover",
+        "label": "Pause on Hover",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Slide Settings"
+      },
+      {
+        "type": "range",
+        "id": "slide_padding_top",
+        "min": 0,
+        "max": 150,
+        "step": 5,
+        "unit": "px",
+        "label": "Padding Top On Even Slide - Desktop",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "slide_padding_top_mobile",
+        "min": 0,
+        "max": 150,
+        "step": 5,
+        "unit": "px",
+        "label": "Padding Top On Even Slide - Mobile",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Card Settings"
+      },
+      {
+        "type": "range",
+        "id": "card_width",
+        "min": 50,
+        "max": 600,
+        "step": 10,
+        "unit": "px",
+        "label": "Card Width - Desktop",
+        "default": 260
+      },
+      {
+        "type": "range",
+        "id": "card_width_mobile",
+        "min": 50,
+        "max": 400,
+        "step": 10,
+        "unit": "px",
+        "label": "Card Width - Mobile",
+        "default": 230
+      },
+      {
+        "type": "range",
+        "id": "card_padding_vertical",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Padding Vertical",
+        "default": 10
+      },
+      {
+        "type": "range",
+        "id": "card_padding_horizontal",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Padding Horizontal",
+        "default": 10
+      },
+      {
+        "type": "range",
+        "id": "card_radius",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Border Radius",
+        "default": 8
+      },
+      {
+        "type": "checkbox",
+        "id": "use_shadow",
+        "label": "Use Shadow",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Image Settings"
+      },
+      {
+        "type": "select",
+        "id": "image_ratio",
+        "label": "Image Ration",
+        "default": "square",
+        "options": [
+          {
+            "label": "None",
+            "value": "none"
+          },
+          {
+            "label": "Square",
+            "value": "square"
+          },
+          {
+            "label": "Portrait",
+            "value": "portrait"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "image_radius",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Image Border Radius",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Text Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "text_custom",
+        "label": "Use Custom Font",
+        "default": false 
+      },
+      {
+        "type": "font_picker",
+        "id": "text_font",
+        "label": "Text Font Family",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "range",
+        "id": "text_size",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Text Size",
+        "default": 14
+      },
+      {
+        "type": "range",
+        "id": "text_height",
+        "min": 50,
+        "max": 200,
+        "step": 10,
+        "unit": "%",
+        "label": "Text Line Height",
+        "default": 130
+      },
+      {
+        "type": "range",
+        "id": "text_mt",
+        "min": 0,
+        "max": 50,
+        "step": 2,
+        "unit": "px",
+        "label": "Text Margin Top",
+        "default": 10
+      },
+      {
+        "type": "header",
+        "content": "Section Colors"
+      },
+      {
+        "type": "color",
+        "label": "Heading",
+        "id": "heading_color",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "label": "Card Background",
+        "id": "card_bg",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "label": "Section background",
+        "id": "background_color",
+        "default": "#f4f4f4"
+      },
+      {
+        "type": "color_background",
+        "id": "background_gradient",
+        "label": "Section background gradient"
+      },
+      {
+        "type": "color",
+        "label": "Border",
+        "id": "border_color",
+        "default": "#000000"
+      },
+      {
+        "type": "header",
+        "content": "Section margin (outside)"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin bottom",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Section padding (inside)"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Padding top",
+        "default": 36
+      },
+      {
+         "type": "range",
+         "id": "padding_bottom",
+         "min": 0,
+         "max": 100,
+         "step": 4,
+         "unit": "px",
+         "label": "Padding bottom",
+         "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_horizontal",
+        "min": 0,
+        "max": 30,
+        "step": 1,
+        "unit": "rem",
+        "label": "Padding sides",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_horizontal_mobile",
+        "min": 0,
+        "max": 15,
+        "step": 0.5,
+        "unit": "rem",
+        "label": "Padding sides mobile",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Section Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Full Width",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "content_width",
+        "min": 0,
+        "max": 400,
+        "step": 10,
+        "unit": "rem",
+        "label": "Section content width",
+        "default": 120
+      },
+      {
+        "type": "range",
+        "id": "border_thickness",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "label": "Border thickness",
+        "default": 0
+      },
+      {
+        "type": "checkbox",
+        "id": "lazy",
+        "label": "Lazy load",
+        "info": "Lazy load images for speed optimisation",
+        "default": true
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "text",
+            "label": "Text",
+            "default": "Text"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "SS - Scrolling Images 2",
+        "blocks": [
+          {
+            "type": "image"
+          },
+          {
+            "type": "image"
+          },
+          {
+            "type": "image"
+          },
+          {
+            "type": "image"
+          },
+          {
+            "type": "image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

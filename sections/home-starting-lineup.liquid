@@ -1,0 +1,247 @@
+{% liquid
+  assign lineup_handles = 'mets-transit-hat-black,dodgers-beach-patrol-hat,mets-sitcom-hat,yankee-sitcom-hat-navy,yankee-sitcom-hat-pinstripe,devils-mob-hat,mets-transit-hat,phillies-sitcom-hat' | split: ','
+%}
+
+<section class="ht-lineup">
+  <header class="ht-lineup__head">
+    <div>
+      <p>Hat Trick NYC · Starting roster · In stock now</p>
+      <h1>Shop the<br><em>starting lineup.</em></h1>
+    </div>
+    <aside>
+      <span>Season</span>
+      <strong>’26</strong>
+      <small>Official program</small>
+    </aside>
+  </header>
+
+  <div class="ht-lineup__utility">
+    <p><strong>Eight starters.</strong> No benchwarmers.</p>
+    <a href="/collections/all">Shop every hat →</a>
+  </div>
+
+  <div class="ht-lineup__grid">
+    {% assign card_number = 0 %}
+    {% for handle in lineup_handles %}
+      {% assign product = all_products[handle] %}
+      {% if product != blank and product.available %}
+        {% assign card_number = card_number | plus: 1 %}
+        <article class="ht-lineup__card">
+          <a class="ht-lineup__image" href="{{ product.url }}" aria-label="View {{ product.title | escape }}">
+            <span class="ht-lineup__number">HT–{{ card_number | prepend: '0' }}</span>
+            {% if product.compare_at_price_max > product.price %}<span class="ht-lineup__badge">Sale</span>{% elsif product.tags contains 'pre-order' or product.tags contains 'preorder' %}<span class="ht-lineup__badge">Pre-order</span>{% else %}<span class="ht-lineup__badge ht-lineup__badge--navy">Available</span>{% endif %}
+            {{ product.featured_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '320, 480, 640, 800, 1000', sizes: '(min-width: 990px) 24vw, 50vw', alt: product.title, class: 'ht-lineup__primary' }}
+            {% if product.images[1] != blank %}
+              {{ product.images[1] | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '320, 480, 640, 800, 1000', sizes: '(min-width: 990px) 24vw, 50vw', alt: product.title, class: 'ht-lineup__secondary' }}
+            {% endif %}
+          </a>
+          <div class="ht-lineup__info">
+            <div class="ht-lineup__title-row">
+              <h2><a href="{{ product.url }}">{{ product.title }}</a></h2>
+              <span>{{ product.price | money }}</span>
+            </div>
+            <p>{{ product.metafields.descriptors.subtitle | default: 'Original Hat Trick design · One size snapback' }}</p>
+            {% form 'product', product, class: 'ht-lineup__form' %}
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" name="add" data-lineup-add>
+                <span data-lineup-add-label>Quick add</span>
+                <span data-lineup-add-meta>＋</span>
+              </button>
+            {% endform %}
+          </div>
+        </article>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <p class="visually-hidden" role="status" aria-live="polite" data-lineup-status></p>
+
+  <footer class="ht-lineup__foot">
+    <span>Need the deep cut?</span>
+    <a href="/collections/all">Browse the complete roster ↗</a>
+  </footer>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }}{background:#d9c79d;color:#17130e}
+  .ht-lineup{--paper:#eadcb8;--cream:#f4e9ca;--navy:#173f68;--red:#b93225;--yellow:#e6b839;--cyan:#2b9da0;--ink:#17130e;max-width:1600px;margin:auto;padding:clamp(65px,8vw,120px) clamp(16px,5vw,76px);background-color:var(--paper);background-image:linear-gradient(rgba(23,19,14,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(23,19,14,.055) 1px,transparent 1px);background-size:32px 32px}
+  .ht-lineup__head{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-bottom:45px;padding-bottom:28px;border-bottom:4px solid var(--ink)}
+  .ht-lineup__head p{margin:0 0 24px;color:var(--red);text-transform:uppercase;letter-spacing:.16em;font:900 10px/1.2 Arial,sans-serif}
+  .ht-lineup__head h1{margin:0;color:var(--ink);font:500 clamp(60px,9vw,135px)/.76 Georgia,serif;letter-spacing:-.07em}.ht-lineup__head h1 em{color:var(--red);font-weight:500}
+  .ht-lineup__head aside{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 145px;aspect-ratio:1;border:6px double var(--navy);border-radius:50%;color:var(--navy);transform:rotate(7deg);text-align:center;text-transform:uppercase}.ht-lineup__head aside span,.ht-lineup__head aside small{letter-spacing:.13em;font:900 8px/1.1 Arial,sans-serif}.ht-lineup__head aside strong{font:900 47px/.9 Georgia,serif}
+  .ht-lineup__utility{display:flex;justify-content:space-between;gap:25px;margin-bottom:22px;text-transform:uppercase;letter-spacing:.1em;font:900 9px/1.2 Arial,sans-serif}.ht-lineup__utility p{margin:0}.ht-lineup__utility a{color:var(--navy);text-decoration-thickness:2px;text-underline-offset:4px}
+  .ht-lineup__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(15px,2vw,30px)}
+  .ht-lineup__card{min-width:0;border:3px solid var(--ink);background:var(--cream);box-shadow:7px 8px 0 var(--navy);transition:transform .2s ease,box-shadow .2s ease}.ht-lineup__card:nth-child(4n+2),.ht-lineup__card:nth-child(4n+3){box-shadow:7px 8px 0 var(--red)}.ht-lineup__card:hover{transform:translateY(-5px);box-shadow:9px 13px 0 var(--yellow)}
+  .ht-lineup__image{position:relative;display:block;aspect-ratio:1;overflow:hidden;border-bottom:3px solid var(--ink);background:#fff}.ht-lineup__image img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .3s ease,transform .45s ease}.ht-lineup__secondary{opacity:0}.ht-lineup__card:hover .ht-lineup__secondary{opacity:1}.ht-lineup__card:hover .ht-lineup__primary{opacity:0}.ht-lineup__card:hover .ht-lineup__image img{transform:scale(1.025)}
+  .ht-lineup__number{position:absolute;z-index:3;top:10px;left:10px;padding:7px 9px;border:2px solid var(--ink);background:var(--cream);color:var(--ink);letter-spacing:.12em;font:900 8px/1 Arial,sans-serif}.ht-lineup__badge{position:absolute;z-index:3;right:10px;top:10px;padding:7px 9px;border:2px solid var(--ink);background:var(--red);color:var(--cream);text-transform:uppercase;letter-spacing:.1em;font:900 7px/1 Arial,sans-serif}.ht-lineup__badge--navy{background:var(--navy)}
+  .ht-lineup__info{padding:17px 15px 15px}.ht-lineup__title-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}.ht-lineup__title-row h2{margin:0;color:var(--ink);font:700 clamp(20px,2vw,29px)/.95 Georgia,serif;letter-spacing:-.03em}.ht-lineup__title-row h2 a{color:inherit;text-decoration:none}.ht-lineup__title-row>span{white-space:nowrap;color:var(--red);font:900 13px/1.1 'Courier New',monospace}.ht-lineup__info>p{min-height:28px;margin:12px 0 16px;color:rgba(23,19,14,.72);text-transform:uppercase;letter-spacing:.08em;font:800 8px/1.35 Arial,sans-serif}
+  .ht-lineup__form button{display:flex;justify-content:space-between;width:100%;padding:13px 14px;border:2px solid var(--ink);border-radius:0;background:var(--navy);color:var(--cream);text-transform:uppercase;letter-spacing:.12em;font:900 9px/1 Arial,sans-serif;cursor:pointer;transition:background .2s ease,color .2s ease}.ht-lineup__form button:hover{background:var(--yellow);color:var(--ink)}.ht-lineup__form button:disabled{cursor:wait;opacity:.72}.ht-lineup__form button.has-items{background:var(--yellow);color:var(--ink)}.ht-lineup__form button.is-loading{background:var(--cyan);color:var(--ink)}.ht-lineup__form button [data-lineup-add-meta]{font-size:14px}
+  .ht-lineup__foot{display:flex;justify-content:space-between;align-items:center;gap:25px;margin-top:45px;padding:22px 25px;border:3px solid var(--ink);background:var(--yellow);box-shadow:6px 6px 0 var(--red);text-transform:uppercase;letter-spacing:.11em;font:900 9px/1.2 Arial,sans-serif}.ht-lineup__foot a{color:var(--ink)}
+  @media(max-width:1050px){.ht-lineup__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ht-lineup__title-row h2{font-size:26px}}
+  @media(max-width:580px){.ht-lineup{padding-inline:12px}.ht-lineup__head{align-items:flex-start}.ht-lineup__head h1{font-size:54px}.ht-lineup__head aside{display:none}.ht-lineup__utility{align-items:flex-end}.ht-lineup__utility p{max-width:160px}.ht-lineup__grid{gap:13px}.ht-lineup__card{box-shadow:4px 5px 0 var(--navy)}.ht-lineup__info{padding:11px 9px 9px}.ht-lineup__title-row{display:block}.ht-lineup__title-row h2{font-size:18px;min-height:36px}.ht-lineup__title-row>span{display:block;margin-top:7px}.ht-lineup__info>p{display:none}.ht-lineup__form{margin-top:12px}.ht-lineup__form button{padding:12px 9px;font-size:8px}.ht-lineup__number{top:6px;left:6px}.ht-lineup__badge{top:6px;right:6px}.ht-lineup__foot{align-items:flex-start;flex-direction:column}}
+  @media(prefers-reduced-motion:reduce){.ht-lineup__card,.ht-lineup__image img{transition:none}}
+</style>
+
+<script>
+  (() => {
+    const root = document.querySelector('.ht-lineup:not([data-quick-add-ready])');
+    if (!root) return;
+    root.setAttribute('data-quick-add-ready', '');
+
+    const forms = [...root.querySelectorAll('.ht-lineup__form')];
+    const status = root.querySelector('[data-lineup-status]');
+    const drawer = document.querySelector('cart-drawer');
+    const cartSections = ['cart-drawer', 'cart-icon-bubble'];
+    const source = 'home-starting-lineup';
+    const quantities = new Map();
+
+    const announce = (message) => {
+      if (!status) return;
+      status.textContent = '';
+      window.requestAnimationFrame(() => { status.textContent = message; });
+    };
+
+    const setButton = (form, state = 'idle') => {
+      const button = form.querySelector('[data-lineup-add]');
+      const label = button.querySelector('[data-lineup-add-label]');
+      const meta = button.querySelector('[data-lineup-add-meta]');
+      const id = String(form.querySelector('[name="id"]').value);
+      const quantity = quantities.get(id) || 0;
+      const loading = state === 'loading';
+
+      button.disabled = loading;
+      button.setAttribute('aria-disabled', loading ? 'true' : 'false');
+      button.classList.toggle('is-loading', loading);
+      button.classList.toggle('has-items', quantity > 0 && state !== 'error');
+
+      if (loading) {
+        label.textContent = 'Adding…';
+        meta.textContent = '';
+      } else if (state === 'error') {
+        label.textContent = 'Try again';
+        meta.textContent = '!';
+      } else if (quantity > 0) {
+        label.textContent = 'Add another';
+        meta.textContent = `· ${quantity}`;
+      } else {
+        label.textContent = 'Quick add';
+        meta.textContent = '＋';
+      }
+    };
+
+    const applyCart = (cart) => {
+      quantities.clear();
+      (cart.items || []).forEach((item) => {
+        const key = String(item.variant_id);
+        quantities.set(key, (quantities.get(key) || 0) + item.quantity);
+      });
+      if (drawer) {
+        drawer.classList.toggle('is-empty', cart.item_count === 0);
+        drawer.querySelector('.drawer__inner')?.classList.toggle('is-empty', cart.item_count === 0);
+      }
+      forms.forEach((form) => setButton(form));
+      return cart;
+    };
+
+    const refreshCart = async () => {
+      const response = await fetch('/cart.js', { headers: { Accept: 'application/json' } });
+      if (!response.ok) throw new Error('Unable to load cart.');
+      return applyCart(await response.json());
+    };
+
+    const refreshDrawer = (result) => {
+      if (!drawer || !result.sections) return;
+      const parser = new DOMParser();
+      const drawerHTML = result.sections['cart-drawer'];
+      const bubbleHTML = result.sections['cart-icon-bubble'];
+
+      if (drawerHTML) {
+        const replacement = parser.parseFromString(drawerHTML, 'text/html').querySelector('#CartDrawer');
+        const target = document.querySelector('#CartDrawer');
+        if (target && replacement?.innerHTML.trim()) {
+          target.innerHTML = replacement.innerHTML;
+          target.querySelector('#CartDrawer-Overlay')?.addEventListener('click', () => {
+            if (typeof drawer.close === 'function') drawer.close();
+            else {
+              drawer.classList.remove('active');
+              document.body.classList.remove('overflow-hidden');
+            }
+          });
+        }
+      }
+
+      if (bubbleHTML) {
+        const replacement = parser.parseFromString(bubbleHTML, 'text/html').querySelector('.shopify-section');
+        const target = document.querySelector('#cart-icon-bubble');
+        if (target && replacement?.innerHTML.trim()) target.innerHTML = replacement.innerHTML;
+      }
+    };
+
+    forms.forEach((form) => {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const button = form.querySelector('[data-lineup-add]');
+        if (button.disabled) return;
+
+        const id = String(form.querySelector('[name="id"]').value);
+        setButton(form, 'loading');
+
+        try {
+          const data = new FormData(form);
+          data.append('sections', cartSections);
+          data.append('sections_url', window.location.pathname);
+
+          const response = await fetch(window.routes?.cart_add_url || '/cart/add.js', {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+            body: data
+          });
+          const result = await response.json();
+          if (!response.ok || result.status) {
+            throw new Error(result.description || result.message || 'Could not add this hat.');
+          }
+
+          refreshDrawer(result);
+          await refreshCart();
+          announce(`Added to cart. ${quantities.get(id) || 1} in cart.`);
+
+          if (typeof publish === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+            publish(PUB_SUB_EVENTS.cartUpdate, { source, productVariantId: id, cartData: result });
+          }
+        } catch (error) {
+          announce(error.message || 'Could not add this hat.');
+          setButton(form, 'error');
+          window.setTimeout(() => setButton(form), 1600);
+        }
+      });
+    });
+
+    refreshCart().catch(() => {});
+
+    const bindCartUpdates = () => {
+      if (typeof subscribe !== 'function' || typeof PUB_SUB_EVENTS === 'undefined') return;
+      subscribe(PUB_SUB_EVENTS.cartUpdate, (event) => {
+        if (event?.source !== source) refreshCart().catch(() => {});
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bindCartUpdates, { once: true });
+    } else {
+      bindCartUpdates();
+    }
+
+    if (drawer && typeof MutationObserver !== 'undefined') {
+      let cartSyncTimer;
+      new MutationObserver(() => {
+        window.clearTimeout(cartSyncTimer);
+        cartSyncTimer = window.setTimeout(() => refreshCart().catch(() => {}), 120);
+      }).observe(drawer, { childList: true, subtree: true });
+    }
+  })();
+</script>
+
+{% schema %}
+{"name":"Homepage starting lineup","settings":[],"presets":[{"name":"Homepage starting lineup"}]}
+{% endschema %}

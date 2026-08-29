@@ -1,0 +1,26 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "preorder_practice_mode_page": {
+      "type": "preorder-practice-mode",
+      "settings": {
+        "product": "and1-practice-hat",
+        "close_iso": "2026-09-05T03:59:59Z",
+        "full_page": true
+      }
+    },
+    "detroit_workshop_run_page": {
+      "type": "detroit-workshop-run",
+      "settings": {}
+    }
+  },
+  "order": ["preorder_practice_mode_page", "detroit_workshop_run_page"]
+}

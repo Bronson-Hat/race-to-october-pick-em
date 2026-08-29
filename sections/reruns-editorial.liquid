@@ -1,0 +1,102 @@
+{% liquid
+  assign subway_drop = collections['subway-series']
+  assign msg_drop = collections['msg']
+  assign auto_drop = collections['auto']
+%}
+
+<section class="rr" data-reruns-editorial>
+  <div class="rr__ticker" aria-hidden="true">
+    <div><span>One of one</span><i>◆</i><span>Found in the wild</span><i>◆</i><span>Brooklyn, New York</span><i>◆</i><span>Next release loading</span><i>◆</i><span>One of one</span><i>◆</i><span>Found in the wild</span><i>◆</i><span>Brooklyn, New York</span><i>◆</i><span>Next release loading</span></div>
+  </div>
+
+  <header class="rr__hero">
+    <div class="rr__hero-copy">
+      <p class="rr__kicker">Hat Trick Vintage Department · Reruns</p>
+      <h1>Good stuff<br><em>comes back around.</em></h1>
+      <p class="rr__intro">Reruns is our rotating collection of one-of-one vintage sportswear—found, cleaned up, photographed, and released from Brooklyn. Every piece has already lived a life. We just put it back in the starting lineup.</p>
+      <div class="rr__status">
+        <span class="rr__status-light"></span>
+        <div><small>Current status</small><strong>Out sourcing · New collection coming soon</strong></div>
+      </div>
+    </div>
+
+    <aside class="rr__memo">
+      <span class="rr__stamp">Field note / 2026</span>
+      <p>We’re rebuilding the racks.</p>
+      <p class="rr__memo-copy">No filler and no reproductions. We’re hunting for the right pieces now and will release the next collection when the haul is ready.</p>
+      {% form 'customer', class: 'rr__form' %}
+        <input type="hidden" name="contact[tags]" value="reruns-vintage">
+        <label for="RerunsEmail-{{ section.id }}">Get the first look</label>
+        <div><input id="RerunsEmail-{{ section.id }}" type="email" name="contact[email]" placeholder="EMAIL ADDRESS" required autocomplete="email"><button type="submit">Notify me <span>↗</span></button></div>
+        {% if form.posted_successfully? %}<p class="rr__form-note">You’re on the list. See you at the next drop.</p>{% endif %}
+        {% if form.errors %}<p class="rr__form-note">{{ form.errors | default_errors }}</p>{% endif %}
+      {% endform %}
+    </aside>
+  </header>
+
+  <div class="rr__rule"><span>Past drops / The archive</span><b>Three case files</b></div>
+
+  <section class="rr__archive" aria-label="Past Reruns drops">
+    {% assign drops = 'subway-series,msg,auto' | split: ',' %}
+    {% for handle in drops %}
+      {% assign drop = collections[handle] %}
+      {% case handle %}
+        {% when 'subway-series' %}
+          {% assign number = '01' %}{% assign label = 'Subway Series' %}{% assign season = 'New York · 2025' %}{% assign blurb = 'A cross-town collection built from vintage Mets and Yankees pieces, World Series memories, and the gear that rode the train before us.' %}
+        {% when 'msg' %}
+          {% assign number = '02' %}{% assign label = 'Madison Square Garden' %}{% assign season = 'The Garden · 2025' %}{% assign blurb = 'Knicks orange, Rangers blue, arena jackets, oversized graphics, and the beautiful chaos of the world’s most famous building.' %}
+        {% else %}
+          {% assign number = '03' %}{% assign label = 'Auto Department' %}{% assign season = 'Trackside · 2025' %}{% assign blurb = 'Sun-faded racing caps, dealership oddities, film stock, cigarette sponsors, and the loudest graphics ever allowed on a pit wall.' %}
+      {% endcase %}
+
+      <article class="rr__drop rr__drop--{{ handle }}">
+        <a class="rr__drop-link" href="{{ drop.url | default: '#' }}" aria-label="View the {{ label }} archive">
+          <div class="rr__contact-sheet">
+            {% for product in drop.products limit: 3 %}
+              {% if product.featured_image %}
+                <figure class="rr__photo rr__photo--{{ forloop.index }}">
+                  {{ product.featured_image | image_url: width: 1100 | image_tag: loading: 'lazy', widths: '360,540,760,1100', sizes: '(min-width: 900px) 28vw, 82vw', alt: product.title }}
+                  <figcaption>{{ forloop.index | prepend: '0' }} / {{ product.title | truncate: 34 }}</figcaption>
+                </figure>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="rr__drop-copy">
+            <div class="rr__drop-meta"><span>Case file {{ number }}</span><em>Claimed / Archived</em></div>
+            <p>{{ season }}</p>
+            <h2>{{ label }}</h2>
+            <div class="rr__drop-bottom"><p>{{ blurb }}</p><strong>Open the lookbook <span>↗</span></strong></div>
+          </div>
+        </a>
+      </article>
+    {% endfor %}
+  </section>
+
+  <footer class="rr__footer">
+    <p>Past pieces aren’t coming back.</p>
+    <h2>The hunt is the whole point.</h2>
+    <a href="#RerunsEmail-{{ section.id }}">Tell me when the next rack drops ↑</a>
+  </footer>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }}{background:#e9e2cb;color:#171916}
+  .rr{--ink:#171916;--paper:#e9e2cb;--red:#cf3828;--blue:#244f75;--yellow:#e6b62d;--green:#285a3b;position:relative;overflow:hidden;background-color:var(--paper);background-image:linear-gradient(rgba(23,25,22,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(23,25,22,.055) 1px,transparent 1px);background-size:22px 22px;border-block:6px solid var(--ink);font-family:Arial,sans-serif}
+  .rr__ticker{overflow:hidden;border-bottom:4px solid var(--ink);background:var(--ink);color:var(--paper)}.rr__ticker div{display:flex;width:max-content;align-items:center;gap:27px;padding:13px 0;animation:rrTicker 28s linear infinite}.rr__ticker span{text-transform:uppercase;letter-spacing:.17em;font:900 10px/1 Arial,sans-serif}.rr__ticker i{color:var(--yellow);font-style:normal}@keyframes rrTicker{to{transform:translateX(-50%)}}
+  .rr__hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr);gap:clamp(36px,7vw,110px);align-items:end;padding:clamp(70px,10vw,145px) clamp(22px,6vw,92px) clamp(65px,9vw,125px)}
+  .rr__kicker{margin:0 0 25px;color:var(--red);text-transform:uppercase;letter-spacing:.18em;font:900 10px/1 Arial,sans-serif}.rr__hero h1{max-width:940px;margin:0;text-transform:uppercase;letter-spacing:-.045em;font:900 clamp(68px,10.8vw,172px)/.72 Impact,Arial Black,sans-serif}.rr__hero h1 em{display:inline-block;color:var(--blue);font-size:.64em;font-style:normal;letter-spacing:-.03em;transform:rotate(-1deg)}.rr__intro{max-width:750px;margin:48px 0 34px;font:800 clamp(17px,1.8vw,25px)/1.42 Arial,sans-serif}
+  .rr__status{display:flex;align-items:center;gap:14px;max-width:620px;padding:17px 19px;border:3px solid var(--ink);background:#f3edda;box-shadow:7px 7px 0 var(--yellow)}.rr__status-light{width:17px;height:17px;flex:0 0 auto;border:3px solid var(--ink);border-radius:50%;background:var(--red);box-shadow:0 0 0 5px rgba(207,56,40,.16);animation:rrPulse 2.2s ease-in-out infinite}.rr__status small,.rr__status strong{display:block;text-transform:uppercase}.rr__status small{margin-bottom:5px;color:var(--green);letter-spacing:.15em;font:900 8px/1 Arial,sans-serif}.rr__status strong{letter-spacing:.06em;font:900 12px/1.2 Arial,sans-serif}@keyframes rrPulse{50%{box-shadow:0 0 0 10px rgba(207,56,40,0)}}
+  .rr__memo{position:relative;padding:32px;border:4px solid var(--ink);background:#f5efdc;box-shadow:12px 12px 0 var(--green);transform:rotate(1deg)}.rr__stamp{display:inline-block;margin-bottom:28px;padding:9px 12px;border:3px solid var(--red);color:var(--red);text-transform:uppercase;letter-spacing:.16em;font:900 8px/1 Arial,sans-serif;transform:rotate(-3deg)}.rr__memo>p{margin:0 0 15px;text-transform:uppercase;font:900 35px/.95 Impact,Arial Black,sans-serif}.rr__memo .rr__memo-copy{margin-bottom:28px;text-transform:none;font:700 14px/1.55 Arial,sans-serif}.rr__form{padding-top:22px;border-top:3px solid var(--ink)}.rr__form label{display:block;margin-bottom:10px;text-transform:uppercase;letter-spacing:.12em;font:900 9px/1 Arial,sans-serif}.rr__form>div{display:flex}.rr__form input{min-width:0;flex:1;padding:15px;border:3px solid var(--ink);border-right:0;border-radius:0;background:var(--paper);font:800 11px/1 Arial,sans-serif}.rr__form button{padding:15px;border:3px solid var(--ink);border-radius:0;background:var(--red);color:#fff;text-transform:uppercase;letter-spacing:.08em;font:900 9px/1 Arial,sans-serif}.rr__form-note{margin:12px 0 0!important;color:var(--green);text-transform:none!important;font:800 11px/1.3 Arial,sans-serif!important}
+  .rr__rule{display:flex;justify-content:space-between;align-items:center;margin:0 clamp(22px,6vw,92px);padding:17px 0;border-block:4px solid var(--ink);text-transform:uppercase;letter-spacing:.15em;font:900 10px/1 Arial,sans-serif}.rr__rule b{color:var(--red)}
+  .rr__archive{display:grid;gap:clamp(75px,11vw,165px);padding:clamp(75px,10vw,145px) clamp(22px,6vw,92px)}.rr__drop{position:relative}.rr__drop-link{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(330px,.88fr);gap:clamp(30px,6vw,90px);align-items:center;color:inherit;text-decoration:none}.rr__contact-sheet{display:grid;grid-template-columns:1.15fr .85fr;grid-template-rows:1fr 1fr;gap:13px;padding:15px;border:4px solid var(--ink);background:#d3ccb7;box-shadow:13px 13px 0 var(--blue);transform:rotate(-.5deg)}.rr__photo{position:relative;min-height:260px;margin:0;overflow:hidden;border:3px solid var(--ink);background:#fff}.rr__photo--1{grid-row:1/3;min-height:570px}.rr__photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.88) contrast(1.04);transition:transform .7s cubic-bezier(.16,1,.3,1),filter .4s ease}.rr__photo figcaption{position:absolute;inset:auto 8px 8px;background:var(--paper);border:2px solid var(--ink);padding:7px 9px;text-transform:uppercase;letter-spacing:.07em;font:900 7px/1 Arial,sans-serif}.rr__drop-link:hover .rr__photo img{transform:scale(1.035);filter:saturate(1.06) contrast(1.06)}
+  .rr__drop-copy{padding:clamp(28px,4vw,55px);border:4px solid var(--ink);background:#f4eedb;box-shadow:12px 12px 0 var(--red)}.rr__drop-meta{display:flex;justify-content:space-between;gap:18px;margin-bottom:45px;padding-bottom:14px;border-bottom:3px solid var(--ink);text-transform:uppercase;letter-spacing:.13em;font:900 8px/1 Arial,sans-serif}.rr__drop-meta em{color:var(--red);font-style:normal}.rr__drop-copy>p{margin:0 0 12px;color:var(--green);text-transform:uppercase;letter-spacing:.16em;font:900 9px/1 Arial,sans-serif}.rr__drop-copy h2{margin:0 0 36px;text-transform:uppercase;letter-spacing:-.035em;font:900 clamp(52px,6.8vw,108px)/.78 Impact,Arial Black,sans-serif;word-break:normal;overflow-wrap:normal;hyphens:none}.rr__drop-bottom{display:grid;gap:25px}.rr__drop-bottom p{max-width:560px;margin:0;font:700 15px/1.55 Arial,sans-serif}.rr__drop-bottom strong{display:flex;justify-content:space-between;padding:16px 18px;border:3px solid var(--ink);background:var(--ink);color:var(--paper);text-transform:uppercase;letter-spacing:.12em;font:900 9px/1 Arial,sans-serif}
+  .rr__drop--msg .rr__contact-sheet{box-shadow:13px 13px 0 var(--red)}.rr__drop--msg .rr__drop-copy{box-shadow:12px 12px 0 var(--blue)}.rr__drop--auto .rr__contact-sheet{box-shadow:13px 13px 0 var(--yellow)}.rr__drop--auto .rr__drop-copy{box-shadow:12px 12px 0 var(--green)}
+  .rr__footer{padding:clamp(75px,10vw,145px) clamp(22px,6vw,92px);border-top:6px solid var(--ink);background:var(--blue);color:var(--paper);text-align:center}.rr__footer p{margin:0 0 12px;text-transform:uppercase;letter-spacing:.17em;font:900 9px/1 Arial,sans-serif}.rr__footer h2{max-width:1100px;margin:0 auto 35px;text-transform:uppercase;letter-spacing:-.03em;font:900 clamp(62px,10vw,150px)/.78 Impact,Arial Black,sans-serif}.rr__footer a{display:inline-block;padding:16px 21px;border:3px solid var(--paper);background:var(--yellow);color:var(--ink);box-shadow:6px 6px 0 var(--ink);text-decoration:none;text-transform:uppercase;letter-spacing:.1em;font:900 10px/1 Arial,sans-serif}
+  @media(max-width:900px){.rr__hero,.rr__drop-link{grid-template-columns:1fr}.rr__hero{align-items:start}.rr__memo{max-width:600px}.rr__drop:nth-child(even) .rr__contact-sheet{order:0}.rr__drop:nth-child(even) .rr__drop-copy{order:1}.rr__photo--1{min-height:500px}}
+  @media(max-width:560px){.rr__ticker div{gap:19px}.rr__hero{padding-top:58px}.rr__hero h1{font-size:66px}.rr__intro{margin-top:35px}.rr__memo{padding:23px}.rr__form>div{display:grid}.rr__form input{border-right:3px solid var(--ink);border-bottom:0}.rr__rule b{display:none}.rr__archive{gap:85px}.rr__contact-sheet{grid-template-columns:1fr 1fr;padding:9px;gap:8px}.rr__photo{min-height:160px}.rr__photo--1{min-height:340px}.rr__drop-copy{padding:25px}.rr__drop-copy h2{font-size:54px}.rr__drop-meta{margin-bottom:30px}.rr__footer h2{font-size:62px}}
+  @media(prefers-reduced-motion:reduce){.rr__ticker div,.rr__status-light{animation:none}.rr__photo img{transition:none}}
+</style>
+
+{% schema %}
+{"name":"Reruns editorial archive","settings":[],"presets":[{"name":"Reruns editorial archive"}]}
+{% endschema %}

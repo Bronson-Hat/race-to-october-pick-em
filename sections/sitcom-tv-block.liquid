@@ -1,0 +1,146 @@
+{% liquid
+  assign sitcom_handles = 'mets-sitcom-hat,mariner-sitcom-hat,devils-mob-hat,yankee-sitcom-hat-navy,phillies-sitcom-hat,detroit-improvement-hat,giants-sitcom-hat,dodgers-beach-patrol-hat' | split: ','
+  assign featured_sitcom = all_products[sitcom_handles.first]
+%}
+
+<section class="ht-sitcom" data-sitcom-tv>
+  <div class="ht-sitcom__intro">
+    <p class="ht-sitcom__eyebrow">Hat Trick Broadcasting · Channel 90</p>
+    <h2>{{ section.settings.heading | escape }}</h2>
+    <p>{{ section.settings.copy | escape }}</p>
+  </div>
+
+  <div class="ht-sitcom__set">
+    <div class="ht-sitcom__tv">
+      <div class="ht-sitcom__screen-wrap">
+        <div class="ht-sitcom__screen">
+          <span class="ht-sitcom__bug" data-tv-channel>CH 03</span>
+          <div class="ht-sitcom__picture">
+            {% if featured_sitcom.featured_image %}
+              <img data-tv-image src="{{ featured_sitcom.featured_image | image_url: width: 1000 }}" alt="{{ featured_sitcom.featured_image.alt | default: featured_sitcom.title | escape }}" width="1000" height="1000" loading="lazy">
+            {% endif %}
+          </div>
+          <div class="ht-sitcom__lower-third">
+            <span data-tv-status>{% if featured_sitcom.available %}Now airing{% else %}Archive rerun{% endif %}</span>
+            <strong data-tv-title>{{ featured_sitcom.title | escape }}</strong>
+          </div>
+          <span class="ht-sitcom__scanlines" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="ht-sitcom__controls" aria-hidden="true">
+        <span class="ht-sitcom__knob"></span><span class="ht-sitcom__knob ht-sitcom__knob--small"></span>
+        <span class="ht-sitcom__speaker"></span>
+      </div>
+    </div>
+
+    <div class="ht-sitcom__guide">
+      <div class="ht-sitcom__guide-head"><span>Tonight's lineup</span><span>EST</span></div>
+      {% for handle in sitcom_handles %}
+        {% assign sitcom_product = all_products[handle] %}
+        {% if sitcom_product != blank %}
+          <button class="ht-sitcom__channel{% if forloop.first %} is-active{% endif %}" type="button" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+            data-tv-option data-channel="CH {{ forloop.index | plus: 2 | prepend: '0' | slice: -2, 2 }}"
+            data-title="{{ sitcom_product.title | escape }}"
+            data-status="{% if sitcom_product.available %}Now airing · {{ sitcom_product.price | money | escape }}{% else %}Archive rerun · Sold out{% endif %}"
+            data-image="{% if sitcom_product.featured_image %}{{ sitcom_product.featured_image | image_url: width: 1000 }}{% endif %}"
+            data-alt="{{ sitcom_product.featured_image.alt | default: sitcom_product.title | escape }}"
+            data-url="{{ sitcom_product.url }}">
+            <span class="ht-sitcom__channel-no">{{ forloop.index | plus: 2 | prepend: '0' | slice: -2, 2 }}</span>
+            <span class="ht-sitcom__channel-name">{{ sitcom_product.title | remove: ' Hat' | escape }}</span>
+            <span class="ht-sitcom__availability">{% if sitcom_product.available %}In stock{% else %}Rerun{% endif %}</span>
+          </button>
+        {% endif %}
+      {% endfor %}
+      <a class="ht-sitcom__cta" data-tv-link href="{{ featured_sitcom.url }}">Shop this episode <span>↗</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} { background:#eadfcb; color:#171511; }
+  #shopify-section-{{ section.id }} .ht-sitcom { position:relative; isolation:isolate; max-width:1480px; margin:0 auto; padding:clamp(64px,8vw,120px) clamp(20px,4vw,64px); overflow:hidden; }
+  #shopify-section-{{ section.id }} .ht-sitcom:after { content:""; position:absolute; z-index:8; inset:0; pointer-events:none; opacity:.13; background-image:repeating-radial-gradient(circle at 23% 37%,rgba(25,16,8,.45) 0 1px,transparent 1px 4px); background-size:7px 7px; animation:ht-film-grain .32s steps(2,end) infinite; mix-blend-mode:multiply; }
+  .ht-sitcom__intro { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr); gap:24px 60px; align-items:end; margin-bottom:44px; }
+  .ht-sitcom__eyebrow { grid-column:1/-1; margin:0; text-transform:uppercase; letter-spacing:.16em; font-size:12px; font-weight:700; }
+  .ht-sitcom__intro h2 { margin:0; font-family:Georgia,serif; font-size:clamp(52px,8vw,118px); line-height:.82; letter-spacing:-.065em; font-weight:500; }
+  .ht-sitcom__intro>p:last-child { margin:0 0 4px; max-width:42ch; font-size:16px; line-height:1.55; }
+  .ht-sitcom__set { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(290px,.55fr); background:#1a1916; border:1px solid #1a1916; box-shadow:12px 12px 0 #b93828; }
+  .ht-sitcom__tv { min-width:0; padding:clamp(18px,3vw,42px); display:grid; grid-template-columns:minmax(0,1fr) 72px; gap:20px; background:#35383a; background-image:linear-gradient(125deg,rgba(255,255,255,.13),transparent 27%,rgba(0,0,0,.17) 78%),repeating-linear-gradient(0deg,rgba(0,0,0,.09) 0 1px,transparent 1px 5px); box-shadow:inset 0 1px 0 #686c6e,inset 0 -5px 12px rgba(0,0,0,.38); }
+  .ht-sitcom__screen-wrap { padding:14px; border-radius:42px; background:#2d2922; box-shadow:inset 0 0 0 3px #0e0d0b,inset 0 0 24px #000,0 0 14px rgba(105,247,219,.14); animation:ht-phosphor-pulse 4.8s ease-in-out infinite; }
+  .ht-sitcom__screen { position:relative; isolation:isolate; overflow:hidden; aspect-ratio:4/3; border-radius:31px; background:#182021; box-shadow:inset 0 0 60px #000,0 0 18px rgba(116,218,205,.28); }
+  .ht-sitcom__picture,.ht-sitcom__picture img { width:100%; height:100%; }
+  .ht-sitcom__picture { animation:ht-tracking-wobble 13s steps(1,end) infinite; }
+  .ht-sitcom__picture img { display:block; object-fit:cover; transition:opacity .18s ease,transform .4s ease; filter:saturate(.86) contrast(1.06); }
+  .ht-sitcom__screen.is-switching { animation:ht-tv-flicker .28s steps(2,end); }
+  .ht-sitcom__screen.is-switching img { opacity:.12; transform:scale(1.025); filter:saturate(.2) contrast(1.7) brightness(1.4); }
+  .ht-sitcom__screen:before { content:""; position:absolute; z-index:4; inset:0; pointer-events:none; opacity:0; background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(231,255,247,.72) 6px 7px,rgba(0,0,0,.72) 8px 10px),repeating-linear-gradient(90deg,rgba(224,255,250,.2) 0 2px,transparent 2px 7px); mix-blend-mode:screen; }
+  .ht-sitcom__screen.is-switching:before { animation:ht-static-burst .28s steps(4,end); }
+  .ht-sitcom__screen.is-switching .ht-sitcom__bug { animation:ht-channel-pop .28s cubic-bezier(.2,.8,.2,1); }
+  .ht-sitcom__bug { position:absolute; z-index:3; top:18px; right:20px; padding:5px 8px; color:#f4ead8; background:#bd3927; border:1px solid currentColor; font:700 11px/1 Arial,sans-serif; letter-spacing:.13em; }
+  .ht-sitcom__lower-third { position:absolute; z-index:3; left:18px; bottom:18px; max-width:calc(100% - 36px); padding:10px 14px 12px; color:#171511; background:#f0dfb7; border-left:7px solid #d43b28; box-shadow:5px 5px 0 rgba(0,0,0,.28); }
+  .ht-sitcom__lower-third span { display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:.12em; font:700 10px/1.2 Arial,sans-serif; }
+  .ht-sitcom__lower-third strong { display:block; font:600 clamp(16px,2.2vw,28px)/1.05 Georgia,serif; }
+  .ht-sitcom__scanlines { position:absolute; z-index:2; inset:-12px 0; pointer-events:none; background:repeating-linear-gradient(0deg,rgba(5,18,18,.2) 0 1px,rgba(133,255,228,.035) 1px 3px,transparent 3px 5px),radial-gradient(ellipse at center,rgba(126,255,226,.1),transparent 52%,rgba(0,0,0,.42) 100%); mix-blend-mode:screen; animation:ht-scan-roll 7s linear infinite; }
+  .ht-sitcom__controls { display:flex; flex-direction:column; align-items:center; padding-top:20px; gap:18px; }
+  .ht-sitcom__knob { display:block; width:48px; aspect-ratio:1; border-radius:50%; background:repeating-conic-gradient(#181715 0 7deg,#3d3932 7deg 14deg); box-shadow:inset 0 0 0 7px #24221e,0 4px 0 #151310; transition:transform .32s cubic-bezier(.2,.9,.3,1.3); }
+  .ht-sitcom.is-tuning .ht-sitcom__knob { transform:rotate(48deg); }
+  .ht-sitcom.is-tuning .ht-sitcom__knob--small { transform:rotate(-34deg); }
+  .ht-sitcom__knob--small { width:38px; }
+  .ht-sitcom__speaker { display:block; width:44px; height:115px; margin-top:4px; opacity:.72; background:radial-gradient(circle,#171511 1.5px,transparent 2px) 0 0/9px 9px; }
+  .ht-sitcom__guide { display:flex; flex-direction:column; padding:16px; color:#171511; background:#efe2bd; background-image:repeating-linear-gradient(0deg,rgba(50,40,20,.035) 0 1px,transparent 1px 4px); border-left:7px solid #141414; }
+  .ht-sitcom__guide-head { display:flex; justify-content:space-between; margin:-16px -16px 7px; padding:17px 16px 15px; border-bottom:4px solid #171511; color:#fff2cd; background:#c23b2a; text-transform:uppercase; letter-spacing:.13em; font:800 12px/1 Arial,sans-serif; }
+  .ht-sitcom__channel { appearance:none; display:grid; grid-template-columns:34px 1fr auto; gap:10px; align-items:center; width:100%; padding:15px 6px; border:0; border-bottom:2px solid #171511; color:inherit; background:transparent; text-align:left; cursor:pointer; transition:padding .18s ease,background-color .18s ease,transform .18s ease; animation:ht-guide-arrive .42s both; }
+  .ht-sitcom__channel:nth-of-type(2){animation-delay:.04s}.ht-sitcom__channel:nth-of-type(3){animation-delay:.08s}.ht-sitcom__channel:nth-of-type(4){animation-delay:.12s}.ht-sitcom__channel:nth-of-type(5){animation-delay:.16s}.ht-sitcom__channel:nth-of-type(6){animation-delay:.20s}.ht-sitcom__channel:nth-of-type(7){animation-delay:.24s}.ht-sitcom__channel:nth-of-type(8){animation-delay:.28s}
+  .ht-sitcom__channel:hover,.ht-sitcom__channel.is-active { color:#171511; background:#edbd32; padding-left:10px; padding-right:10px; box-shadow:inset 7px 0 0 #2b9da0; }
+  .ht-sitcom__channel-no { color:#fff3cf; background:#c23b2a; padding:6px 4px; text-align:center; font:800 12px/1 Arial,sans-serif; box-shadow:2px 2px 0 #171511; }
+  .ht-sitcom__channel-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:600 15px/1.1 Georgia,serif; }
+  .ht-sitcom__availability { padding:5px 6px; color:#f8edcf; background:#238d91; text-transform:uppercase; letter-spacing:.08em; font:800 9px/1 Arial,sans-serif; }
+  .ht-sitcom__cta { display:flex; justify-content:space-between; margin:16px -2px -2px; padding:16px 14px; color:#f7eac8; background:#171511; text-decoration:none; text-transform:uppercase; letter-spacing:.08em; font:800 12px/1 Arial,sans-serif; }
+  .ht-sitcom__cta:hover { color:#fff; background:#c23b2a; }
+  @keyframes ht-scan-roll { from{ transform:translateY(-5px) } to{ transform:translateY(5px) } }
+  @keyframes ht-tv-flicker { 0%{filter:brightness(1)} 22%{filter:brightness(1.8) contrast(1.3)} 48%{filter:brightness(.55)} 70%{filter:brightness(1.35)} 100%{filter:brightness(1)} }
+  @keyframes ht-phosphor-pulse { 0%,100%{box-shadow:inset 0 0 0 3px #0e0d0b,inset 0 0 24px #000,0 0 12px rgba(105,247,219,.14)} 50%{box-shadow:inset 0 0 0 3px #0e0d0b,inset 0 0 24px #000,0 0 34px rgba(105,247,219,.46)} }
+  @keyframes ht-tracking-wobble { 0%,78%,82%,100%{transform:translate(0)} 79%{transform:translateX(2px) skewX(.15deg)} 80%{transform:translateX(-3px)} 81%{transform:translateX(1px)} }
+  @keyframes ht-static-burst { 0%{opacity:0;transform:translateY(-12%)} 25%{opacity:.8;transform:translateY(9%)} 55%{opacity:.35;transform:translateY(-3%)} 80%{opacity:.7;transform:translateY(5%)} 100%{opacity:0;transform:translateY(0)} }
+  @keyframes ht-channel-pop { 0%{transform:scale(1)} 50%{transform:scale(1.22) rotate(-2deg);filter:brightness(1.5)} 100%{transform:scale(1)} }
+  @keyframes ht-guide-arrive { from{opacity:0;transform:translateX(10px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes ht-film-grain { 0%{transform:translate(0)} 25%{transform:translate(-2px,1px)} 50%{transform:translate(1px,-2px)} 75%{transform:translate(2px,2px)} 100%{transform:translate(-1px,0)} }
+  @media (prefers-reduced-motion:reduce){ .ht-sitcom:after,.ht-sitcom__screen-wrap,.ht-sitcom__picture,.ht-sitcom__scanlines,.ht-sitcom__screen.is-switching,.ht-sitcom__screen.is-switching:before,.ht-sitcom__screen.is-switching .ht-sitcom__bug,.ht-sitcom__channel{animation:none}.ht-sitcom__knob{transition:none} }
+  @media(max-width:900px){ .ht-sitcom__intro,.ht-sitcom__set{grid-template-columns:1fr}.ht-sitcom__intro h2{max-width:8ch}.ht-sitcom__guide{min-height:440px}.ht-sitcom__set{box-shadow:7px 7px 0 #b93828;} }
+  @media(max-width:560px){ .ht-sitcom__intro{display:block}.ht-sitcom__intro h2{margin:18px 0 24px}.ht-sitcom__tv{grid-template-columns:1fr;padding:14px}.ht-sitcom__controls{display:none}.ht-sitcom__screen-wrap{padding:9px;border-radius:25px}.ht-sitcom__screen{border-radius:18px}.ht-sitcom__guide{padding:18px;min-height:420px}.ht-sitcom__channel{padding:15px 2px}.ht-sitcom__availability{display:none} }
+</style>
+
+<script>
+  (() => {
+    const root = document.currentScript.previousElementSibling.previousElementSibling;
+    if (!root || !root.matches('[data-sitcom-tv]')) return;
+    const screen = root.querySelector('.ht-sitcom__screen');
+    const image = root.querySelector('[data-tv-image]');
+    const title = root.querySelector('[data-tv-title]');
+    const status = root.querySelector('[data-tv-status]');
+    const channel = root.querySelector('[data-tv-channel]');
+    const link = root.querySelector('[data-tv-link]');
+    root.querySelectorAll('[data-tv-option]').forEach((button) => {
+      button.addEventListener('click', () => {
+        root.querySelectorAll('[data-tv-option]').forEach((item) => { item.classList.remove('is-active'); item.setAttribute('aria-pressed','false'); });
+        button.classList.add('is-active'); button.setAttribute('aria-pressed','true'); screen.classList.add('is-switching'); root.classList.add('is-tuning');
+        window.setTimeout(() => {
+          if (image && button.dataset.image) { image.src = button.dataset.image; image.alt = button.dataset.alt || button.dataset.title; }
+          title.textContent = button.dataset.title; status.textContent = button.dataset.status; channel.textContent = button.dataset.channel; link.href = button.dataset.url;
+          screen.classList.remove('is-switching'); root.classList.remove('is-tuning');
+        }, 160);
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sitcom CRT block",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Sitcom Block" },
+    { "type": "textarea", "id": "copy", "label": "Intro", "default": "A late-night lineup of hats pulled from the glow of the living-room TV. Change the channel and shop the episode." }
+  ],
+  "presets": [{ "name": "Sitcom CRT block" }]
+}
+{% endschema %}

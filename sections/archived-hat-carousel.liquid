@@ -1,0 +1,497 @@
+{% assign cid = section.id | replace:'_','' | downcase %}
+
+{% style %}
+.arch-wrap-{{ cid }}{
+  position:relative;
+  width:100vw; left:50%; margin-left:-50vw;
+  overflow:hidden; padding:20px 0; background:transparent;
+  display:flex; flex-direction:column; align-items:center;
+}
+
+/* stage */
+.carousel-stage-{{ cid }}{
+  position:relative; z-index: 1;
+  height: {{ section.settings.card_height }}px;
+  perspective: 1200px; touch-action: pan-y; user-select:none;
+  transition: transform .28s ease;
+}
+.carousel-stage-{{ cid }}.stage-zoom{ transform: scale(1.03); }
+
+/* cards */
+.card-{{ cid }}{
+  position:absolute; top:50%; left:50%;
+  width: {{ section.settings.card_width }}px;
+  height: {{ section.settings.card_height }}px;
+  transform-style: preserve-3d; will-change: transform, opacity, filter;
+  transition: transform .42s cubic-bezier(.22,.61,.36,1), opacity .25s ease, filter .3s ease, z-index .2s;
+  pointer-events:auto; opacity:0; z-index:1; filter: brightness(.85);
+}
+.card-{{ cid }} img{ display:block; width:100%; height:100%; object-fit:contain; }
+
+/* depth tiers */
+.card-{{ cid }}.is-far   { filter: brightness(.75) blur(.8px); opacity:.85; }
+.card-{{ cid }}.is-near  { filter: brightness(.92) blur(.25px); opacity:1; }
+.card-{{ cid }}.is-center{
+  filter: brightness(1.08) drop-shadow(0 14px 30px rgba(0,0,0,.18));
+  opacity:1; z-index:5;
+}
+
+/* subtle center pop + light sweep */
+.card-{{ cid }}.bloom{ animation: bloom-{{ cid }} 120ms ease-out; }
+@keyframes bloom-{{ cid }}{
+  0%   { transform: translate(var(--tx, -50%), var(--ty, -50%)) scale(1.03); filter: brightness(1.18) drop-shadow(0 18px 44px rgba(0,0,0,.22)); }
+  100% { transform: translate(var(--tx, -50%), var(--ty, -50%)) scale(1.00); filter: brightness(1.08) drop-shadow(0 14px 30px rgba(0,0,0,.18)); }
+}
+.card-{{ cid }}.is-center::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background: linear-gradient(105deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.18) 48%, rgba(255,255,255,0) 100%);
+  transform: translateX(-120%); filter: blur(1px); opacity:0;
+}
+.card-{{ cid }}.is-center.sweep::after{
+  animation: sweep-{{ cid }} 420ms ease-out forwards;
+}
+@keyframes sweep-{{ cid }}{
+  0%   { transform: translateX(-120%); opacity:0; }
+  20%  { opacity:.22; }
+  60%  { opacity:.12; }
+  100% { transform: translateX(120%); opacity:0; }
+}
+
+/* controls */
+.controls-{{ cid }}{
+  display:flex; gap:14px; justify-content:center; align-items:center; margin-top:12px; z-index: 10; position:relative;
+}
+.ctrl-btn-{{ cid }}{
+  width:52px; height:52px; border-radius:50%; border:0; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:22px; box-shadow:0 2px 8px rgba(0,0,0,.12); background:#fff; transition: transform .08s ease;
+}
+.ctrl-btn-{{ cid }}:active{ transform: scale(.96); }
+.vote-btn-{{ cid }}{ background:#ffd700; }
+.ctrl-btn-{{ cid }}.shake{ animation: shake-{{ cid }} 480ms ease; }
+@keyframes shake-{{ cid }}{
+  0%,100%{ transform: translateX(0); }
+  25%{ transform: translateX(-4px); }
+  50%{ transform: translateX(4px); }
+  75%{ transform: translateX(-3px); }
+}
+
+/* Votes-left pill — centered below trophy */
+.votes-pill-{{ cid }}{
+  position:absolute; left:50%; transform:translateX(-50%);
+  bottom:55px;
+  z-index: 30;
+  background:#111; color:#fff; font-weight:700; font-size:13px;
+  letter-spacing:.02em; padding:6px 10px; border-radius:999px;
+  box-shadow:0 6px 16px rgba(0,0,0,.18), inset 0 0 0 1px rgba(255,255,255,.06);
+  display:flex; align-items:center; gap:8px; pointer-events:none;
+}
+.votes-pill-{{ cid }} .n{ font-weight:800; }
+
+/* swipe/page counter */
+.counter-{{ cid }}{ text-align:center; margin-top:6px; font-size:14px; opacity:.75; }
+
+/* Haptic fallback: a tiny tactile buzz animation */
+.ctrl-btn-{{ cid }}.buzz { animation: buzz-{{ cid }} 80ms linear 0s 1; }
+@keyframes buzz-{{ cid }}{
+  0%   { transform: translateX(0) }
+  25%  { transform: translateX(-1px) }
+  50%  { transform: translateX(1px) }
+  75%  { transform: translateX(-0.5px) }
+  100% { transform: translateX(0) }
+}
+
+/* confetti overlay ABOVE cards */
+.confetti-layer-{{ cid }}{
+  position: absolute; inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+.confetti-{{ cid }}{
+  position:absolute; width:6px; height:10px; border-radius:2px;
+  animation: confetti-pop-{{ cid }} 700ms cubic-bezier(.17,.67,.38,1) forwards;
+  will-change: transform, opacity;
+}
+@keyframes confetti-pop-{{ cid }}{
+  0%   { transform: translate(var(--x,0px), var(--y,0px)) rotate(0deg) scale(1); opacity:1; }
+  80%  { opacity:1; }
+  100% { transform: translate(calc(var(--x,0px) + var(--dx,0px)), calc(var(--y,0px) + var(--dy,0px))) rotate(var(--rot,120deg)) scale(.9); opacity:0; }
+}
+
+/* desktop parallax smoothing */
+@media (hover:hover){
+  .card-{{ cid }}.is-center.parallax-on{
+    transition: transform .12s ease, filter .2s ease;
+  }
+}
+{% endstyle %}
+
+<div class="arch-wrap-{{ cid }}">
+  <div class="carousel-stage-{{ cid }}" id="stage-{{ cid }}"></div>
+  <div class="confetti-layer-{{ cid }}" id="confetti-{{ cid }}"></div>
+
+  <div class="controls-{{ cid }}">
+    <button class="ctrl-btn-{{ cid }}" type="button" data-prev aria-label="Previous">◀️</button>
+
+    <div style="position:relative; display:inline-block;">
+      <button class="ctrl-btn-{{ cid }} vote-btn-{{ cid }}" id="vote-{{ cid }}" type="button" data-vote aria-label="Vote">🏆</button>
+      <span class="votes-pill-{{ cid }}" id="votes-pill-{{ cid }}" hidden>
+        <span class="n" id="votes-left-{{ cid }}">5</span> left
+      </span>
+    </div>
+
+    <button class="ctrl-btn-{{ cid }}" type="button" data-next aria-label="Next">▶️</button>
+  </div>
+
+  <div class="counter-{{ cid }}" id="ctr-{{ cid }}"></div>
+</div>
+
+<script>
+(() => {
+  const STAGE   = document.getElementById("stage-{{ cid }}");
+  const CTR     = document.getElementById("ctr-{{ cid }}");
+  const BTN_VOTE= document.getElementById("vote-{{ cid }}");
+  const CONFETTI= document.getElementById("confetti-{{ cid }}");
+  const WRAP    = STAGE ? STAGE.parentElement : null;
+  const PILL    = document.getElementById("votes-pill-{{ cid }}");
+  const PILL_N  = document.getElementById("votes-left-{{ cid }}");
+  if (!STAGE || !WRAP || !CONFETTI) return;
+
+  const VOTE_PROXY_RAW = "{{ section.settings.vote_proxy | escape }}".trim();
+  const VOTE_PROXY = VOTE_PROXY_RAW.replace(/\/+$/,''); // drop trailing slash
+
+  // --- Soft Haptics helper (Android vibrate; iOS falls back to a tiny buzz anim) ---
+  const HAPTICS = (() => {
+    const canVibrate = typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function';
+    const buzzElem = (el) => { if (!el) return; el.classList.add('buzz'); setTimeout(() => el.classList.remove('buzz'), 100); };
+    const patterns = { light: 10, medium: [12, 20, 10], heavy: 24, selection: 8 };
+    function impact(level = 'light', elemForFallback){
+      if (canVibrate) {
+        const p = patterns[level] ?? patterns.light;
+        try { navigator.vibrate(p); } catch(_) {}
+      } else {
+        buzzElem(elemForFallback);
+      }
+    }
+    return { impact };
+  })();
+
+  /* build slots from settings */
+  const slots = [];
+  {% for i in (1..10) %}
+    {% assign imgk = 'img_' | append: i %}
+    {% assign idk  = 'id_'  | append: i %}
+    {% if section.settings[imgk] != blank %}
+      slots.push({
+        id: "{{ section.settings[idk] | default: 'slot-' | append: i | escape }}",
+        src: "{{ section.settings[imgk] | image_url: width: 1400 }}"
+      });
+    {% endif %}
+  {% endfor %}
+
+  if (slots.length === 0) {
+    STAGE.innerHTML = '<div style="text-align:center;opacity:.6;">Add card PNGs in section settings.</div>';
+    return;
+  }
+
+  /* render */
+  STAGE.innerHTML = "";
+  const els = slots.map((s, idx) => {
+    const d = document.createElement('div');
+    d.className = "card-{{ cid }}";
+    d.dataset.index = idx;
+    d.dataset.productId = s.id;
+    const img = document.createElement('img');
+    img.src = s.src; img.alt = s.id; img.loading = "lazy";
+    d.appendChild(img);
+    STAGE.appendChild(d);
+    return d;
+  });
+
+  /* layout knobs */
+  const SPREAD = {{ section.settings.side_peek | default: 48 }};
+  const SCALE1 = {{ section.settings.side_scale | default: 0.9 }};
+  const SCALE2 = Math.max(0.76, ({{ section.settings.side_scale | default: 0.9 }} - 0.10));
+  const YROT   = {{ section.settings.arc_degrees | default: 10 }};
+  const CX     = {{ section.settings.center_x | default: 0 }};
+  const CY     = {{ section.settings.center_y | default: 8 }};
+
+  let current = 0;
+
+  function tform(k){
+    if (k === 0) return `translate(calc(-50% + ${CX}px), calc(-50% + ${CY}px)) rotateY(0deg) scale(1)`;
+    if (k === -1) return `translate(calc(-50% - ${SPREAD}px + ${CX}px), calc(-50% + ${CY + 4}px)) rotateY(${YROT}deg) scale(${SCALE1})`;
+    if (k ===  1) return `translate(calc(-50% + ${SPREAD}px + ${CX}px), calc(-50% + ${CY + 4}px)) rotateY(-${YROT}deg) scale(${SCALE1})`;
+    if (k === -2) return `translate(calc(-50% - ${SPREAD*2}px + ${CX}px), calc(-50% + ${CY + 8}px)) rotateY(${YROT*1.5}deg) scale(${SCALE2})`;
+    if (k ===  2) return `translate(calc(-50% + ${SPREAD*2}px + ${CX}px), calc(-50% + ${CY + 8}px)) rotateY(-${YROT*1.5}deg) scale(${SCALE2})`;
+    return `translate(calc(-50% + ${CX}px), calc(-50% + ${CY}px)) scale(.9)`;
+  }
+
+  function markCenterEffects(el){
+    if (!el) return;
+    el.classList.remove('bloom','sweep');
+    requestAnimationFrame(() => { el.classList.add('bloom','sweep'); });
+  }
+
+  function place(){
+    const n = els.length;
+    els.forEach(e => {
+      e.style.opacity = 0; e.style.zIndex = 1;
+      e.classList.remove('is-center','is-near','is-far','parallax-on','sweep','bloom');
+      e.style.setProperty('--tx','-50%'); e.style.setProperty('--ty','-50%');
+    });
+
+    for (let k=-2; k<=2; k++){
+      const i = (current + k + n) % n;
+      const el = els[i];
+      if (!el) continue;
+      el.style.opacity = 1;
+      el.style.transform = tform(k);
+      if (k === 0){ el.classList.add('is-center','parallax-on'); el.style.zIndex = 5; markCenterEffects(el); }
+      else if (Math.abs(k) === 1){ el.classList.add('is-near'); el.style.zIndex = 4; }
+      else { el.classList.add('is-far'); el.style.zIndex = 3; }
+    }
+    if (CTR) CTR.textContent = `${current + 1} / ${n}`;
+  }
+
+  function withStageZoom(fn){
+    STAGE.classList.add('stage-zoom');
+    fn();
+    setTimeout(()=>STAGE.classList.remove('stage-zoom'), 260);
+  }
+  function next(){ withStageZoom(() => { current = (current + 1) % els.length; place(); }); }
+  function prev(){ withStageZoom(() => { current = (current - 1 + els.length) % els.length; place(); }); }
+
+  /* buttons */
+  function wireButtons(){
+    const btnPrev = WRAP.querySelector('[data-prev]');
+    const btnNext = WRAP.querySelector('[data-next]');
+    const btnVote = WRAP.querySelector('[data-vote]');
+
+    if (btnPrev && !btnPrev.__wired){
+      btnPrev.__wired = true;
+      btnPrev.addEventListener('click', (e) => { HAPTICS.impact('selection', e.currentTarget); prev(); });
+    }
+    if (btnNext && !btnNext.__wired){
+      btnNext.__wired = true;
+      btnNext.addEventListener('click', (e) => { HAPTICS.impact('selection', e.currentTarget); next(); });
+    }
+    if (btnVote && !btnVote.__wired){
+      btnVote.__wired = true;
+      btnVote.addEventListener('click', handleVoteClick);
+    }
+  }
+  wireButtons();
+  setTimeout(wireButtons, 300); // guard against theme re-render
+
+  /* desktop parallax */
+  let parallaxEnabled = matchMedia('(hover:hover)').matches;
+  if (parallaxEnabled){
+    STAGE.addEventListener('mousemove', (e) => {
+      const el = els[current];
+      if (!el) return;
+      const rect = STAGE.getBoundingClientRect();
+      const mx = (e.clientX - rect.left) / rect.width;
+      const my = (e.clientY - rect.top) / rect.height;
+      const rx = (0.5 - my) * 6;
+      const ry = (mx - 0.5) * 8;
+      el.style.transform = `${tform(0)} rotateX(${rx}deg) rotateY(${ry}deg)`;
+    });
+    STAGE.addEventListener('mouseleave', () => {
+      const el = els[current]; if (el) el.style.transform = tform(0);
+    });
+  }
+
+  /* swipe */
+  let sx=0, dx=0, startT=0, dragging=false;
+  STAGE.addEventListener('touchstart', (e) => {
+    const t = e.touches[0]; sx=t.clientX; dx=0; dragging=true; startT=performance.now();
+  }, {passive:true});
+  STAGE.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    dx = e.touches[0].clientX - sx;
+    const el = els[current]; if (el){
+      el.style.transition = 'none';
+      el.style.transform = `translate(calc(-50% + {{ section.settings.center_x | default: 0 }}px + ${dx/12}px), calc(-50% + {{ section.settings.center_y | default: 8 }}px)) rotateY(${-dx/12}deg) scale(1)`;
+    }
+  }, {passive:true});
+  STAGE.addEventListener('touchend', () => {
+    if (!dragging) return; dragging=false;
+    const dt = Math.max(1, (performance.now() - startT));
+    const velocity = dx / dt;
+    const bigFlick = Math.abs(velocity) > 0.6;
+    const threshold = 44;
+    if (dx > threshold || (bigFlick && dx > 0)) { HAPTICS.impact('selection', STAGE); overshoot(prev, +1); }
+    else if (dx < -threshold || (bigFlick && dx < 0)) { HAPTICS.impact('selection', STAGE); overshoot(next, -1); }
+    else place();
+  });
+
+  function overshoot(action, dir){
+    const el = els[current];
+    if (el){
+      el.style.transition = 'transform .18s ease-out';
+      el.style.transform = `translate(calc(-50% + {{ section.settings.center_x | default: 0 }}px + ${dir*8}px), calc(-50% + {{ section.settings.center_y | default: 8 }}px)) rotateY(${-dir*5}deg) scale(1)`;
+      setTimeout(()=> action(), 120);
+    } else action();
+  }
+
+  /* votes-left helper */
+  async function fetchRemaining(){
+    if (!VOTE_PROXY) return null;
+    try{
+      const r = await fetch(`${VOTE_PROXY}/remaining`, { credentials:'include' });
+      const j = await r.json();
+      return (j && j.ok) ? j.remaining : null;
+    }catch(_){ return null; }
+  }
+  function updatePill(n){
+    if (!PILL || !PILL_N) return;
+    if (n === null || typeof n === 'undefined') { PILL.hidden = true; return; }
+    PILL.hidden = false; PILL_N.textContent = n;
+  }
+
+  /* confetti */
+  function rand(min,max){ return Math.random()*(max-min)+min; }
+  function spawnConfettiFromButton(btn){
+    if (!btn || !CONFETTI) return;
+    const wrapRect = WRAP.getBoundingClientRect();
+    const r = btn.getBoundingClientRect();
+    const originX = r.left + r.width/2 - wrapRect.left;
+    const originY = r.top  + r.height/2 - wrapRect.top;
+
+    const colors = ['#ffd700','#ffdc73','#fff1b6','#f0b400','#ffe27a'];
+    for (let i=0;i<14;i++){
+      const p = document.createElement('span');
+      p.className = 'confetti-{{ cid }}';
+      p.style.left = `${originX}px`;
+      p.style.top  = `${originY}px`;
+      p.style.background = colors[Math.floor(Math.random()*colors.length)];
+      p.style.setProperty('--x','0px');
+      p.style.setProperty('--y','0px');
+      p.style.setProperty('--dx', `${rand(-80,80)}px`);
+      p.style.setProperty('--dy', `${rand(-120,-40)}px`);
+      p.style.setProperty('--rot', `${rand(90,360)}deg`);
+      CONFETTI.appendChild(p);
+      setTimeout(()=> p.remove(), 800);
+    }
+  }
+
+  /* main vote click */
+  async function handleVoteClick(ev){
+    const btn = ev.currentTarget;
+
+    // haptic pre-tap
+    HAPTICS.impact('medium', btn);
+
+    // pop
+    btn.style.transform = 'scale(.94)';
+    setTimeout(()=>{ btn.style.transform = ''; }, 110);
+
+    // confetti
+    spawnConfettiFromButton(btn);
+
+    // id from center card
+    const center = els[current];
+    const pid = center?.dataset?.productId || '';
+
+    // optimistic +1 on the leaderboard (reverts on failure)
+    let undo = () => {};
+    if (window.hatVotes && window.hatVotes.optimistic && pid){
+      undo = window.hatVotes.optimistic(pid);
+    }
+
+    // send vote
+    try{
+      if (!pid || !VOTE_PROXY) throw new Error('missing vote config');
+      const res = await fetch(`${VOTE_PROXY}/vote`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        credentials:'include',
+        body: JSON.stringify({ id: pid })
+      });
+      const j = await res.json();
+      if (!j || j.ok !== true){
+        // fail: revert + tactile nudge
+        HAPTICS.impact('light', btn);
+        undo();
+        btn.classList.add('shake'); setTimeout(()=>btn.classList.remove('shake'), 480);
+      } else {
+        // success: tiny confirm haptic + update pill
+        HAPTICS.impact('light', btn);
+        updatePill(Math.max(0, j.remaining));
+      }
+    }catch(_){
+      HAPTICS.impact('light', btn);
+      undo();
+      btn.classList.add('shake'); setTimeout(()=>btn.classList.remove('shake'), 480);
+    }
+  }
+
+  /* keyboard nav (optional but nice) */
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight'){ HAPTICS.impact('selection', STAGE); next(); }
+    if (e.key === 'ArrowLeft'){  HAPTICS.impact('selection', STAGE); prev(); }
+  });
+
+  /* init */
+  place();
+  // show remaining on load
+  fetchRemaining().then(updatePill).catch(()=>{});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Archived Hat Carousel",
+  "settings": [
+    { "type": "header", "content": "Cards" },
+
+    { "type": "image_picker", "id": "img_1",  "label": "Card 1 PNG" },
+    { "type": "text",         "id": "id_1",   "label": "Card 1 ID",  "default": "slot-1" },
+
+    { "type": "image_picker", "id": "img_2",  "label": "Card 2 PNG" },
+    { "type": "text",         "id": "id_2",   "label": "Card 2 ID",  "default": "slot-2" },
+
+    { "type": "image_picker", "id": "img_3",  "label": "Card 3 PNG" },
+    { "type": "text",         "id": "id_3",   "label": "Card 3 ID",  "default": "slot-3" },
+
+    { "type": "image_picker", "id": "img_4",  "label": "Card 4 PNG" },
+    { "type": "text",         "id": "id_4",   "label": "Card 4 ID",  "default": "slot-4" },
+
+    { "type": "image_picker", "id": "img_5",  "label": "Card 5 PNG" },
+    { "type": "text",         "id": "id_5",   "label": "Card 5 ID",  "default": "slot-5" },
+
+    { "type": "image_picker", "id": "img_6",  "label": "Card 6 PNG" },
+    { "type": "text",         "id": "id_6",   "label": "Card 6 ID",  "default": "slot-6" },
+
+    { "type": "image_picker", "id": "img_7",  "label": "Card 7 PNG" },
+    { "type": "text",         "id": "id_7",   "label": "Card 7 ID",  "default": "slot-7" },
+
+    { "type": "image_picker", "id": "img_8",  "label": "Card 8 PNG" },
+    { "type": "text",         "id": "id_8",   "label": "Card 8 ID",  "default": "slot-8" },
+
+    { "type": "image_picker", "id": "img_9",  "label": "Card 9 PNG" },
+    { "type": "text",         "id": "id_9",   "label": "Card 9 ID",  "default": "slot-9" },
+
+    { "type": "image_picker", "id": "img_10", "label": "Card 10 PNG" },
+    { "type": "text",         "id": "id_10",  "label": "Card 10 ID", "default": "slot-10" },
+
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "card_width",  "min": 220, "max": 640, "step": 10, "unit": "px", "label": "Card width",  "default": 380 },
+    { "type": "range", "id": "card_height", "min": 300, "max": 980, "step": 10, "unit": "px", "label": "Card height", "default": 480 },
+
+    { "type": "range", "id": "center_x",   "min": -160, "max": 160, "step": 4, "unit": "px", "label": "Center X", "default": 0 },
+    { "type": "range", "id": "center_y",   "min": -160, "max": 160, "step": 4, "unit": "px", "label": "Center Y", "default": 8 },
+
+    { "type": "range", "id": "side_peek",  "min": 0, "max": 60, "step": 2, "unit": "px", "label": "Side peek", "default": 36 },
+    { "type": "range", "id": "side_scale", "min": 0.7, "max": 0.9, "step": 0.1, "label": "Side scale", "default": 0.9 },
+    { "type": "range", "id": "arc_degrees","min": 0, "max": 14, "step": 1, "unit": "°",  "label": "Side tilt", "default": 8 },
+
+    { "type": "header", "content": "Voting" },
+    { "type": "text",   "id": "vote_proxy", "label": "Vote proxy URL", "default": "https://hat-votes-proxy.bronson-16e.workers.dev" }
+  ],
+  "presets": [
+    { "name": "Archived hats — Carousel + Votes" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,112 @@
+{% assign product = all_products['detroit-improvement-hat'] %}
+
+<section class="ht-workshop">
+  <div class="ht-workshop__beam"><span>Bay 02</span><strong>Run Closed · Fully Reserved</strong><span>Detroit Division</span></div>
+
+  <header class="ht-workshop__header">
+    <div class="ht-workshop__logo-wrap">
+      <img src="https://cdn.shopify.com/s/files/1/0762/0208/2600/files/hat-trick-tool-time-logo.png?v=1787763406" alt="Hat Trick Tool Time" loading="lazy">
+      <p>Garage workshop · Production file 002</p>
+    </div>
+    <div class="ht-workshop__gauge" aria-label="Preorder run status: fully reserved">
+      <i></i><b>100</b><span>Reserved</span>
+    </div>
+  </header>
+
+  <div class="ht-workshop__main">
+    <div class="ht-workshop__product">
+      <div class="ht-workshop__pegboard">
+        {% if product != blank %}
+          {{ product.featured_image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '480,720,1000,1400', sizes: '(min-width: 900px) 48vw, 100vw', alt: product.title }}
+        {% endif %}
+        <span class="ht-workshop__tag">Job complete</span>
+      </div>
+      <figure class="ht-workshop__neighbor" aria-label="Neighbor peeking over the fence in a Detroit Improvement Hat">
+        <img class="ht-workshop__neighbor-person" src="https://cdn.shopify.com/s/files/1/0762/0208/2600/files/detroit-neighbor-exact-transparent.png?v=1787768332" alt="Neighbor wearing the Detroit Improvement Hat" loading="eager" decoding="async">
+        <img class="ht-workshop__neighbor-fence" src="https://cdn.shopify.com/s/files/1/0762/0208/2600/files/detroit-fence-foreground-clean.png?v=1787765673" alt="" loading="lazy">
+      </figure>
+    </div>
+
+    <article class="ht-workshop__ticket">
+      <p class="ht-workshop__eyebrow">Work order · HT–DET–002</p>
+      <h2><span>Detroit</span><em>Improvement</em><span>Hat</span></h2>
+      <div class="ht-workshop__status"><span>Status</span><strong>Sold out</strong></div>
+      <p class="ht-workshop__copy">This production run is fully reserved. Straight out of the garage and built with more power: black crown, red brim, green underbrim, and Detroit hockey energy.</p>
+      <dl>
+        <div><dt>Crown</dt><dd>Unstructured 5-panel</dd></div>
+        <div><dt>Material</dt><dd>100% cotton</dd></div>
+        <div><dt>Closure</dt><dd>Adjustable snapback</dd></div>
+        <div><dt>Run state</dt><dd>Closed / reserved</dd></div>
+      </dl>
+      <div class="ht-workshop__actions">
+        <a class="ht-workshop__primary" href="/pages/archive">Vote for more power <span>↗</span></a>
+        {% if product != blank %}<a class="ht-workshop__secondary" href="{{ product.url }}">View the original work order →</a>{% endif %}
+      </div>
+    </article>
+  </div>
+
+  <section class="ht-workshop__notes">
+    <div><span>01</span><strong>The run is closed.</strong><p>No additional orders are being accepted for this batch.</p></div>
+    <div><span>02</span><strong>Existing orders are locked.</strong><p>Customers who secured one remain part of the current production run.</p></div>
+    <div><span>03</span><strong>Want a rerun?</strong><p>Head to the Archive and cast a comeback vote.</p></div>
+  </section>
+
+  <footer class="ht-workshop__caution" aria-hidden="true"><div><span>More power</span><span>Run closed</span><span>Detroit workshop</span><span>More power</span><span>Run closed</span><span>Detroit workshop</span></div></footer>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }}{background:#2b302f;color:#eee8d5}
+  .ht-workshop{--steel:#343a39;--dark:#171a19;--blue:#217bbb;--green:#285e27;--red:#c73527;--cream:#eee8d5;--yellow:#efb929;position:relative;max-width:1600px;margin:auto;overflow:hidden;color:var(--cream);background-color:var(--steel);background-image:linear-gradient(90deg,rgba(255,255,255,.035) 50%,transparent 50%),linear-gradient(rgba(0,0,0,.08) 50%,transparent 50%);background-size:7px 7px;border-block:6px solid var(--dark)}
+  .ht-workshop__beam{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:14px clamp(18px,5vw,72px);color:var(--cream);background:var(--dark);border-bottom:4px solid var(--yellow);text-transform:uppercase;letter-spacing:.15em;font:900 9px/1 Arial,sans-serif}.ht-workshop__beam strong{padding:9px 24px;color:var(--dark);background:var(--yellow);border:2px solid var(--cream);transform:rotate(-1deg)}.ht-workshop__beam span:last-child{text-align:right}
+  .ht-workshop__header{display:flex;justify-content:space-between;align-items:center;gap:40px;padding:clamp(42px,7vw,95px) clamp(22px,6vw,90px);background-color:#cbc4ad;background-image:radial-gradient(circle,rgba(23,26,25,.42) 1.8px,transparent 2px);background-size:22px 22px;border-bottom:8px solid var(--dark)}
+  .ht-workshop__logo-wrap{max-width:760px;padding:24px 30px 17px;border:4px solid var(--dark);background:#f7f4ea;box-shadow:12px 12px 0 var(--green);transform:rotate(-1deg)}.ht-workshop__logo-wrap img{display:block;width:100%;height:auto}.ht-workshop__logo-wrap p{margin:16px 0 0;padding-top:12px;border-top:2px solid var(--dark);color:var(--dark);text-transform:uppercase;letter-spacing:.14em;font:900 9px/1 Arial,sans-serif}
+  .ht-workshop__gauge{position:relative;display:grid;place-items:center;align-content:center;flex:0 0 180px;aspect-ratio:1;border:12px solid var(--dark);border-radius:50%;color:var(--dark);background:conic-gradient(from -115deg,var(--green) 0 68%,var(--yellow) 68% 82%,var(--red) 82% 100%);box-shadow:inset 0 0 0 10px var(--cream),8px 9px 0 rgba(0,0,0,.35)}.ht-workshop__gauge:before{content:"";position:absolute;inset:28px;border-radius:50%;background:var(--cream)}.ht-workshop__gauge i{position:absolute;z-index:2;left:50%;bottom:50%;width:5px;height:58px;background:var(--red);transform-origin:bottom;transform:rotate(72deg)}.ht-workshop__gauge b,.ht-workshop__gauge span{position:relative;z-index:3}.ht-workshop__gauge b{font:900 43px/.9 Impact,Arial Black,sans-serif}.ht-workshop__gauge span{text-transform:uppercase;letter-spacing:.1em;font:900 8px/1 Arial,sans-serif}
+  .ht-workshop__main{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,6vw,85px);padding:clamp(60px,8vw,120px) clamp(22px,6vw,90px)}
+  .ht-workshop__product{position:relative}.ht-workshop__pegboard{position:relative;min-height:620px;padding:20px;border:5px solid var(--dark);background-color:#c58b50;background-image:radial-gradient(circle,#563a24 2px,transparent 2.5px);background-size:24px 24px;box-shadow:14px 14px 0 var(--blue);transform:rotate(-.7deg)}.ht-workshop__pegboard img{width:100%;height:100%;min-height:575px;object-fit:cover;border:4px solid var(--dark);background:#fff}.ht-workshop__tag{position:absolute;top:34px;left:35px;padding:12px 16px;border:3px solid var(--dark);background:var(--red);color:var(--cream);box-shadow:5px 5px 0 var(--dark);text-transform:uppercase;letter-spacing:.13em;font:900 9px/1 Arial,sans-serif;transform:rotate(-3deg)}.ht-workshop__tools{display:flex;justify-content:space-around;margin:28px 25px 0;padding:13px;border:3px solid var(--dark);background:#bbb4a1;color:var(--dark);font-size:30px;box-shadow:7px 7px 0 rgba(0,0,0,.35)}
+  .ht-workshop__ticket{align-self:center;padding:clamp(28px,4vw,55px);border:5px solid var(--dark);background:var(--cream);color:var(--dark);box-shadow:12px 12px 0 var(--red)}.ht-workshop__eyebrow{margin:0 0 24px;color:var(--green);text-transform:uppercase;letter-spacing:.16em;font:900 9px/1 Arial,sans-serif}.ht-workshop__ticket h2{margin:0;font:900 clamp(55px,7vw,105px)/.76 Impact,Arial Black,sans-serif;text-transform:uppercase;letter-spacing:-.025em}.ht-workshop__ticket h2 em{color:var(--blue);font-weight:900}.ht-workshop__status{display:flex;justify-content:space-between;align-items:center;margin:31px 0;padding:13px 15px;border:3px solid var(--dark);background:var(--yellow);text-transform:uppercase;letter-spacing:.11em;font:900 9px/1 Arial,sans-serif}.ht-workshop__status strong{padding:7px 10px;background:var(--red);color:var(--cream);font-size:10px}.ht-workshop__copy{font:700 16px/1.55 Arial,sans-serif}.ht-workshop__ticket dl{margin:25px 0;border:3px solid var(--dark)}.ht-workshop__ticket dl div{display:grid;grid-template-columns:1fr 1.7fr;border-bottom:2px solid var(--dark)}.ht-workshop__ticket dl div:last-child{border:0}.ht-workshop__ticket dt,.ht-workshop__ticket dd{margin:0;padding:11px 13px}.ht-workshop__ticket dt{border-right:2px solid var(--dark);text-transform:uppercase;letter-spacing:.1em;font:900 8px/1 Arial,sans-serif}.ht-workshop__ticket dd{font:800 13px/1.1 Arial,sans-serif}.ht-workshop__actions{display:grid;gap:12px}.ht-workshop__primary{display:flex;justify-content:space-between;padding:17px 18px;border:3px solid var(--dark);background:var(--green);color:var(--cream);box-shadow:5px 5px 0 var(--dark);text-decoration:none;text-transform:uppercase;letter-spacing:.12em;font:900 9px/1 Arial,sans-serif}.ht-workshop__secondary{color:var(--dark);text-align:center;text-transform:uppercase;text-underline-offset:4px;letter-spacing:.09em;font:900 8px/1 Arial,sans-serif}
+  .ht-workshop__ticket h2 span,.ht-workshop__ticket h2 em{display:block}.ht-workshop__ticket h2 em{margin:-.03em 0 -.01em;color:var(--red);font-size:.72em;font-weight:900;letter-spacing:-.04em;white-space:nowrap}
+  .ht-workshop__neighbor{position:relative;margin:28px 0 0;border:4px solid var(--dark);background:#e8e2d0;box-shadow:8px 8px 0 var(--yellow);overflow:hidden}.ht-workshop__neighbor:before{content:"FENCE LINE · BAY 02";position:absolute;z-index:2;top:12px;left:12px;padding:8px 11px;border:2px solid var(--dark);background:var(--blue);color:#fff;text-transform:uppercase;letter-spacing:.14em;font:900 8px/1 Arial,sans-serif;transform:rotate(-2deg)}.ht-workshop__neighbor img{display:block;width:100%;height:auto;transform-origin:50% 100%;animation:ht-neighbor-peek 5.5s cubic-bezier(.2,.8,.2,1) infinite}.ht-workshop__neighbor figcaption{position:absolute;right:13px;bottom:13px;display:grid;gap:4px;max-width:58%;padding:10px 13px;border:3px solid var(--dark);background:var(--cream);color:var(--dark);box-shadow:4px 4px 0 var(--green);transform:rotate(1deg)}.ht-workshop__neighbor figcaption span{text-transform:uppercase;letter-spacing:.13em;color:var(--red);font:900 7px/1 Arial,sans-serif}.ht-workshop__neighbor figcaption strong{font:900 13px/1.05 Arial Black,Arial,sans-serif}@keyframes ht-neighbor-peek{0%,10%,100%{transform:translateY(7%)}18%,82%{transform:translateY(0)}48%{transform:translateY(-1.5%) rotate(.35deg)}}
+  .ht-workshop__neighbor{aspect-ratio:3/2;background:#d8d0bc;cursor:ns-resize}.ht-workshop__neighbor:before{display:none}.ht-workshop__neighbor img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:none}.ht-workshop__neighbor-person{z-index:1;object-fit:contain!important;object-position:center bottom;opacity:0;transform:translateY(17%);will-change:transform,opacity;transition:transform .95s cubic-bezier(.16,1,.3,1),opacity .32s ease}.ht-workshop__neighbor.is-loaded .ht-workshop__neighbor-person{opacity:1}.ht-workshop__neighbor-fence{z-index:2;object-fit:cover;object-position:center center;pointer-events:none;transform:none!important;transition:none!important;animation:none!important}.ht-workshop__neighbor.is-peeking .ht-workshop__neighbor-person,.ht-workshop__neighbor:hover .ht-workshop__neighbor-person{transform:translateY(-6%)}
+  .ht-workshop__notes{display:grid;grid-template-columns:repeat(3,1fr);margin:0 clamp(22px,6vw,90px) clamp(70px,9vw,130px);border:4px solid var(--dark);background:#bcb5a2;color:var(--dark);box-shadow:10px 10px 0 var(--yellow)}.ht-workshop__notes div{padding:25px;border-right:3px solid var(--dark)}.ht-workshop__notes div:last-child{border:0}.ht-workshop__notes span{display:block;margin-bottom:38px;color:var(--red);font:900 37px/1 Impact,Arial Black,sans-serif}.ht-workshop__notes strong{font:900 21px/1 Arial Black,Arial,sans-serif}.ht-workshop__notes p{font:600 13px/1.5 Arial,sans-serif}
+  .ht-workshop__caution{overflow:hidden;border-top:6px solid var(--dark);background:repeating-linear-gradient(-45deg,var(--yellow) 0 22px,var(--dark) 22px 44px)}.ht-workshop__caution div{display:flex;width:max-content;animation:ht-workshop-scroll 22s linear infinite}.ht-workshop__caution span{margin:10px 25px;padding:10px 18px;background:var(--cream);color:var(--dark);border:3px solid var(--dark);text-transform:uppercase;letter-spacing:.15em;font:900 9px/1 Arial,sans-serif}@keyframes ht-workshop-scroll{to{transform:translateX(-50%)}}
+  @media(max-width:900px){.ht-workshop__header{align-items:flex-start}.ht-workshop__gauge{flex-basis:125px}.ht-workshop__main{grid-template-columns:1fr}.ht-workshop__notes{grid-template-columns:1fr}.ht-workshop__notes div{border-right:0;border-bottom:3px solid var(--dark)}.ht-workshop__notes div:last-child{border:0}}
+  @media(max-width:560px){.ht-workshop__beam{grid-template-columns:1fr}.ht-workshop__beam span{display:none}.ht-workshop__beam strong{text-align:center}.ht-workshop__header{display:block;padding:35px 16px}.ht-workshop__logo-wrap{padding:15px}.ht-workshop__gauge{width:120px;margin:35px auto 0}.ht-workshop__main{padding-inline:16px}.ht-workshop__pegboard{min-height:390px}.ht-workshop__pegboard img{min-height:350px}.ht-workshop__ticket h2{font-size:52px}.ht-workshop__ticket dl div{grid-template-columns:1fr}.ht-workshop__ticket dt{border-right:0;border-bottom:1px solid var(--dark)}.ht-workshop__notes{margin-inline:16px}}
+  @media(prefers-reduced-motion:reduce){.ht-workshop__caution div,.ht-workshop__neighbor img{animation:none}.ht-workshop__neighbor-person{transform:translateY(-6%);transition:none}}
+</style>
+
+{% schema %}
+{"name":"Detroit workshop run","settings":[],"presets":[{"name":"Detroit workshop run"}]}
+{% endschema %}
+
+<script>
+  (() => {
+    const scene = document.currentScript.previousElementSibling?.querySelector?.('.ht-workshop__neighbor') || document.querySelector('#shopify-section-{{ section.id }} .ht-workshop__neighbor');
+    if (!scene || scene.dataset.peekReady) return;
+    scene.dataset.peekReady = 'true';
+    const person = scene.querySelector('.ht-workshop__neighbor-person');
+    const reveal = () => {
+      if (!scene.classList.contains('is-loaded')) return;
+      scene.classList.add('is-peeking');
+      window.setTimeout(() => scene.classList.remove('is-peeking'), 2400);
+    };
+    const begin = () => {
+      window.requestAnimationFrame(() => {
+        scene.classList.add('is-loaded');
+        window.requestAnimationFrame(() => {
+          const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => { if (entry.isIntersecting) { reveal(); observer.unobserve(scene); } });
+          }, { threshold: .45 });
+          observer.observe(scene);
+        });
+      });
+    };
+    if (person?.complete) {
+      person.decode?.().catch(() => {}).finally(begin);
+    } else if (person) {
+      person.addEventListener('load', begin, { once: true });
+    } else {
+      begin();
+    }
+    scene.addEventListener('click', reveal);
+  })();
+</script>

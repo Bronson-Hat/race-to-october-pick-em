@@ -1,0 +1,56 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "image_cNnFBr": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Hat_Trick_Card_Logo_Hi-Res_8b4f48f7-6953-4169-ac78-bf80f07b0cc4.png",
+            "image_width": 160,
+            "alignment": "center"
+          }
+        },
+        "c8141fd7-c21c-4580-a170-e44dfe7f1907": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Boring Legal Jargon",
+            "menu": "footer"
+          }
+        }
+      },
+      "block_order": [
+        "image_cNnFBr",
+        "c8141fd7-c21c-4580-a170-e44dfe7f1907"
+      ],
+      "settings": {
+        "color_scheme": "background-1",
+        "newsletter_enable": true,
+        "newsletter_heading": "Stay Stitched in",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "show_policy": true,
+        "margin_top": 24,
+        "padding_top": 60,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

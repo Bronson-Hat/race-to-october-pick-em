@@ -1,0 +1,193 @@
+{% liquid
+  assign featured_handles = 'mets-transit-hat-black,mariner-sitcom-hat,and1-practice-hat' | split: ','
+%}
+
+<section class="ht-trade">
+  <header class="ht-trade__hero">
+    <div class="ht-trade__catalog-no">HT–NYC / TRADE CATALOG / 2026</div>
+    <div class="ht-trade__hero-copy">
+      <p class="ht-trade__kicker">For shops, teams, bands &amp; good ideas</p>
+      <h1>Put better hats<br><em>on your shelves.</em></h1>
+      <p class="ht-trade__intro">Stock Hat Trick originals or work directly with our NYC studio on a custom run—distinctive headwear designed to get picked up, tried on, and talked about.</p>
+      <a class="ht-trade__button ht-trade__button--yellow" href="#wholesale-inquiry">Start a wholesale inquiry <span>↘</span></a>
+    </div>
+    <aside class="ht-trade__stamp" aria-label="Wholesale program details">
+      <span>Buyer<br>Program</span>
+      <strong>MOQ</strong>
+      <b>50</b>
+      <small>Custom hats</small>
+    </aside>
+    <div class="ht-trade__register" aria-hidden="true">+</div>
+  </header>
+
+  <div class="ht-trade__facts" aria-label="Wholesale highlights">
+    <div><span>01</span><strong>Independent</strong><small>Designed in NYC</small></div>
+    <div><span>02</span><strong>Small batch</strong><small>Low custom minimums</small></div>
+    <div><span>03</span><strong>Full service</strong><small>Concept through production</small></div>
+    <div><span>04</span><strong>Built to sell</strong><small>Deep cuts, broad appeal</small></div>
+  </div>
+
+  <section class="ht-trade__paths" aria-labelledby="trade-paths-title">
+    <div class="ht-trade__section-head">
+      <p>Choose your program</p>
+      <h2 id="trade-paths-title">Two ways to work together.</h2>
+    </div>
+    <div class="ht-trade__path-grid">
+      <article class="ht-trade__path ht-trade__path--navy">
+        <span class="ht-trade__path-no">Program 01</span>
+        <h3>Stock the<br>collection.</h3>
+        <p>Bring Hat Trick’s existing releases into your shop. We’ll help you choose a tight assortment that fits your customers and your market.</p>
+        <ul>
+          <li>Curated opening assortment</li>
+          <li>Recognizable, giftable designs</li>
+          <li>Independent-shop friendly</li>
+        </ul>
+        <a href="#wholesale-inquiry">Request the line sheet →</a>
+      </article>
+      <article class="ht-trade__path ht-trade__path--red">
+        <span class="ht-trade__path-no">Program 02</span>
+        <h3>Create a<br>custom run.</h3>
+        <p>Bring the team, business, band, event, or strange idea. We’ll turn it into a hat people actually want to wear.</p>
+        <ul>
+          <li>MOQs starting at 50 hats</li>
+          <li>Full in-house design support</li>
+          <li>Custom shape, color, and details</li>
+        </ul>
+        <a href="#wholesale-inquiry">Tell us your idea →</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="ht-trade__why">
+    <div class="ht-trade__why-copy">
+      <p class="ht-trade__kicker">The Hat Trick difference</p>
+      <h2>Familiar enough to click.<br>Original enough to remember.</h2>
+      <p>Our hats live where sports, television, city life, and nostalgia overlap. The references pull people in; the design and construction make them keep the hat on.</p>
+    </div>
+    <div class="ht-trade__scorecard">
+      <div><span>Conversation value</span><b>10</b></div>
+      <div><span>Giftability</span><b>09</b></div>
+      <div><span>Counter appeal</span><b>10</b></div>
+      <div><span>Boring logo energy</span><b>00</b></div>
+    </div>
+  </section>
+
+  <section class="ht-trade__line-sheet" aria-labelledby="trade-line-title">
+    <div class="ht-trade__section-head">
+      <p>Selected retail hits · Preview assortment</p>
+      <h2 id="trade-line-title">The opening lineup.</h2>
+    </div>
+    <div class="ht-trade__products">
+      {% for handle in featured_handles %}
+        {% assign product = all_products[handle] %}
+        {% if product != blank %}
+          <article class="ht-trade__product">
+            <span class="ht-trade__product-no">HT–{{ forloop.index | prepend: '0' }}</span>
+            <div class="ht-trade__product-image">
+              {{ product.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '360, 540, 720, 900', sizes: '(min-width: 900px) 31vw, 90vw', alt: product.title }}
+            </div>
+            <h3>{{ product.title }}</h3>
+            <p>{{ product.vendor | default: 'Hat Trick NYC' }}</p>
+          </article>
+        {% endif %}
+      {% endfor %}
+      <article class="ht-trade__product ht-trade__product--wildcard">
+        <span class="ht-trade__product-no">HT–YOUR–01</span>
+        <div><b>?</b><span>Your idea<br>goes here.</span></div>
+        <h3>Custom Program</h3>
+        <p>Built with our studio</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="ht-trade__process" aria-labelledby="trade-process-title">
+    <div class="ht-trade__section-head">
+      <p>From hello to delivery</p>
+      <h2 id="trade-process-title">How it works.</h2>
+    </div>
+    <ol>
+      <li><span>01</span><strong>Introduce yourself.</strong><p>Tell us about your shop, audience, quantity, and timeline.</p></li>
+      <li><span>02</span><strong>Build the lineup.</strong><p>Choose existing styles or develop a custom concept with Bronson.</p></li>
+      <li><span>03</span><strong>Approve the details.</strong><p>We align on artwork, materials, pricing, and production.</p></li>
+      <li><span>04</span><strong>Stock the shelves.</strong><p>Your hats arrive ready to start conversations.</p></li>
+    </ol>
+  </section>
+
+  <section class="ht-trade__inquiry" id="wholesale-inquiry">
+    <div class="ht-trade__inquiry-copy">
+      <p class="ht-trade__kicker">Wholesale desk · New accounts</p>
+      <h2>Let’s make<br>something good.</h2>
+      <p>Give us the basics and you’ll hear directly from the Hat Trick studio. No generic sales maze, no hard sell.</p>
+      <div class="ht-trade__response"><span>Expected reply</span><strong>1–3 business days</strong></div>
+    </div>
+
+    <div class="ht-trade__form-wrap">
+      {% form 'contact', id: 'HatTrickWholesaleForm', class: 'ht-trade__form' %}
+        {% if form.posted_successfully? %}
+          <div class="ht-trade__success" tabindex="-1">Application received. Bronson will be in touch soon.</div>
+        {% endif %}
+        {{ form.errors | default_errors }}
+        <input type="hidden" name="contact[Inquiry type]" value="Wholesale inquiry">
+        <div class="ht-trade__field-grid">
+          <label><span>Your name *</span><input required type="text" name="contact[name]" autocomplete="name"></label>
+          <label><span>Business name *</span><input required type="text" name="contact[Business name]" autocomplete="organization"></label>
+          <label><span>Email *</span><input required type="email" name="contact[email]" autocomplete="email"></label>
+          <label><span>Location *</span><input required type="text" name="contact[Location]" placeholder="City, State / Country"></label>
+          <label><span>Website or Instagram</span><input type="text" name="contact[Website or Instagram]"></label>
+          <label><span>Business type</span><select name="contact[Business type]"><option>Retail shop</option><option>Online retailer</option><option>Team or organization</option><option>Band or artist</option><option>Hospitality</option><option>Other</option></select></label>
+          <label><span>I’m interested in</span><select name="contact[Program]"><option>Stocking Hat Trick products</option><option>A custom hat run</option><option>Both</option></select></label>
+          <label><span>Estimated quantity</span><select name="contact[Estimated quantity]"><option>Not sure yet</option><option>50–99</option><option>100–249</option><option>250–499</option><option>500+</option></select></label>
+        </div>
+        <label class="ht-trade__full"><span>Tell us about the project *</span><textarea required rows="6" name="contact[body]" placeholder="What do you sell, who is it for, and what would make this project a home run?"></textarea></label>
+        <button class="ht-trade__submit" type="submit">Send to the wholesale desk <span>↗</span></button>
+      {% endform %}
+    </div>
+  </section>
+
+  <div class="ht-trade__ticker" aria-hidden="true"><div><span>Independent retail</span><span>Custom programs</span><span>Designed in NYC</span><span>Minimum 50 hats</span><span>Independent retail</span><span>Custom programs</span><span>Designed in NYC</span><span>Minimum 50 hats</span></div></div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }}{background:#d9c79d;color:#17130e}
+  .ht-trade{--paper:#eadcb8;--cream:#f4e9ca;--navy:#173f68;--red:#b93225;--yellow:#e6b839;--cyan:#2b9da0;--ink:#17130e;max-width:1600px;margin:auto;overflow:hidden;background-color:var(--paper);background-image:linear-gradient(rgba(23,19,14,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(23,19,14,.05) 1px,transparent 1px);background-size:32px 32px}
+  .ht-trade__hero{position:relative;min-height:670px;padding:55px clamp(22px,6vw,92px) 70px;color:var(--cream);background:var(--navy);border-bottom:8px solid var(--yellow);overflow:hidden}
+  .ht-trade__hero:before{content:"";position:absolute;inset:-30%;opacity:.12;background:repeating-radial-gradient(circle at 75% 50%,transparent 0 30px,#fff 31px 33px,transparent 34px 60px);transform:rotate(8deg)}
+  .ht-trade__catalog-no{position:relative;z-index:2;padding-bottom:18px;border-bottom:2px solid rgba(244,233,202,.55);text-transform:uppercase;letter-spacing:.17em;font:900 10px/1 Arial,sans-serif}
+  .ht-trade__hero-copy{position:relative;z-index:2;max-width:1080px;padding-top:75px}
+  .ht-trade__kicker,.ht-trade__section-head>p{margin:0 0 22px;color:var(--red);text-transform:uppercase;letter-spacing:.17em;font:900 10px/1.2 Arial,sans-serif}
+  .ht-trade__hero .ht-trade__kicker{color:var(--yellow)}
+  .ht-trade__hero h1{margin:0;color:var(--cream);font:500 clamp(70px,10vw,155px)/.78 Georgia,serif;letter-spacing:-.07em}
+  .ht-trade__hero h1 em{color:var(--yellow);font-weight:500}
+  .ht-trade__intro{max-width:680px;margin:42px 0 32px;font:500 clamp(17px,1.6vw,22px)/1.5 Arial,sans-serif}
+  .ht-trade__button,.ht-trade__path a{display:inline-flex;gap:30px;align-items:center;justify-content:space-between;padding:17px 20px;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);text-decoration:none;text-transform:uppercase;letter-spacing:.1em;font:900 10px/1 Arial,sans-serif}
+  .ht-trade__button--yellow{color:var(--ink);background:var(--yellow)}
+  .ht-trade__stamp{position:absolute;z-index:2;right:clamp(20px,6vw,90px);top:115px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:155px;aspect-ratio:1;border:6px double var(--yellow);border-radius:50%;color:var(--yellow);transform:rotate(9deg);text-align:center;text-transform:uppercase;font-family:Arial,sans-serif}
+  .ht-trade__stamp span,.ht-trade__stamp small{font-size:8px;letter-spacing:.14em;font-weight:900}.ht-trade__stamp strong{margin-top:5px;font-size:10px}.ht-trade__stamp b{font:900 42px/.9 Georgia,serif}
+  .ht-trade__register{position:absolute;right:40px;bottom:25px;color:var(--cyan);font:100 48px/1 Arial,sans-serif}
+  .ht-trade__facts{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:4px solid var(--ink);background:var(--yellow)}
+  .ht-trade__facts div{display:grid;grid-template-columns:auto 1fr;padding:21px 24px;border-right:3px solid var(--ink)}.ht-trade__facts div:last-child{border:0}
+  .ht-trade__facts span{grid-row:1/3;margin-right:15px;color:var(--red);font:900 30px/1 Arial Black,sans-serif}.ht-trade__facts strong{font:700 20px/1 Georgia,serif}.ht-trade__facts small{text-transform:uppercase;letter-spacing:.09em;font:800 8px/1.3 Arial,sans-serif}
+  .ht-trade__paths,.ht-trade__line-sheet,.ht-trade__process{padding:clamp(70px,9vw,135px) clamp(22px,6vw,92px)}
+  .ht-trade__section-head{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:45px}.ht-trade__section-head h2{max-width:850px;margin:0;font:700 clamp(50px,7vw,105px)/.82 Georgia,serif;letter-spacing:-.06em;text-align:right}
+  .ht-trade__path-grid{display:grid;grid-template-columns:1fr 1fr;border:3px solid var(--ink);box-shadow:12px 12px 0 var(--yellow)}
+  .ht-trade__path{min-height:560px;padding:clamp(30px,5vw,70px);color:var(--cream)}.ht-trade__path--navy{background:var(--navy)}.ht-trade__path--red{background:var(--red);border-left:3px solid var(--ink)}
+  .ht-trade__path-no{display:block;margin-bottom:55px;color:var(--yellow);text-transform:uppercase;letter-spacing:.15em;font:900 9px/1 Arial,sans-serif}
+  .ht-trade__path h3{margin:0 0 28px;color:var(--cream);font:700 clamp(48px,6vw,86px)/.82 Georgia,serif;letter-spacing:-.055em}.ht-trade__path p{max-width:510px;font:500 17px/1.55 Arial,sans-serif}.ht-trade__path ul{margin:25px 0 38px;padding:0;list-style:none;border-top:2px solid rgba(244,233,202,.55)}.ht-trade__path li{padding:11px 0;border-bottom:1px solid rgba(244,233,202,.4);text-transform:uppercase;letter-spacing:.09em;font:800 9px/1.2 Arial,sans-serif}.ht-trade__path a{color:var(--ink);background:var(--cream)}
+  .ht-trade__why{display:grid;grid-template-columns:1.2fr .8fr;gap:clamp(35px,7vw,100px);align-items:center;padding:clamp(70px,9vw,135px) clamp(22px,6vw,92px);color:var(--cream);background:var(--red);border-block:4px solid var(--ink)}
+  .ht-trade__why h2{margin:0 0 30px;color:var(--cream);font:700 clamp(45px,6vw,88px)/.88 Georgia,serif;letter-spacing:-.055em}.ht-trade__why-copy>p:last-child{max-width:760px;font:500 18px/1.55 Arial,sans-serif}.ht-trade__why .ht-trade__kicker{color:var(--yellow)}
+  .ht-trade__scorecard{border:3px solid var(--ink);background:var(--paper);color:var(--ink);box-shadow:9px 9px 0 var(--navy)}.ht-trade__scorecard div{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:2px solid var(--ink)}.ht-trade__scorecard div:last-child{border:0}.ht-trade__scorecard span{text-transform:uppercase;letter-spacing:.1em;font:900 9px/1.2 Arial,sans-serif}.ht-trade__scorecard b{color:var(--red);font:900 32px/1 Georgia,serif}
+  .ht-trade__products{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.ht-trade__product{position:relative;padding:10px 10px 19px;border:3px solid var(--ink);background:var(--cream);box-shadow:6px 7px 0 var(--navy);transform:rotate(-.5deg)}.ht-trade__product:nth-child(even){transform:rotate(.7deg);box-shadow:6px 7px 0 var(--red)}
+  .ht-trade__product-no{display:block;padding:4px 0 9px;text-transform:uppercase;letter-spacing:.12em;font:900 8px/1 Arial,sans-serif}.ht-trade__product-image{aspect-ratio:1;overflow:hidden;border:2px solid var(--ink);background:white}.ht-trade__product-image img{width:100%;height:100%;object-fit:cover}.ht-trade__product h3{margin:17px 4px 3px;font:700 clamp(20px,2vw,29px)/.95 Georgia,serif}.ht-trade__product>p{margin:0 4px;text-transform:uppercase;letter-spacing:.1em;font:800 8px/1.2 Arial,sans-serif}
+  .ht-trade__product--wildcard>div{display:grid;place-items:center;align-content:center;aspect-ratio:1;border:2px solid var(--ink);color:var(--cream);background:var(--cyan);text-align:center}.ht-trade__product--wildcard b{font:900 clamp(90px,10vw,150px)/.65 Georgia,serif}.ht-trade__product--wildcard div span{text-transform:uppercase;letter-spacing:.12em;font:900 9px/1.2 Arial,sans-serif}
+  .ht-trade__process{background:var(--cream);border-block:4px solid var(--ink)}.ht-trade__process ol{display:grid;grid-template-columns:repeat(4,1fr);margin:0;padding:0;list-style:none;border:3px solid var(--ink)}.ht-trade__process li{min-height:280px;padding:25px;border-right:3px solid var(--ink)}.ht-trade__process li:last-child{border:0}.ht-trade__process li>span{display:block;margin-bottom:65px;color:var(--red);font:900 38px/1 Arial Black,sans-serif}.ht-trade__process strong{display:block;font:700 27px/1 Georgia,serif}.ht-trade__process li p{font:500 14px/1.5 Arial,sans-serif}
+  .ht-trade__inquiry{display:grid;grid-template-columns:.78fr 1.22fr;gap:clamp(35px,7vw,100px);padding:clamp(75px,10vw,150px) clamp(22px,6vw,92px);color:var(--cream);background:var(--navy)}.ht-trade__inquiry h2{margin:0 0 30px;color:var(--cream);font:700 clamp(54px,5.7vw,92px)/.9 Georgia,serif;letter-spacing:-.05em;word-break:normal;overflow-wrap:normal;hyphens:none}.ht-trade__inquiry-copy>p:not(.ht-trade__kicker){max-width:520px;font:500 17px/1.55 Arial,sans-serif}.ht-trade__inquiry .ht-trade__kicker{color:var(--yellow)}.ht-trade__response{display:inline-grid;margin-top:30px;padding:15px 20px;border:2px solid var(--yellow);transform:rotate(-2deg)}.ht-trade__response span{text-transform:uppercase;letter-spacing:.12em;font:900 8px/1 Arial,sans-serif}.ht-trade__response strong{color:var(--yellow);font:700 25px/1.2 Georgia,serif}
+  .ht-trade__form-wrap{padding:clamp(24px,4vw,48px);border:3px solid var(--ink);background:var(--paper);box-shadow:10px 10px 0 var(--yellow);color:var(--ink)}.ht-trade__field-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.ht-trade__form label{display:grid;gap:8px}.ht-trade__form label>span{text-transform:uppercase;letter-spacing:.11em;font:900 8px/1 Arial,sans-serif}.ht-trade__form input,.ht-trade__form select,.ht-trade__form textarea{width:100%;min-height:50px;padding:12px;border:2px solid var(--ink);border-radius:0;background:var(--cream);color:var(--ink);font:600 14px/1.3 Arial,sans-serif}.ht-trade__form textarea{resize:vertical}.ht-trade__full{margin-top:20px}.ht-trade__submit{display:flex;justify-content:space-between;width:100%;margin-top:20px;padding:18px 20px;border:3px solid var(--ink);border-radius:0;background:var(--red);color:var(--cream);box-shadow:5px 5px 0 var(--ink);text-transform:uppercase;letter-spacing:.1em;font:900 10px/1 Arial,sans-serif;cursor:pointer}.ht-trade__success{margin-bottom:20px;padding:15px;border:3px solid var(--ink);background:var(--yellow);font-weight:800}
+  .ht-trade__ticker{overflow:hidden;color:var(--ink);background:var(--yellow);border-block:4px solid var(--ink)}.ht-trade__ticker div{display:flex;width:max-content;animation:ht-trade-ticker 24s linear infinite}.ht-trade__ticker span{display:flex;align-items:center;gap:25px;padding:20px 35px;text-transform:uppercase;letter-spacing:.14em;font:900 10px/1 Arial,sans-serif}.ht-trade__ticker span:after{content:"★";color:var(--red)}@keyframes ht-trade-ticker{to{transform:translateX(-50%)}}
+  @media(max-width:950px){.ht-trade__facts{grid-template-columns:1fr 1fr}.ht-trade__facts div:nth-child(2){border-right:0}.ht-trade__facts div{border-bottom:3px solid var(--ink)}.ht-trade__path-grid,.ht-trade__why,.ht-trade__inquiry{grid-template-columns:1fr}.ht-trade__path--red{border-left:0;border-top:3px solid var(--ink)}.ht-trade__products,.ht-trade__process ol{grid-template-columns:1fr 1fr}.ht-trade__process li:nth-child(2){border-right:0}.ht-trade__process li{border-bottom:3px solid var(--ink)}.ht-trade__section-head{display:block}.ht-trade__section-head h2{text-align:left}.ht-trade__section-head>p{margin-bottom:15px}}
+  @media(max-width:600px){.ht-trade__hero{min-height:650px}.ht-trade__hero-copy{padding-top:65px}.ht-trade__hero h1{font-size:62px}.ht-trade__stamp{display:none}.ht-trade__facts,.ht-trade__products,.ht-trade__process ol,.ht-trade__field-grid{grid-template-columns:1fr}.ht-trade__facts div{border-right:0}.ht-trade__path{min-height:0}.ht-trade__products{gap:25px}.ht-trade__process li{min-height:0;border-right:0}.ht-trade__process li>span{margin-bottom:25px}}
+  @media(prefers-reduced-motion:reduce){.ht-trade__ticker div{animation:none}}
+</style>
+
+{% schema %}
+{"name":"Wholesale trade catalog","settings":[],"presets":[{"name":"Wholesale trade catalog"}]}
+{% endschema %}

@@ -1,0 +1,166 @@
+<section class="ht-about">
+  <header class="ht-about__masthead">
+    <p>Hat Trick NYC · Independent Design Studio · Est. New York</p>
+    <h1>Behind the<br><em>Stitching</em></h1>
+    <span class="ht-about__issue">Studio<br>Issue 01</span>
+  </header>
+
+  <div class="ht-about__spread">
+    <figure class="ht-about__portrait">
+      <div class="ht-about__photo">
+        {% if section.settings.portrait != blank %}
+          {{ section.settings.portrait | image_url: width: 1400 | image_tag:
+            loading: 'eager',
+            widths: '480, 720, 1000, 1400',
+            sizes: '(min-width: 900px) 48vw, 100vw',
+            alt: 'Bronson, founder and designer of Hat Trick NYC'
+          }}
+        {% endif %}
+        <span class="ht-about__halftone" aria-hidden="true"></span>
+      </div>
+      <figcaption>
+        <span>Fig. 001</span>
+        <span>Founder / Designer / Lifelong fan</span>
+        <span>New York, NY</span>
+      </figcaption>
+      <div class="ht-about__note" aria-hidden="true">Designed by<br>Bronson in NYC ↗</div>
+    </figure>
+
+    <article class="ht-about__story">
+      <p class="ht-about__eyebrow">About Hat Trick</p>
+      <h2>Sports culture,<br>rewritten in thread.</h2>
+      <div class="ht-about__copy rte">
+        {{ section.settings.story }}
+      </div>
+      <div class="ht-about__signature">
+        <span>From the desk of</span>
+        <strong>Bronson</strong>
+        <small>Founder, Hat Trick NYC</small>
+      </div>
+    </article>
+  </div>
+
+  <section class="ht-about__principles" aria-labelledby="ht-principles-title">
+    <div class="ht-about__principles-head">
+      <p>Studio principles · Non-negotiables</p>
+      <h2 id="ht-principles-title">The house rules</h2>
+    </div>
+    <ol>
+      <li>
+        <span>01</span>
+        <strong>Sports are culture.</strong>
+        <p>The uniforms, broadcasts, commutes, rituals, and arguments matter as much as the final score.</p>
+      </li>
+      <li>
+        <span>02</span>
+        <strong>Nostalgia should feel new.</strong>
+        <p>The references may be familiar. The hat should still feel like something you haven’t seen before.</p>
+      </li>
+      <li>
+        <span>03</span>
+        <strong>A good hat starts conversations.</strong>
+        <p>If someone across the bar understands the reference, the design did its job.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="ht-about__specs" aria-label="Studio production details">
+    <div class="ht-about__spec-card">
+      <p>Production notes</p>
+      <dl>
+        <div><dt>Studio</dt><dd>Independent</dd></div>
+        <div><dt>Designed</dt><dd>New York City</dd></div>
+        <div><dt>Method</dt><dd>Small batches</dd></div>
+        <div><dt>Favorite shape</dt><dd>Unstructured five-panel</dd></div>
+        <div><dt>Primary material</dt><dd>Premium cotton</dd></div>
+        <div><dt>Required ingredient</dt><dd>A deep-cut reference</dd></div>
+      </dl>
+    </div>
+    <blockquote>
+      <span>“</span>
+      <p>Made for the fans who notice the side patch, remember the broadcast, and stay through the ninth.</p>
+    </blockquote>
+  </section>
+
+  <div class="ht-about__ticker" aria-hidden="true">
+    <div>
+      <span>Designed in NYC</span><span>Made for the cheap seats</span><span>No boring hats</span><span>Small batch forever</span>
+      <span>Designed in NYC</span><span>Made for the cheap seats</span><span>No boring hats</span><span>Small batch forever</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} { background:#d9c79d; color:#17130e; }
+  .ht-about { --paper:#eadcb8; --cream:#f4e9ca; --navy:#173f68; --red:#b93225; --yellow:#e6b839; --cyan:#2b9da0; --ink:#17130e; position:relative; overflow:hidden; max-width:1600px; margin:0 auto; background-color:var(--paper); background-image:linear-gradient(rgba(23,19,14,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(23,19,14,.05) 1px,transparent 1px),radial-gradient(circle at 1px 1px,rgba(185,50,37,.04) 1px,transparent 1.5px); background-size:32px 32px,32px 32px,8px 8px; }
+  .ht-about__masthead { position:relative; min-height:500px; padding:clamp(90px,11vw,160px) clamp(22px,6vw,92px) 55px; color:var(--cream); background:var(--navy); overflow:hidden; border-bottom:8px solid var(--red); }
+  .ht-about__masthead:before { content:""; position:absolute; inset:-50%; opacity:.12; background:repeating-radial-gradient(circle at center,transparent 0 24px,#fff 25px 27px,transparent 28px 50px); transform:rotate(-12deg); }
+  .ht-about__masthead>p { position:relative; z-index:2; margin:0 0 35px; text-transform:uppercase; letter-spacing:.16em; font:800 11px/1.2 Arial,sans-serif; }
+  .ht-about__masthead h1 { position:relative; z-index:2; max-width:1050px; margin:0; color:var(--cream); font:500 clamp(72px,13vw,190px)/.71 Georgia,serif; letter-spacing:-.075em; }
+  .ht-about__masthead h1 em { color:var(--yellow); font-weight:500; }
+  .ht-about__issue { position:absolute; z-index:2; right:clamp(22px,6vw,92px); bottom:55px; display:grid; place-items:center; width:135px; aspect-ratio:1; border:6px double var(--yellow); border-radius:50%; color:var(--yellow); transform:rotate(9deg); text-align:center; text-transform:uppercase; letter-spacing:.1em; font:800 12px/1.15 Arial,sans-serif; }
+  .ht-about__spread { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr); gap:clamp(38px,6vw,90px); align-items:center; padding:clamp(60px,9vw,140px) clamp(22px,6vw,92px); }
+  .ht-about__portrait { position:relative; margin:0; padding:14px 14px 18px; border:3px solid var(--ink); background:var(--cream); box-shadow:12px 13px 0 var(--red); transform:rotate(-1deg); }
+  .ht-about__photo { position:relative; overflow:hidden; aspect-ratio:4/5; border:2px solid var(--ink); background:#f9f5ea; }
+  .ht-about__photo img { display:block; width:100%; height:100%; object-fit:cover; filter:saturate(.82) contrast(1.05); }
+  .ht-about__halftone { position:absolute; inset:0; pointer-events:none; opacity:.14; background:radial-gradient(circle,#17130e 0 1px,transparent 1.2px) 0 0/5px 5px; mix-blend-mode:multiply; }
+  .ht-about__portrait figcaption { display:grid; grid-template-columns:auto 1fr auto; gap:15px; padding:13px 2px 0; text-transform:uppercase; letter-spacing:.09em; font:800 8px/1.3 Arial,sans-serif; }
+  .ht-about__portrait figcaption span:nth-child(2){text-align:center}
+  .ht-about__note { position:absolute; right:-38px; bottom:70px; padding:13px 18px; color:var(--cream); background:var(--red); border:3px solid var(--ink); box-shadow:4px 4px 0 var(--ink); transform:rotate(7deg); font:700 19px/1.05 Georgia,serif; }
+  .ht-about__story { position:relative; padding:clamp(30px,4vw,58px); border:3px solid var(--ink); background:rgba(244,233,202,.95); box-shadow:9px 9px 0 var(--yellow); }
+  .ht-about__story:before,.ht-about__story:after { content:""; position:absolute; width:22px; height:22px; background:linear-gradient(90deg,transparent 10px,var(--red) 10px 12px,transparent 12px),linear-gradient(transparent 10px,var(--cyan) 10px 12px,transparent 12px); }
+  .ht-about__story:before{top:14px;right:14px}.ht-about__story:after{left:14px;bottom:14px;transform:rotate(45deg)}
+  .ht-about__eyebrow,.ht-about__principles-head p,.ht-about__spec-card>p { margin:0 0 18px; color:var(--red); text-transform:uppercase; letter-spacing:.16em; font:900 10px/1.2 Arial,sans-serif; }
+  .ht-about__story h2 { margin:0 0 30px; font:700 clamp(42px,5vw,78px)/.88 Georgia,serif; letter-spacing:-.055em; }
+  .ht-about__copy { font:500 clamp(17px,1.6vw,22px)/1.6 Arial,sans-serif; }
+  .ht-about__copy p { margin:0; }
+  .ht-about__signature { display:grid; grid-template-columns:1fr auto; margin-top:34px; padding-top:18px; border-top:3px solid var(--ink); }
+  .ht-about__signature span,.ht-about__signature small { text-transform:uppercase; letter-spacing:.1em; font:800 8px/1.2 Arial,sans-serif; }
+  .ht-about__signature strong { grid-row:1/3; grid-column:2; color:var(--navy); font:italic 700 38px/.8 Georgia,serif; transform:rotate(-4deg); }
+  .ht-about__principles { padding:clamp(65px,9vw,130px) clamp(22px,6vw,92px); color:var(--cream); background:var(--red); border-top:4px solid var(--ink); border-bottom:4px solid var(--ink); }
+  .ht-about__principles-head { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:45px; }
+  .ht-about__principles-head p { color:var(--yellow); }
+  .ht-about__principles-head h2 { margin:0; color:var(--cream); font:700 clamp(54px,8vw,120px)/.8 Georgia,serif; letter-spacing:-.065em; }
+  .ht-about__principles ol { list-style:none; display:grid; grid-template-columns:repeat(3,1fr); margin:0; padding:0; border:3px solid var(--ink); }
+  .ht-about__principles li { position:relative; min-height:320px; padding:28px; border-right:3px solid var(--ink); background:var(--paper); color:var(--ink); }
+  .ht-about__principles li:last-child{border:0}
+  .ht-about__principles li>span { display:block; margin-bottom:55px; color:var(--red); font:900 40px/1 Arial Black,sans-serif; }
+  .ht-about__principles strong { display:block; font:700 clamp(27px,3vw,40px)/.95 Georgia,serif; letter-spacing:-.04em; }
+  .ht-about__principles li p { margin:18px 0 0; font:500 15px/1.5 Arial,sans-serif; }
+  .ht-about__specs { display:grid; grid-template-columns:1fr 1fr; gap:clamp(30px,5vw,75px); align-items:center; padding:clamp(70px,9vw,140px) clamp(22px,6vw,92px); }
+  .ht-about__spec-card { border:3px solid var(--ink); background:var(--cream); box-shadow:9px 9px 0 var(--cyan); }
+  .ht-about__spec-card>p { margin:0; padding:18px 22px; color:var(--cream); background:var(--navy); border-bottom:3px solid var(--ink); }
+  .ht-about__spec-card dl { margin:0; }
+  .ht-about__spec-card dl div { display:grid; grid-template-columns:1fr 1.4fr; border-bottom:2px solid var(--ink); }
+  .ht-about__spec-card dl div:last-child{border:0}
+  .ht-about__spec-card dt,.ht-about__spec-card dd { margin:0; padding:15px 20px; }
+  .ht-about__spec-card dt { border-right:2px solid var(--ink); text-transform:uppercase; letter-spacing:.1em; font:800 9px/1.2 Arial,sans-serif; }
+  .ht-about__spec-card dd { font:700 17px/1.15 Georgia,serif; }
+  .ht-about__specs blockquote { position:relative; margin:0; padding:40px 25px 35px 70px; border-top:5px solid var(--ink); border-bottom:5px solid var(--ink); }
+  .ht-about__specs blockquote span { position:absolute; left:5px; top:19px; color:var(--red); font:700 100px/1 Georgia,serif; }
+  .ht-about__specs blockquote p { margin:0; font:italic 500 clamp(30px,4vw,55px)/1.05 Georgia,serif; letter-spacing:-.035em; }
+  .ht-about__ticker { overflow:hidden; color:var(--cream); background:var(--navy); border-top:4px solid var(--ink); border-bottom:4px solid var(--ink); }
+  .ht-about__ticker div { display:flex; width:max-content; animation:ht-about-ticker 26s linear infinite; }
+  .ht-about__ticker span { display:flex; align-items:center; gap:25px; padding:19px 34px; text-transform:uppercase; letter-spacing:.14em; font:900 11px/1 Arial,sans-serif; }
+  .ht-about__ticker span:after { content:"★"; color:var(--yellow); }
+  @keyframes ht-about-ticker { to{transform:translateX(-50%)} }
+  @media(max-width:900px){.ht-about__spread{grid-template-columns:1fr}.ht-about__portrait{max-width:680px;margin:0 auto}.ht-about__principles-head{display:block}.ht-about__principles-head h2{margin-top:16px}.ht-about__principles ol{grid-template-columns:1fr}.ht-about__principles li{min-height:0;border-right:0;border-bottom:3px solid var(--ink)}.ht-about__principles li>span{margin-bottom:25px}.ht-about__specs{grid-template-columns:1fr}}
+  @media(max-width:560px){.ht-about__masthead{min-height:450px}.ht-about__masthead h1{font-size:64px}.ht-about__issue{display:none}.ht-about__portrait{padding:9px}.ht-about__portrait figcaption{grid-template-columns:1fr 1fr}.ht-about__portrait figcaption span:nth-child(2){display:none}.ht-about__note{right:-6px;bottom:55px}.ht-about__story{padding:27px 21px}.ht-about__principles li{padding:24px}.ht-about__spec-card dl div{grid-template-columns:1fr}.ht-about__spec-card dt{border-right:0;border-bottom:1px solid var(--ink);padding-bottom:8px}.ht-about__spec-card dd{padding-top:10px}.ht-about__specs blockquote{padding-left:50px}}
+  @media(prefers-reduced-motion:reduce){.ht-about__ticker div{animation:none}}
+</style>
+
+{% schema %}
+{
+  "name": "About studio colophon",
+  "settings": [
+    { "type": "image_picker", "id": "portrait", "label": "Founder portrait" },
+    {
+      "type": "richtext",
+      "id": "story",
+      "label": "Founder story",
+      "default": "<p>I’m Bronson — a designer and lifelong sports fan who believes hats should do more than block the sun. I design hats that turn heads in the stadium, spark conversations in the stands, and fuel the kind of playful banter that makes sports fun. Hat Trick NYC is where design meets fandom — equal parts style, nostalgia, and a wink to the games and culture we love.</p>"
+    }
+  ],
+  "presets": [{ "name": "About studio colophon" }]
+}
+{% endschema %}

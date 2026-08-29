@@ -1,0 +1,429 @@
+{% assign lid = section.id | replace:'_','' | downcase %}
+
+{% style %}
+.leader-wrap-{{ lid }}{
+  --bg: {{ section.settings.bg_color | default: '#0b3d1a' }};
+  --row: {{ section.settings.row_color | default: '#0f4920' }};
+  --frame: {{ section.settings.frame_color | default: '#1a5a2b' }};
+  --text: {{ section.settings.text_color | default: '#ffffff' }};
+  --accent: {{ section.settings.accent_color | default: '#ffd34d' }};
+  width:100%; max-width:920px; margin:24px auto 44px; padding:0 16px;
+}
+.board-{{ lid }}{ background:linear-gradient(180deg,var(--frame),var(--bg)); border-radius:14px; box-shadow:0 12px 30px rgba(0,0,0,.18), inset 0 0 0 1px rgba(255,255,255,.05); overflow:hidden; }
+.board-head-{{ lid }}{ display:flex; justify-content:space-between; align-items:center; padding:16px 22px; color:var(--text); border-bottom:1px solid rgba(255,255,255,.06); }
+.board-title-{{ lid }}{ letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--text); text-shadow:{% if section.settings.glow_enable %}0 0 10px rgba(255,255,255,.25){% else %}none{% endif %}; }
+.board-sub-{{ lid }}{ opacity:.7; font-size:.9rem; }
+.board-list-{{ lid }}{ list-style:none; margin:0; padding:8px; }
+.board-row-{{ lid }}{
+  display:grid; grid-template-columns:52px 1fr 86px;
+  align-items:center; gap:12px;
+  background:var(--row);
+  margin:10px 0; padding:14px 16px;
+  border-radius:10px;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.04);
+  transition:background-color .25s ease, transform .35s cubic-bezier(.2,.8,.2,1);
+  will-change: transform;
+  position: relative; /* for mini confetti */
+}
+.board-row-{{ lid }}.flash-{{ lid }}{ background:linear-gradient(0deg, rgba(255,211,77,.18), rgba(255,211,77,.06)), var(--row); }
+.rank-badge-{{ lid }}{ width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--accent); color:#222; font-weight:800; box-shadow:0 3px 0 rgba(0,0,0,.25); }
+.label-{{ lid }}{ color:var(--text); font-weight:600; letter-spacing:.02em; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+/* flipboard count (white tile, black numbers) */
+.count-{{ lid }}{ position:relative; height:28px; width:76px; background:#fff; color:#111; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:800; overflow:hidden; box-shadow:inset 0 -2px 0 rgba(0,0,0,.25); }
+.count-{{ lid }} .flip-{{ lid }}{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; backface-visibility:hidden; transform-origin:50% 100%; }
+.flip-out-{{ lid }}{ animation: flipOut-{{ lid }} 320ms ease both; }
+.count-{{ lid }} .flip-{{ lid }}::after {
+  content: '%';
+  margin-left: 1px;
+  font-size: 0.9em;
+}
+
+.flip-in-{{ lid }} { animation: flipIn-{{ lid }} 320ms ease 150ms both; }
+@keyframes flipOut-{{ lid }}{ 0%{transform:rotateX(0);opacity:1;} 100%{transform:rotateX(-90deg);opacity:0;} }
+@keyframes flipIn-{{ lid }}{ 0%{transform:rotateX(90deg);opacity:0;} 100%{transform:rotateX(0);opacity:1;} }
+
+/* --- Fenway / scoreboard header vibe --- */
+.board-{{ lid }}.fenway-{{ lid }} .board-title-{{ lid }}{
+  letter-spacing:.18em;
+  font-weight:900;
+  text-transform:uppercase;
+  position:relative;
+  padding:2px 6px;
+  color:#ffffff;
+  text-shadow:
+    -1px -1px 0 #0b2d13,
+     1px -1px 0 #0b2d13,
+    -1px  1px 0 #0b2d13,
+     1px  1px 0 #0b2d13,
+     0   2px 0 rgba(0,0,0,.35);
+}
+.board-{{ lid }}.fenway-{{ lid }} .board-head-{{ lid }}{
+  background:
+    linear-gradient(0deg, rgba(255,255,255,.06), rgba(255,255,255,0)),
+    repeating-linear-gradient(90deg, rgba(255,211,77,.06) 0 12px, transparent 12px 24px);
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+
+/* rank up highlight */
+.board-row-{{ lid }}.rank-up-{{ lid }}{
+  background:linear-gradient(0deg, rgba(255,211,77,.26), rgba(255,211,77,.08)), var(--row);
+}
+
+/* Top slot highlight */
+.board-row-{{ lid }}.is-top::before{
+  content:"";
+  position:absolute; inset:-4px;
+  border-radius:12px;
+  background: radial-gradient(circle at 50% 50%, rgba(255,211,77,.26), transparent 70%);
+  animation: glowPulse-{{ lid }} 2.4s ease-in-out infinite;
+  z-index: 0;
+}
+.board-row-{{ lid }}.is-top{
+  box-shadow:
+    0 0 12px rgba(255,230,100,.6),
+    0 0 24px rgba(255,180,0,.35),
+    inset 0 0 0 1px rgba(255,255,255,.06);
+}
+@keyframes glowPulse-{{ lid }}{
+  0%,100%{ opacity:.55; transform: scale(1);}
+  50%    { opacity:1;    transform: scale(1.04);}
+}
+
+/* tiny confetti for rank-up */
+.board-row-{{ lid }} .mini-confetti-{{ lid }}{
+  position:absolute; width:6px; height:10px; border-radius:2px;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  animation: miniPop-{{ lid }} 650ms cubic-bezier(.17,.67,.38,1) forwards;
+  pointer-events:none;
+  z-index: 2;
+}
+@keyframes miniPop-{{ lid }}{
+  0%   { transform: translate(-50%,-50%) rotate(0deg);   opacity:1; }
+  80%  { opacity:1; }
+  100% { transform: translate(calc(-50% + var(--dx,0px)), calc(-50% + var(--dy,0px))) rotate(var(--rot,160deg)); opacity:0; }
+}
+
+.board-foot-{{ lid }}{ display:flex; justify-content:flex-end; gap:10px; padding:10px 16px; font-size:.8rem; color:rgba(255,255,255,.7); border-top:1px solid rgba(255,255,255,.06); }
+.dot-{{ lid }}{ width:6px; height:6px; border-radius:50%; background:#4ade80; box-shadow:0 0 8px #4ade80; }
+
+@media (max-width:640px){
+  .board-row-{{ lid }}{ grid-template-columns:42px 1fr 70px; padding:12px 12px; }
+  .count-{{ lid }}{ width:64px; height:26px; }
+}
+{% endstyle %}
+
+<div class="leader-wrap-{{ lid }}">
+  <div class="board-{{ lid }} fenway-{{ lid }}" id="board-{{ lid }}" aria-live="polite">
+    <div class="board-head-{{ lid }}">
+      <div class="board-title-{{ lid }}">{{ section.settings.title | escape }}</div>
+      <div class="board-sub-{{ lid }}" id="status-{{ lid }}">{{ section.settings.subtitle | escape }}</div>
+    </div>
+
+    <ul class="board-list-{{ lid }}" id="list-{{ lid }}">
+      {%- assign rows = section.settings.rows | default: 6 -%}
+      {%- for i in (1..10) -%}
+        {%- assign idk = 'id_' | append: i -%}
+        {%- assign labk = 'label_' | append: i -%}
+        {%- assign pid = section.settings[idk] | strip -%}
+        {%- if pid != blank and forloop.index <= rows -%}
+          <li class="board-row-{{ lid }}" data-id="{{ pid | escape }}">
+            <span class="rank-badge-{{ lid }}">{{ forloop.index }}</span>
+            <span class="label-{{ lid }}">{{ section.settings[labk] | default: 'Card' | escape }}</span>
+            <span class="count-{{ lid }}" data-count><span data-val class="flip-{{ lid }}">0</span></span>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    <div class="board-foot-{{ lid }}">
+      <span class="dot-{{ lid }}"></span>
+      <span id="ts-{{ lid }}"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const WRAP = document.getElementById('board-{{ lid }}');
+  if(!WRAP) return;
+
+  const LIST   = document.getElementById('list-{{ lid }}');
+  const TS     = document.getElementById('ts-{{ lid }}');
+  const STATUS = document.getElementById('status-{{ lid }}');
+
+  // Allow the carousel to read this (for auto-detect)
+  WRAP.dataset.voteProxy = "{{ section.settings.vote_proxy | strip | escape }}";
+
+  const PROXY = (WRAP.dataset.voteProxy || "").replace(/\/+$/,'');
+  const REFRESH_SEC = {{ section.settings.refresh_sec | default: 10 | times: 1 }};
+  const entries = Array.from(LIST.querySelectorAll('[data-id]')).map(el => ({ id: el.dataset.id, el }));
+
+  function nowStr(){ const d=new Date(); return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
+
+  function flip(el,newNum){
+    const valEl = el.querySelector('[data-val]');
+    const old = (valEl?.textContent || '0').trim();
+    const next = String(newNum);
+    if(old === next) return;
+
+    const out = document.createElement('span');
+    out.className = 'flip-{{ lid }} flip-out-{{ lid }}';
+    out.textContent = old;
+
+    const into = document.createElement('span');
+    into.className = 'flip-{{ lid }} flip-in-{{ lid }}';
+    into.textContent = next;
+
+    el.innerHTML = ''; el.appendChild(out); el.appendChild(into);
+  }
+
+  function setCountFor(id, value, flash=true){
+    const item = entries.find(e => e.id === id);
+    if(!item) return;
+    const countEl = item.el.querySelector('[data-count]');
+    if(countEl){
+      flip(countEl, value);          // value is now a PERCENTAGE
+      countEl.dataset.current = String(value);
+    }
+    if(flash){
+      item.el.classList.add('flash-{{ lid }}');
+      setTimeout(()=>item.el.classList.remove('flash-{{ lid }}'), 550);
+    }
+  }
+
+  // measure for FLIP
+  function measurePositions(items){
+    return items.map(({el}) => {
+      const r = el.getBoundingClientRect();
+      return { el, top: r.top, left: r.left };
+    });
+  }
+
+  // tiny rank-up confetti
+  function spawnMiniConfetti(row, bursts = 10){
+    const colors = ['#ffd700','#ffdc73','#fff1b6','#f0b400','#ffe27a'];
+    for (let i=0;i<bursts;i++){
+      const p = document.createElement('span');
+      p.className = 'mini-confetti-{{ lid }}';
+      p.style.background = colors[Math.floor(Math.random()*colors.length)];
+      p.style.setProperty('--dx', `${(Math.random()*2-1) * 80}px`);
+      p.style.setProperty('--dy', `${-40 - Math.random()*70}px`);
+      p.style.setProperty('--rot', `${90 + Math.random()*180}deg`);
+      row.appendChild(p);
+      setTimeout(()=> p.remove(), 680);
+    }
+  }
+
+  // crown + glow on #1
+  function markTopRow(topId){
+    const rows = Array.from(LIST.querySelectorAll('[data-id]'));
+    rows.forEach(row => {
+      const isTop = row.dataset.id === topId;
+      row.classList.toggle('is-top', isTop);
+      let crown = row.querySelector('.crown-{{ lid }}');
+      if (isTop && !crown){
+        crown = document.createElement('span');
+        crown.className = 'crown-{{ lid }}';
+        crown.textContent = ' 👑';
+        crown.style.marginLeft = '6px';
+        const label = row.querySelector('.label-{{ lid }}');
+        if (label) label.appendChild(crown);
+      }
+      if (!isTop && crown){ crown.remove(); }
+    });
+  }
+
+  function animateReorder(sortedIds){
+    const currentItems = Array.from(LIST.querySelectorAll('[data-id]'))
+      .map(el => ({ id: el.dataset.id, el }));
+    const first = measurePositions(currentItems);
+
+    // Append in new order
+    sortedIds.forEach(id => {
+      const node = currentItems.find(x => x.id === id)?.el;
+      if (node) LIST.appendChild(node);
+    });
+
+    // FLIP
+    const last = measurePositions(Array.from(LIST.querySelectorAll('[data-id]')).map(el => ({el})));
+    last.forEach((to) => {
+      const from = first.find(f => f.el === to.el);
+      if (!from) return;
+      const dx = from.left - to.left;
+      const dy = from.top  - to.top;
+      if (dx || dy){
+        to.el.style.transform = `translate(${dx}px, ${dy}px)`;
+        to.el.getBoundingClientRect(); // reflow
+        to.el.style.transform = '';
+      }
+    });
+
+    // Rank badges + animations
+    const rankMap = new Map(sortedIds.map((id, idx) => [id, idx]));
+    Array.from(LIST.children).forEach((el) => {
+      const id = el.dataset.id;
+      const newRank = (rankMap.get(id) ?? 0) + 1;
+      const badge = el.querySelector('.rank-badge-{{ lid }}');
+      if (badge) badge.textContent = newRank;
+
+      const prevRank = parseInt(el.dataset.rank || `${newRank}`, 10);
+      if (newRank < prevRank){
+        el.classList.add('rank-up-{{ lid }}');
+        spawnMiniConfetti(el, newRank === 1 ? 16 : 10);
+        setTimeout(()=> el.classList.remove('rank-up-{{ lid }}'), 650);
+      }
+      el.dataset.rank = newRank;
+    });
+
+    // mark #1
+    if (sortedIds.length) markTopRow(sortedIds[0]);
+  }
+
+  async function fetchCounts(){
+    if(!PROXY || entries.length === 0) return;
+    const ids = entries.map(e => e.id).join(',');
+    try{
+      const res = await fetch(`${PROXY}/leaderboard?ids=${encodeURIComponent(ids)}`, {
+        method:'GET', headers:{ 'Accept':'application/json' }, credentials:'include'
+      });
+      const data = await res.json();
+      if(Array.isArray(data.leaderboard)){
+        // --- convert raw counts to percentages of total ---
+        var total = 0;
+        data.leaderboard.forEach(function(row){
+          total += (row.count || 0);
+        });
+
+        var withPct = data.leaderboard.map(function(row){
+          var c = row.count || 0;
+          var pct = total > 0 ? Math.round((c / total) * 100) : 0;
+          return {
+            id: row.id,
+            count: c,
+            pct: pct
+          };
+        });
+
+        // update numbers as percentages
+        withPct.forEach(function(r){
+          setCountFor(r.id, r.pct, false);
+        });
+
+        // compute order (desc by raw count) and animate
+        const sortedIds = withPct
+          .slice()
+          .sort((a,b) => (b.count||0) - (a.count||0))
+          .map(r => r.id);
+        animateReorder(sortedIds);
+      }
+      if(TS) TS.textContent = `Updated ${ nowStr() }`;
+      if(STATUS) STATUS.textContent = '{{ section.settings.subtitle | escape }}';
+    }catch(e){ /* silent */ }
+  }
+
+  // expose a tiny API for the carousel (optimistic + real vote + remaining)
+  window.hatVotes = window.hatVotes || {};
+  window.hatVotes.leaderboard = async (ids) => {
+    const res = await fetch(`${PROXY}/leaderboard?ids=${encodeURIComponent(ids.join(','))}`, { credentials:'include' });
+    return res.json();
+  };
+  window.hatVotes.vote = async (id) => {
+    const res = await fetch(`${PROXY}/vote`, {
+      method:'POST',
+      headers:{ 'Content-Type': 'application/json' },
+      credentials:'include',
+      body: JSON.stringify({ id })
+    });
+    return res.json();
+  };
+  window.hatVotes.remaining = async () => {
+    const res = await fetch(`${PROXY}/remaining`, { credentials:'include' });
+    return res.json();
+  };
+  window.hatVotes.optimistic = (id) => {
+    const item = entries.find(e => e.id === id);
+    if(!item) return () => {};
+    const box = item.el.querySelector('[data-count]');
+    const current = parseInt(box?.dataset.current || box?.textContent || '0', 10) || 0;
+    setCountFor(id, current + 1, true);
+    return () => setCountFor(id, current, true);
+  };
+
+  // first load + poll
+  fetchCounts();
+  setInterval(fetchCounts, Math.max(6, REFRESH_SEC) * 1000);
+})();
+
+/* --- immediate +1 bump when a vote happens elsewhere --- */
+(function(){
+  function getCurrent(li){
+    const val = li?.querySelector('[data-count] [data-val]')?.textContent?.trim() || '0';
+    return parseInt(val, 10) || 0;
+  }
+  window.hatVoteBump = function(id){
+    const li = document.querySelector('[data-id="'+ id.replace(/"/g,'&quot;') +'"]');
+    if(!li) return;
+    const cur = getCurrent(li);
+    if (typeof setCountFor === 'function') {
+      setCountFor(id, cur + 1, true);
+    } else {
+      const countEl = li.querySelector('[data-count]');
+      if (countEl) {
+        const into = document.createElement('span');
+        into.className = 'flip-{{ lid }}';
+        into.textContent = String(cur + 1);
+        countEl.innerHTML = '';
+        countEl.appendChild(into);
+      }
+      li.classList.add('flash-{{ lid }}');
+      setTimeout(()=> li.classList.remove('flash-{{ lid }}'), 550);
+    }
+    // also re-evaluate order using current DOM values (quick local reorder)
+    const rows = Array.from(document.querySelectorAll('#list-{{ lid }} [data-id]')).map(el => {
+      const num = parseInt(el.querySelector('[data-count] [data-val]')?.textContent || '0', 10) || 0;
+      return { id: el.dataset.id, count: num };
+    });
+    const sortedIds = rows.sort((a,b) => (b.count||0)-(a.count||0)).map(r=>r.id);
+    if (typeof animateReorder === 'function') animateReorder(sortedIds);
+  };
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Archived Leaderboard",
+  "settings": [
+    { "type": "header", "content": "Header" },
+    { "type": "text",  "id": "title",    "label": "Title",    "default": "FAN  LEADERBOARD" },
+    { "type": "text",  "id": "subtitle", "label": "Subtitle", "default": "Live votes" },
+
+    { "type": "header", "content": "Data" },
+    { "type": "text",  "id": "vote_proxy", "label": "Vote proxy URL", "default": "https://hat-votes-proxy.bronson-16e.workers.dev" },
+    { "type": "range", "id": "rows",         "label": "Rows to show",  "min": 1,  "max": 10,  "step": 1, "default": 6 },
+    { "type": "range", "id": "refresh_sec",  "label": "Refresh (sec)", "min": 6,  "max": 200, "step": 2, "default": 10 },
+
+    { "type": "header", "content": "Entries (IDs + Labels)" },
+    { "type": "text", "id": "id_1", "label": "ID 1", "default": "slot-1" }, { "type": "text", "id": "label_1", "label": "Label 1", "default": "Card 1" },
+    { "type": "text", "id": "id_2", "label": "ID 2", "default": "slot-2" }, { "type": "text", "id": "label_2", "label": "Label 2", "default": "Card 2" },
+    { "type": "text", "id": "id_3", "label": "ID 3", "default": "slot-3" }, { "type": "text", "id": "label_3", "label": "Label 3", "default": "Card 3" },
+    { "type": "text", "id": "id_4", "label": "ID 4", "default": "slot-4" }, { "type": "text", "id": "label_4", "label": "Label 4", "default": "Card 4" },
+    { "type": "text", "id": "id_5", "label": "ID 5", "default": "slot-5" }, { "type": "text", "id": "label_5", "label": "Label 5", "default": "Card 5" },
+    { "type": "text", "id": "id_6", "label": "ID 6", "default": "slot-6" }, { "type": "text", "id": "label_6", "label": "Label 6", "default": "Card 6" },
+    { "type": "text", "id": "id_7", "label": "ID 7", "default": "slot-7" }, { "type": "text", "id": "label_7", "label": "Label 7", "default": "Card 7" },
+    { "type": "text", "id": "id_8", "label": "ID 8", "default": "slot-8" }, { "type": "text", "id": "label_8", "label": "Label 8", "default": "Card 8" },
+    { "type": "text", "id": "id_9", "label": "ID 9", "default": "slot-9" }, { "type": "text", "id": "label_9", "label": "Label 9", "default": "Card 9" },
+    { "type": "text", "id": "id_10", "label": "ID 10", "default": "slot-10" }, { "type": "text", "id": "label_10", "label": "Label 10", "default": "Card 10" },
+
+    { "type": "header", "content": "Style" },
+    { "type": "color", "id": "bg_color",     "label": "Board background", "default": "#0b3d1a" },
+    { "type": "color", "id": "text_color",   "label": "Text color",       "default": "#ffffff" },
+    { "type": "color", "id": "row_color",    "label": "Row background",   "default": "#0f4920" },
+    { "type": "color", "id": "frame_color",  "label": "Frame color",      "default": "#1a5a2b" },
+    { "type": "color", "id": "accent_color", "label": "Accent",           "default": "#ffd34d" },
+    { "type": "checkbox", "id": "glow_enable", "label": "Header glow", "default": true }
+  ],
+  "presets": [ { "name": "Archived Leaderboard" } ]
+}
+{% endschema %}
