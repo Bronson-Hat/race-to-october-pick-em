@@ -23,7 +23,8 @@ For local development, copy `.dev.vars.example` to `.dev.vars` and replace the p
 
 ## Deployment
 
-Until Cloudflare Builds is connected, deploy from this directory with:
+Cloudflare Builds deploys the production Worker automatically when changes under
+`worker/` are pushed to the `main` branch. To deploy manually from this directory:
 
 ```sh
 npm run deploy
