@@ -22,7 +22,7 @@
         <p>Live from the counting room</p>
         <h2 id="ht-leaderboard-title">Comeback standings</h2>
       </div>
-      <div class="ht-leaderboard__total"><strong data-total-votes>0</strong><span>total votes</span></div>
+      <div class="ht-leaderboard__total"><strong>Live</strong><span>vote share</span></div>
     </div>
     <ol class="ht-leaderboard__list" data-leaderboard>
       <li class="ht-leaderboard__empty">Cast the first ballot to start the board.</li>
@@ -65,7 +65,7 @@
             </div>
             <div class="ht-card__stats">
               <div><span>Card</span><strong>{{ forloop.index }}/{{ archive_handles.size }}</strong></div>
-              <div><span>Votes</span><strong data-card-votes>0</strong></div>
+              <div><span>Vote share</span><strong data-card-votes>0%</strong></div>
               <div><span>Status</span><strong data-card-rank>—</strong></div>
             </div>
             <button type="button" class="ht-card__vote" data-vote-button>
@@ -216,9 +216,10 @@
         const current = byHandle.get(card.dataset.handle);
         return { card, handle:card.dataset.handle, title:card.dataset.title, votes:Number(current?.votes || 0), rank:Number(current?.rank || 99) };
       }).sort((a,b) => b.votes-a.votes || a.rank-b.rank);
-      const max = Math.max(1,...ranked.map(item => item.votes));
+      const totalVotes = ranked.reduce((sum,item) => sum + item.votes,0);
       ranked.forEach((item,index) => {
-        item.card.querySelector('[data-card-votes]').textContent = item.votes;
+        item.percentage = totalVotes ? (item.votes / totalVotes) * 100 : 0;
+        item.card.querySelector('[data-card-votes]').textContent = Math.round(item.percentage) + '%';
         item.card.querySelector('[data-card-rank]').textContent = '#' + (index + 1);
         item.card.classList.toggle('is-selected',item.handle === selection);
         const button = item.card.querySelector('[data-vote-button]');
@@ -226,8 +227,7 @@
         button.querySelector('span').textContent = item.handle === selection ? 'Your comeback pick' : (selection ? 'Ballot already cast' : (session ? 'Vote this hat back' : 'Continue with Shop to vote'));
       });
       const active = ranked.slice(0,5);
-      root.querySelector('[data-total-votes]').textContent = ranked.reduce((sum,item) => sum + item.votes,0);
-      root.querySelector('[data-leaderboard]').innerHTML = active.map((item,index) => '<li class="ht-leaderboard__row"><span class="ht-leaderboard__rank">0'+(index+1)+'</span><strong class="ht-leaderboard__name">'+escapeHtml(item.title)+'</strong><span class="ht-leaderboard__bar"><i style="width:'+Math.max(4,(item.votes/max)*100)+'%"></i></span><span class="ht-leaderboard__votes">'+item.votes+'</span></li>').join('');
+      root.querySelector('[data-leaderboard]').innerHTML = active.map((item,index) => '<li class="ht-leaderboard__row"><span class="ht-leaderboard__rank">0'+(index+1)+'</span><strong class="ht-leaderboard__name">'+escapeHtml(item.title)+'</strong><span class="ht-leaderboard__bar"><i style="width:'+item.percentage+'%"></i></span><span class="ht-leaderboard__votes">'+Math.round(item.percentage)+'%</span></li>').join('');
     };
     const load = async () => {
       try {
