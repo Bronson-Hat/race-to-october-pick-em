@@ -98,67 +98,6 @@
     min-width: 4.4rem;
     height: 4.4rem;
   }
-
-  .header__heading-logo-wrapper {
-    position: relative;
-  }
-
-  .ht-flight-logo-base {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .ht-pigeon-flight {
-    position: fixed;
-    z-index: 1001;
-    display: none;
-    width: 3.4rem;
-    aspect-ratio: 543 / 724;
-    background-image: var(--ht-pigeon-sprite);
-    background-repeat: no-repeat;
-    background-position: 0 50%;
-    background-size: 400% 100%;
-    filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.18));
-    pointer-events: none;
-    will-change: transform, background-position;
-  }
-
-  .header__heading-logo-wrapper.is-pigeon-launching .header__heading-logo {
-    opacity: 0;
-  }
-
-  .header__heading-logo-wrapper.is-pigeon-launching .ht-flight-logo-base {
-    opacity: 1;
-  }
-
-  .header__heading-logo-wrapper.is-pigeon-launching .ht-pigeon-flight {
-    display: block;
-    animation: ht-pigeon-flap 1.8s linear forwards;
-  }
-
-  .header__heading-logo,
-  .ht-flight-logo-base {
-    transition: opacity 120ms linear;
-  }
-
-  @keyframes ht-pigeon-flap {
-    0%, 40% { background-position: 0 50%; }
-    10%, 30%, 50%, 70% { background-position: 33.333% 50%; }
-    20%, 60%, 82% { background-position: 66.666% 50%; }
-    94%, 100% { background-position: 100% 50%; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .ht-pigeon-flight,
-    .ht-flight-logo-base {
-      display: none !important;
-    }
-  }
 </style>
 
 {%- style -%}
@@ -264,8 +203,6 @@
                 sizes: sizes,
                 preload: true
             }}
-            <img class="ht-flight-logo-base" src="{{ 'ht-logo-flight-base.png' | asset_url }}" alt="" width="{{ settings.logo_width }}" height="{{ logo_height }}" loading="eager">
-            <span class="ht-pigeon-flight" data-pigeon-flight data-sprite-url="{{ 'pigeon-flight-strip.png' | asset_url }}" style="--ht-pigeon-sprite: url('{{ 'pigeon-flight-strip.png' | asset_url }}')" aria-hidden="true"></span>
           </div>
         {%- else -%}
           <span class="h2">{{ shop.name }}</span>
@@ -309,8 +246,6 @@
                 sizes: sizes,
                 preload: true
             }}
-            <img class="ht-flight-logo-base" src="{{ 'ht-logo-flight-base.png' | asset_url }}" alt="" width="{{ settings.logo_width }}" height="{{ logo_height }}" loading="eager">
-            <span class="ht-pigeon-flight" data-pigeon-flight data-sprite-url="{{ 'pigeon-flight-strip.png' | asset_url }}" style="--ht-pigeon-sprite: url('{{ 'pigeon-flight-strip.png' | asset_url }}')" aria-hidden="true"></span>
           </div>
         {%- else -%}
           <span class="h2">{{ shop.name }}</span>
@@ -522,61 +457,6 @@
 
   customElements.define('sticky-header', StickyHeader);
 {% endjavascript %}
-
-<script>
-  (() => {
-    if (window.Shopify && Shopify.designMode) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    try {
-      if (sessionStorage.getItem('ht-pigeon-landed')) return;
-      sessionStorage.setItem('ht-pigeon-landed', '1');
-    } catch (error) {}
-
-    const wrapper = document.querySelector('.header__heading-logo-wrapper');
-    const bird = wrapper?.querySelector('[data-pigeon-flight]');
-    if (!wrapper || !bird || typeof bird.animate !== 'function') return;
-
-    const finish = () => {
-      wrapper.classList.remove('is-pigeon-launching');
-      bird.getAnimations().forEach((animation) => animation.cancel());
-    };
-
-    const launch = () => {
-      const logo = wrapper.getBoundingClientRect();
-      if (!logo.width || !logo.height) return finish();
-
-      const birdWidth = Math.max(24, Math.min(42, logo.width * 0.28));
-      const birdHeight = birdWidth * (724 / 543);
-      const targetX = logo.left + logo.width * 0.59;
-      const targetY = logo.top + logo.height * 0.23;
-      const startX = window.innerWidth + birdWidth * 1.25;
-      const startY = Math.max(2, logo.top - birdHeight * 0.75);
-
-      bird.style.width = `${birdWidth}px`;
-      bird.style.left = '0';
-      bird.style.top = '0';
-      wrapper.classList.add('is-pigeon-launching');
-
-      const flight = bird.animate(
-        [
-          { transform: `translate3d(${startX}px, ${startY}px, 0) rotate(-7deg)`, offset: 0 },
-          { transform: `translate3d(${targetX + 64}px, ${targetY - 38}px, 0) rotate(-4deg)`, offset: 0.55 },
-          { transform: `translate3d(${targetX + 13}px, ${targetY - 17}px, 0) rotate(3deg)`, offset: 0.8 },
-          { transform: `translate3d(${targetX - 2}px, ${targetY + 3}px, 0) rotate(-2deg)`, offset: 0.94 },
-          { transform: `translate3d(${targetX}px, ${targetY}px, 0) rotate(0deg)`, offset: 1 }
-        ],
-        { duration: 1800, easing: 'cubic-bezier(.22,.72,.22,1)', fill: 'forwards' }
-      );
-      flight.addEventListener('finish', () => setTimeout(finish, 90), { once: true });
-      flight.addEventListener('cancel', finish, { once: true });
-    };
-
-    const sprite = new Image();
-    sprite.addEventListener('load', () => requestAnimationFrame(launch), { once: true });
-    sprite.addEventListener('error', finish, { once: true });
-    sprite.src = bird.dataset.spriteUrl;
-  })();
-</script>
 
 <script type="application/ld+json">
   {
