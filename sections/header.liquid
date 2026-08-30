@@ -98,6 +98,35 @@
     min-width: 4.4rem;
     height: 4.4rem;
   }
+
+  .header__heading-logo-wrapper {
+    position: relative;
+  }
+
+  .ht-pigeon-wing-up {
+    position: absolute;
+    z-index: 2;
+    top: 20%;
+    left: 59%;
+    width: 18%;
+    height: auto;
+    opacity: 0;
+    pointer-events: none;
+    transform-origin: 50% 85%;
+    animation: ht-pigeon-perch-flap 12s steps(1, end) 1.1s infinite;
+  }
+
+  @keyframes ht-pigeon-perch-flap {
+    0%, 4%, 7%, 10%, 100% { opacity: 0; }
+    5%, 6%, 8%, 9% { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ht-pigeon-wing-up {
+      display: none;
+      animation: none;
+    }
+  }
 </style>
 
 {%- style -%}
@@ -203,6 +232,7 @@
                 sizes: sizes,
                 preload: true
             }}
+            <img class="ht-pigeon-wing-up" src="{{ 'pigeon-wing-up.png' | asset_url }}" alt="" width="1402" height="1122" loading="eager" aria-hidden="true">
           </div>
         {%- else -%}
           <span class="h2">{{ shop.name }}</span>
@@ -246,6 +276,7 @@
                 sizes: sizes,
                 preload: true
             }}
+            <img class="ht-pigeon-wing-up" src="{{ 'pigeon-wing-up.png' | asset_url }}" alt="" width="1402" height="1122" loading="eager" aria-hidden="true">
           </div>
         {%- else -%}
           <span class="h2">{{ shop.name }}</span>
