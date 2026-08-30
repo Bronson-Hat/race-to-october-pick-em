@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "lodge-preorder",
+      "settings": {
+        "title": "SUPER SONICS",
+        "intro": "A woodland camo cap with dimensional Super Sonics embroidery, finished with a private Hat Trick NYC label inside.",
+        "price": "$44.00",
+        "shipping": "Estimated delivery window to be announced",
+        "open_iso": "2026-10-01T17:00:00Z",
+        "close_iso": "2026-10-08T03:59:59Z"
+      }
+    }
+  },
+  "order": ["main"]
+}

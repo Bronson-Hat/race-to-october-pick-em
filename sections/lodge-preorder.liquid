@@ -1,0 +1,158 @@
+{% assign open_iso = section.settings.open_iso | default: '2026-10-01T17:00:00Z' %}
+{% assign close_iso = section.settings.close_iso | default: '2026-10-08T03:59:59Z' %}
+
+<section class="ht-lodge" data-lodge data-open="{{ open_iso }}" data-close="{{ close_iso }}">
+  <div class="ht-lodge__runway" data-runway>
+    <div class="ht-lodge__scene" data-scene>
+      <div class="ht-lodge__curtain ht-lodge__curtain--left" aria-hidden="true"></div>
+      <div class="ht-lodge__curtain ht-lodge__curtain--right" aria-hidden="true"></div>
+      <div class="ht-lodge__floor" aria-hidden="true"></div>
+      <div class="ht-lodge__glow" aria-hidden="true"></div>
+
+      <div class="ht-lodge__arrival">
+        <p class="ht-lodge__eyebrow">Hat Trick NYC · Preorder transmission</p>
+        <h1>{{ section.settings.title | default: 'SUPER SONICS' }}</h1>
+        <div class="ht-lodge__clock" aria-live="polite">
+          <span data-clock-label>The preorder opens in</span>
+          <div><b data-days>--</b><small>Days</small></div>
+          <div><b data-hours>--</b><small>Hours</small></div>
+          <div><b data-minutes>--</b><small>Minutes</small></div>
+          <div><b data-seconds>--</b><small>Seconds</small></div>
+        </div>
+      </div>
+
+      <figure class="ht-lodge__distant-hat">
+        {% if section.settings.hero_image != blank %}
+          {{ section.settings.hero_image | image_url: width: 1800 | image_tag: loading: 'eager', widths: '600,900,1200,1800', sizes: 'min(72vw, 960px)', alt: section.settings.title }}
+        {% else %}
+          <img src="{{ 'lodge-hat-mist.jpg' | asset_url }}" alt="{{ section.settings.title | escape }} preorder hat concept" width="1536" height="2048" loading="eager">
+        {% endif %}
+      </figure>
+
+      <div class="ht-lodge__scroll-cue"><span>Walk the hall</span><i>↓</i></div>
+    </div>
+  </div>
+
+  <section class="ht-lodge__reveal">
+    <header>
+      <p>Something is waiting</p>
+      <h2>A limited run from the other side.</h2>
+      <span>{{ section.settings.intro | default: 'A woodland camo cap with dimensional Super Sonics embroidery, finished with a private Hat Trick NYC label inside.' }}</span>
+    </header>
+    <div class="ht-lodge__product-grid">
+      <figure class="ht-lodge__main-photo">
+        {% if section.settings.product_image != blank %}
+          {{ section.settings.product_image | image_url: width: 1800 | image_tag: loading: 'lazy', widths: '600,900,1200,1800', sizes: '(min-width: 900px) 60vw, 100vw', alt: section.settings.title }}
+        {% else %}
+          <img src="{{ 'lodge-hat-front-back.png' | asset_url }}" alt="Front and back hat concept" width="1536" height="1024" loading="lazy">
+        {% endif %}
+      </figure>
+      <div class="ht-lodge__details">
+        <p>Transmission 01</p>
+        <h3>{{ section.settings.title | default: 'SUPER SONICS' }}</h3>
+        <strong>{{ section.settings.price | default: '$44.00' }}</strong>
+        <ul>
+          <li>Woodland camouflage crown and brim</li>
+          <li>Raised two-tone front embroidery</li>
+          <li>Adjustable snapback closure</li>
+          <li>Hat Trick NYC woven interior label</li>
+          <li>{{ section.settings.shipping | default: 'Estimated delivery window to be announced' }}</li>
+        </ul>
+        <a class="ht-lodge__cta" data-preorder-cta href="{{ section.settings.product_url | default: '#' }}" aria-disabled="true">Transmission not yet open</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="ht-lodge__artifacts">
+    <article>
+      <div><p>Artifact 01</p><h2>Built to be seen up close.</h2></div>
+      <img src="{{ 'lodge-hat-embroidery.png' | asset_url }}" alt="Close-up of raised Super Sonics embroidery" width="1254" height="1254" loading="lazy">
+    </article>
+    <article class="ht-lodge__label-story">
+      <img src="{{ 'lodge-inside-label.png' | asset_url }}" alt="Hat Trick NYC chevron interior label concept" width="1536" height="1024" loading="lazy">
+      <div><p>Artifact 02</p><h2>The mark inside.</h2><span>The production hat will carry this red Hat Trick NYC label beneath the crown.</span></div>
+    </article>
+    <article>
+      <div><p>Placement reference</p><h2>Hidden in plain sight.</h2><span>The sample shown here demonstrates the intended interior label location. Final materials and stitching will follow the approved production sample.</span></div>
+      <img src="{{ 'lodge-label-placement.jpg' | asset_url }}" alt="Interior label placement reference inside a camo hat" width="1200" height="1500" loading="lazy">
+    </article>
+  </section>
+
+  <section class="ht-lodge__reminder">
+    <p>Leave a message at the desk</p>
+    <h2>Be called when the curtains open.</h2>
+    {% form 'customer', class: 'ht-lodge__form' %}
+      <input type="hidden" name="contact[tags]" value="lodge-preorder-reminder">
+      <label class="visually-hidden" for="LodgeEmail-{{ section.id }}">Email address</label>
+      <input id="LodgeEmail-{{ section.id }}" type="email" name="contact[email]" placeholder="EMAIL ADDRESS" required autocomplete="email">
+      <button type="submit">Leave message →</button>
+      {% if form.posted_successfully? %}<strong>Message received. We’ll call when the room is ready.</strong>{% endif %}
+      {% if form.errors %}<strong>{{ form.errors | default_errors }}</strong>{% endif %}
+    {% endform %}
+  </section>
+</section>
+
+<script>
+(() => {
+  const root = document.currentScript.previousElementSibling;
+  if (!root?.matches('[data-lodge]')) return;
+  const runway = root.querySelector('[data-runway]');
+  const open = Date.parse(root.dataset.open);
+  const close = Date.parse(root.dataset.close);
+  const two = value => String(value).padStart(2, '0');
+  const drawClock = () => {
+    const now = Date.now();
+    const target = now < open ? open : close;
+    const remaining = Math.max(0, target - now);
+    root.querySelector('[data-clock-label]').textContent = now < open ? 'The preorder opens in' : now < close ? 'The curtains close in' : 'The transmission has ended';
+    root.querySelector('[data-days]').textContent = two(Math.floor(remaining / 86400000));
+    root.querySelector('[data-hours]').textContent = two(Math.floor(remaining % 86400000 / 3600000));
+    root.querySelector('[data-minutes]').textContent = two(Math.floor(remaining % 3600000 / 60000));
+    root.querySelector('[data-seconds]').textContent = two(Math.floor(remaining % 60000 / 1000));
+    const cta = root.querySelector('[data-preorder-cta]');
+    const live = now >= open && now < close && cta.getAttribute('href') !== '#';
+    cta.textContent = live ? 'Reserve your hat →' : now >= close ? 'Preorder closed' : 'Transmission not yet open';
+    cta.setAttribute('aria-disabled', String(!live));
+  };
+  const updateDepth = () => {
+    const rect = runway.getBoundingClientRect();
+    const progress = Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - innerHeight)));
+    root.style.setProperty('--walk', progress.toFixed(3));
+  };
+  root.querySelector('[data-preorder-cta]').addEventListener('click', event => {
+    if (event.currentTarget.getAttribute('aria-disabled') === 'true') event.preventDefault();
+  });
+  drawClock(); updateDepth();
+  setInterval(drawClock, 1000);
+  addEventListener('scroll', updateDepth, { passive: true });
+  addEventListener('resize', updateDepth);
+})();
+</script>
+
+<style>
+  #shopify-section-{{ section.id }}{background:#080604}
+  .ht-lodge{--red:#a31512;--deep:#310607;--cream:#efe4c9;--black:#080604;--walk:0;overflow:hidden;background:var(--black);color:var(--cream);font-family:'Courier New',monospace}.ht-lodge *{box-sizing:border-box}.ht-lodge__runway{height:180vh}.ht-lodge__scene{position:sticky;top:0;height:100vh;min-height:620px;overflow:hidden;background:radial-gradient(circle at 50% 30%,#752019 0,transparent 32%),linear-gradient(#160404,#030202 75%)}.ht-lodge__scene:after{content:"";position:absolute;inset:0;z-index:9;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.026) 4px 5px),radial-gradient(circle at center,transparent 35%,rgba(0,0,0,.72));mix-blend-mode:screen}.ht-lodge__curtain{position:absolute;z-index:4;inset:0 auto 0;width:46%;background:repeating-linear-gradient(90deg,#2d0305 0 7%,#85120f 13%,#c22b20 19%,#57080a 27%,#170204 34%);filter:drop-shadow(0 0 24px #000);transition:transform .1s linear}.ht-lodge__curtain:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.16),transparent 18% 75%,rgba(0,0,0,.72));mix-blend-mode:overlay}.ht-lodge__curtain--left{left:0;clip-path:polygon(0 0,100% 0,66% 100%,0 100%);transform:translateX(calc(var(--walk) * -13%))}.ht-lodge__curtain--right{right:0;clip-path:polygon(0 0,100% 0,100% 100%,34% 100%);transform:translateX(calc(var(--walk) * 13%)) scaleX(-1)}.ht-lodge__floor{position:absolute;z-index:2;left:50%;bottom:-45%;width:92%;height:112%;transform:translateX(-50%) perspective(480px) rotateX(58deg) scale(calc(.86 + var(--walk) * .2));transform-origin:50% 100%;clip-path:polygon(36% 0,64% 0,100% 100%,0 100%);background-color:#111;background-image:linear-gradient(135deg,var(--cream) 25%,transparent 25%),linear-gradient(225deg,var(--cream) 25%,transparent 25%),linear-gradient(315deg,var(--cream) 25%,transparent 25%),linear-gradient(45deg,var(--cream) 25%,transparent 25%);background-position:-34px 0,-34px 0,0 0,0 0;background-size:68px 68px;box-shadow:0 0 70px #000}.ht-lodge__glow{position:absolute;z-index:1;left:50%;top:18%;width:42vw;max-width:600px;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:rgba(255,62,31,.25);filter:blur(55px)}.ht-lodge__arrival{position:absolute;z-index:6;top:6vh;left:50%;width:min(860px,90vw);transform:translateX(-50%) translateY(calc(var(--walk) * -20px));text-align:center;text-shadow:0 3px 12px #000}.ht-lodge__eyebrow{margin:0 0 12px;text-transform:uppercase;letter-spacing:.22em;font-size:11px;font-weight:900}.ht-lodge__arrival h1{margin:0;font:900 clamp(62px,10vw,145px)/.76 Impact,Haettenschweiler,sans-serif;letter-spacing:.02em;color:#f3dcb7;text-transform:uppercase}.ht-lodge__clock{display:grid;grid-template-columns:1fr repeat(4,auto);gap:16px;align-items:center;width:min(720px,100%);margin:25px auto 0;padding:13px 18px;border:2px solid var(--cream);background:rgba(19,3,3,.75);backdrop-filter:blur(8px)}.ht-lodge__clock>span{text-align:left;text-transform:uppercase;letter-spacing:.12em;font-size:9px;font-weight:900}.ht-lodge__clock div{display:grid}.ht-lodge__clock b{font-size:27px}.ht-lodge__clock small{text-transform:uppercase;font-size:7px}.ht-lodge__distant-hat{position:absolute;z-index:5;left:50%;top:46%;width:clamp(170px,calc(19vw + var(--walk) * 28vw),620px);margin:0;transform:translate(-50%,-50%) translateY(calc(var(--walk) * 15vh));filter:drop-shadow(0 25px 35px rgba(0,0,0,.75));transition:width .08s linear}.ht-lodge__distant-hat img{display:block;width:100%;aspect-ratio:1.05;object-fit:cover;object-position:center 24%;border-radius:50%;mask-image:radial-gradient(ellipse 48% 44% at 50% 45%,#000 58%,transparent 100%)}.ht-lodge__scroll-cue{position:absolute;z-index:7;bottom:22px;left:50%;display:grid;gap:7px;transform:translateX(-50%);text-align:center;text-transform:uppercase;letter-spacing:.15em;font-size:8px}.ht-lodge__scroll-cue i{font-style:normal;font-size:20px;animation:htLodgeDown 1.4s ease-in-out infinite}
+  .ht-lodge__reveal{position:relative;z-index:10;padding:clamp(70px,9vw,140px) clamp(20px,6vw,90px);background:var(--cream);color:var(--black)}.ht-lodge__reveal>header{display:grid;grid-template-columns:.7fr 1.3fr;gap:30px;align-items:end;max-width:1450px;margin:0 auto 70px}.ht-lodge__reveal header p,.ht-lodge__artifacts p,.ht-lodge__details>p,.ht-lodge__reminder>p{color:var(--red);text-transform:uppercase;letter-spacing:.18em;font-size:10px;font-weight:900}.ht-lodge__reveal header h2,.ht-lodge__artifacts h2,.ht-lodge__reminder h2{margin:0;font:900 clamp(50px,7vw,105px)/.82 Impact,sans-serif;text-transform:uppercase}.ht-lodge__reveal header span{grid-column:2;max-width:650px;font-size:17px;line-height:1.6}.ht-lodge__product-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:clamp(30px,5vw,80px);max-width:1450px;margin:auto}.ht-lodge__main-photo{margin:0;border:4px solid var(--black);box-shadow:15px 15px 0 var(--red);background:#201b17}.ht-lodge__main-photo img{display:block;width:100%;height:100%;min-height:580px;object-fit:cover}.ht-lodge__details{align-self:center;padding:30px 0}.ht-lodge__details h3{margin:8px 0;font:900 clamp(55px,6vw,90px)/.8 Impact,sans-serif}.ht-lodge__details>strong{display:block;margin:25px 0;color:var(--red);font-size:28px}.ht-lodge__details ul{margin:0 0 30px;padding:0;list-style:none;border-block:2px solid}.ht-lodge__details li{padding:13px 0;border-bottom:1px dashed;font-size:13px}.ht-lodge__details li:last-child{border:0}.ht-lodge__cta{display:block;padding:18px;border:3px solid var(--black);background:var(--red);color:var(--cream);text-align:center;text-decoration:none;text-transform:uppercase;font-weight:900;letter-spacing:.11em}.ht-lodge__cta[aria-disabled=true]{background:#2c2925;cursor:not-allowed;opacity:.65}
+  .ht-lodge__artifacts{padding:clamp(60px,8vw,120px) clamp(20px,6vw,90px);background:#120303}.ht-lodge__artifacts article{display:grid;grid-template-columns:.7fr 1.3fr;gap:clamp(30px,6vw,100px);align-items:center;max-width:1350px;margin:0 auto 110px}.ht-lodge__artifacts article:last-child{margin-bottom:0}.ht-lodge__artifacts article>img{width:100%;max-height:720px;object-fit:cover;border:3px solid var(--cream)}.ht-lodge__artifacts h2{font-size:clamp(48px,6vw,90px)}.ht-lodge__artifacts span{display:block;max-width:560px;margin-top:25px;line-height:1.65}.ht-lodge__label-story{grid-template-columns:1.3fr .7fr!important}.ht-lodge__label-story img{order:0}.ht-lodge__label-story div{order:1}.ht-lodge__reminder{padding:clamp(75px,10vw,150px) 20px;background:var(--red);text-align:center}.ht-lodge__reminder>p{color:var(--cream)}.ht-lodge__reminder h2{max-width:900px;margin:0 auto}.ht-lodge__form{display:grid;grid-template-columns:1fr auto;max-width:720px;margin:45px auto 0}.ht-lodge__form input,.ht-lodge__form button{min-height:58px;border:3px solid var(--black);border-radius:0;font:900 12px/1 'Courier New',monospace}.ht-lodge__form input{padding:0 18px;background:var(--cream)}.ht-lodge__form button{padding:0 24px;background:var(--black);color:var(--cream);cursor:pointer}.ht-lodge__form strong{grid-column:1/-1;margin-top:15px}.ht-lodge__scene,.ht-lodge__curtain,.ht-lodge__floor{will-change:transform}
+  @keyframes htLodgeDown{50%{transform:translateY(7px)}}
+  @media(max-width:800px){.ht-lodge__runway{height:155vh}.ht-lodge__scene{min-height:540px}.ht-lodge__curtain{width:55%}.ht-lodge__arrival{top:7vh}.ht-lodge__arrival h1{font-size:clamp(52px,17vw,82px)}.ht-lodge__clock{grid-template-columns:repeat(4,1fr);gap:7px;padding:10px}.ht-lodge__clock>span{grid-column:1/-1;text-align:center}.ht-lodge__clock b{font-size:22px}.ht-lodge__distant-hat{top:52%;width:clamp(170px,calc(38vw + var(--walk) * 42vw),480px)}.ht-lodge__floor{width:145%;height:100%;bottom:-37%}.ht-lodge__reveal>header,.ht-lodge__product-grid,.ht-lodge__artifacts article,.ht-lodge__label-story{grid-template-columns:1fr!important}.ht-lodge__reveal header span{grid-column:1}.ht-lodge__main-photo img{min-height:340px}.ht-lodge__artifacts article{margin-bottom:70px}.ht-lodge__label-story img{order:1}.ht-lodge__label-story div{order:0}.ht-lodge__form{grid-template-columns:1fr}.ht-lodge__form button{border-top:0}}
+  @media(prefers-reduced-motion:reduce){.ht-lodge__scroll-cue i{animation:none}.ht-lodge__curtain--left,.ht-lodge__curtain--right{transform:none}.ht-lodge__distant-hat{width:min(70vw,520px)}.ht-lodge__floor{transform:translateX(-50%) perspective(480px) rotateX(58deg)}}
+</style>
+
+{% schema %}
+{
+  "name":"Lodge preorder concept",
+  "settings":[
+    {"type":"text","id":"title","label":"Product title","default":"SUPER SONICS"},
+    {"type":"textarea","id":"intro","label":"Introduction","default":"A woodland camo cap with dimensional Super Sonics embroidery, finished with a private Hat Trick NYC label inside."},
+    {"type":"text","id":"price","label":"Display price","default":"$44.00"},
+    {"type":"text","id":"shipping","label":"Shipping estimate","default":"Estimated delivery window to be announced"},
+    {"type":"text","id":"open_iso","label":"Opening time (ISO)","default":"2026-10-01T17:00:00Z"},
+    {"type":"text","id":"close_iso","label":"Closing time (ISO)","default":"2026-10-08T03:59:59Z"},
+    {"type":"url","id":"product_url","label":"Product URL"},
+    {"type":"image_picker","id":"hero_image","label":"Hallway hero image"},
+    {"type":"image_picker","id":"product_image","label":"Main product image"}
+  ],
+  "presets":[{"name":"Lodge preorder concept"}]
+}
+{% endschema %}
