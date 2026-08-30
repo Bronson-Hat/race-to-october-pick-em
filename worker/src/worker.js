@@ -401,20 +401,36 @@ async function profileRoute(request, env) {
 
 async function leaderboardRoute(request, env, ctx) {
   await settleLeaderboard(env,ctx);
+  const snapshotDate = chicagoDate();
+  const snapshotCreatedAt = new Date().toISOString();
+  await env.DB.prepare(`INSERT OR IGNORE INTO leaderboard_snapshots(snapshot_date,player_id,rank,standing_balance,created_at)
+    WITH ranked AS (
+      SELECT p.id,
+        p.balance + COALESCE((SELECT SUM(w.stake) FROM wagers w WHERE w.player_id=p.id AND w.status='pending'),0) AS standingBalance,
+        ROW_NUMBER() OVER (ORDER BY p.balance + COALESCE((SELECT SUM(w2.stake) FROM wagers w2 WHERE w2.player_id=p.id AND w2.status='pending'),0) DESC,p.winning_picks DESC,p.claimed_at ASC) AS rank
+      FROM players p WHERE p.shopify_subject_hash IS NOT NULL AND p.nickname IS NOT NULL AND p.leaderboard_opt_in=1
+    ) SELECT ?,id,rank,standingBalance,? FROM ranked`).bind(snapshotDate,snapshotCreatedAt).run();
+  const previousSnapshot = await env.DB.prepare('SELECT MAX(snapshot_date) AS snapshotDate FROM leaderboard_snapshots WHERE snapshot_date<?').bind(snapshotDate).first();
+  const comparedTo = previousSnapshot?.snapshotDate || '';
   const sql = `WITH ranked AS (
     SELECT p.id,p.nickname,p.balance,
       p.balance + COALESCE((SELECT SUM(w.stake) FROM wagers w WHERE w.player_id=p.id AND w.status='pending'),0) AS standingBalance,
       p.winning_picks AS correctPicks,p.settled_picks AS settledPicks,p.claimed_at
     FROM players p
     WHERE p.shopify_subject_hash IS NOT NULL AND p.nickname IS NOT NULL AND p.leaderboard_opt_in=1
-  )
-  SELECT nickname,balance,standingBalance,correctPicks,settledPicks,
-    ROW_NUMBER() OVER (ORDER BY standingBalance DESC,correctPicks DESC,claimed_at ASC) AS rank
-  FROM ranked ORDER BY standingBalance DESC,correctPicks DESC,claimed_at ASC LIMIT 10`;
-  const { results=[] } = await env.DB.prepare(sql).all();
+  ), current AS (
+    SELECT id,nickname,balance,standingBalance,correctPicks,settledPicks,
+      ROW_NUMBER() OVER (ORDER BY standingBalance DESC,correctPicks DESC,claimed_at ASC) AS rank
+    FROM ranked
+  ) SELECT current.nickname,current.balance,current.standingBalance,current.correctPicks,current.settledPicks,current.rank,
+      previous.rank AS previousRank,
+      CASE WHEN previous.rank IS NULL THEN 0 ELSE previous.rank-current.rank END AS movement
+    FROM current LEFT JOIN leaderboard_snapshots previous ON previous.player_id=current.id AND previous.snapshot_date=?
+    ORDER BY current.rank LIMIT 10`;
+  const { results=[] } = await env.DB.prepare(sql).bind(comparedTo).all();
   let me=null;
-  try { const auth=await requireSession(request,env); me=await exactRank(auth.player.id,env); } catch(error) { if(error.status!==401) throw error; }
-  return json({ leaders:results, me, scoreBasis:'standing_balance', contest:contestInfo(), prize:{ type:'one_personal_custom_hat', approximateRetailValue:39.99, currency:'USD', status:'official_rules_ready' } });
+  try { const auth=await requireSession(request,env); me=await exactRank(auth.player.id,env);if(me){const prior=await env.DB.prepare('SELECT rank FROM leaderboard_snapshots WHERE snapshot_date=? AND player_id=?').bind(comparedTo,auth.player.id).first();me.previousRank=prior?.rank||null;me.movement=prior?Number(prior.rank)-Number(me.rank):0;} } catch(error) { if(error.status!==401) throw error; }
+  return json({ leaders:results, me, snapshotDate, comparedTo:comparedTo||null, updatedAt:snapshotCreatedAt, scoreBasis:'standing_balance', contest:contestInfo(), prize:{ type:'one_personal_custom_hat', approximateRetailValue:39.99, currency:'USD', status:'official_rules_ready' } });
 }
 
 async function archiveLeaderboard(env) {
